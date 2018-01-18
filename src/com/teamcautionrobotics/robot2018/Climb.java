@@ -2,6 +2,7 @@ package com.teamcautionrobotics.robot2018;
 
 import edu.wpi.first.wpilibj.VictorSP;
 
+public class Climb {
 	
 	private VictorSP climbMotor;
 	
