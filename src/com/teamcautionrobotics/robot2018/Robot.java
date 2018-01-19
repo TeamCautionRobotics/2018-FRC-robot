@@ -7,6 +7,7 @@
 
 package com.teamcautionrobotics.robot2018;
 
+import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 /**
@@ -21,8 +22,24 @@ public class Robot extends TimedRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
+	
+	DriveBase driveBase;
+	
+	EnhancedJoystick driverLeft;
+	EnhancedJoystick driverRight;
+	Gamepad manipulator;
+	
+	
+	
     @Override
     public void robotInit() {
+    	
+    		driveBase = new DriveBase(0, 1, 0, 0, 1, 2, 3);
+    				
+		driverLeft = new EnhancedJoystick(0);
+        driverRight = new EnhancedJoystick(1);
+        manipulator = new Gamepad(2);
+        
     }
 
     /**
@@ -52,6 +69,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+    	
+    		driveBase.drive(driverLeft.getAxis(AxisType.kY), driverRight.getAxis(AxisType.kY));
     }
 
     /**
