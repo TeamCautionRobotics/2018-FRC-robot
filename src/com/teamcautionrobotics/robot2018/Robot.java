@@ -36,8 +36,8 @@ public class Robot extends TimedRobot {
     	
     		driveBase = new DriveBase(0, 1, 0, 0, 1, 2, 3);
     				
-		driverLeft = new EnhancedJoystick(0);
-        driverRight = new EnhancedJoystick(1);
+		driverLeft = new EnhancedJoystick(0, 0.1);
+        driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
         
     }
