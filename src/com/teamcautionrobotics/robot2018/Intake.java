@@ -4,35 +4,41 @@ import edu.wpi.first.wpilibj.VictorSP;
 
 public class Intake {
 
-	private VictorSP intake;
+	private VictorSP intake1;
+	private VictorSP intake2;
 
-	public Intake(int motorPort) {
+	public Intake(int motorPort1, int motorPort2) {
 
-		intake = new VictorSP(motorPort);
+		intake1 = new VictorSP(motorPort1);
+		intake2 = new VictorSP(motorPort2);
 
 	}
 
 	public void out(double power) {
 		
-		intake.set(power);
+		intake1.set(power);
+		intake2.set(power);
 	
 	}
 
 	public void out() {
 	
-		intake.set(1.0);
+		intake1.set(1.0);
+		intake2.set(1.0);
 	
 	}
 
 	public void in(double power) {
 		
-		intake.set(-power);
+		intake1.set(-power);
+		intake2.set(-power);
 	
 	}
 
 	public void in() {
 	
-		intake.set(-1.0);
+		intake1.set(-1.0);
+		intake2.set(-1.0);
 	
 	}
 
