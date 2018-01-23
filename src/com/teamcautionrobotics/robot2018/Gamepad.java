@@ -2,11 +2,11 @@ package com.teamcautionrobotics.robot2018;
 
 public class Gamepad extends EnhancedJoystick {
 
-	public Gamepad(int port) {
+    public Gamepad(int port) {
         this(port, 0.2);
-	}
+    }
 
-	public Gamepad(int port, double deadband) {
+    public Gamepad(int port, double deadband) {
         super(port, deadband);
     }
 

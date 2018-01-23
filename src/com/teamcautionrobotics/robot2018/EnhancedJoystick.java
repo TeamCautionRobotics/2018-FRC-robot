@@ -6,7 +6,7 @@ public class EnhancedJoystick extends Joystick {
 
     protected double deadbandSize;
 
-	public EnhancedJoystick(int port) {
+    public EnhancedJoystick(int port) {
         this(port, 0.1);
     }
 
@@ -24,7 +24,6 @@ public class EnhancedJoystick extends Joystick {
     public double getRawAxis(int axis) {
         return deadband(super.getRawAxis(axis));
     }
-
 
     /**
      * Set the size of the deadband.
@@ -50,7 +49,7 @@ public class EnhancedJoystick extends Joystick {
             return (value + deadbandSize) / (1 - deadbandSize);
         }
         return 0;
-    
-	}
+
+    }
 
 }
