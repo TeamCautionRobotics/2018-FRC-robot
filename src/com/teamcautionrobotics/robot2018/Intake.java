@@ -14,28 +14,22 @@ public class Intake {
 
     }
 
-    public void out(double power) {
+    // in is positive
+    public void run(double power) {
 
         intake1.set(power);
         intake2.set(power);
 
     }
 
-    public void out() {
+    public void in() {
 
         intake1.set(1.0);
         intake2.set(1.0);
 
     }
 
-    public void in(double power) {
-
-        intake1.set(-power);
-        intake2.set(-power);
-
-    }
-
-    public void in() {
+    public void out() {
 
         intake1.set(-1.0);
         intake2.set(-1.0);

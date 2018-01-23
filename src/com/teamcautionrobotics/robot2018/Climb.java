@@ -12,27 +12,21 @@ public class Climb {
 
     }
 
+    public void move(double power) {
+
+        climbMotor.set(power);
+
+    }
+
     public void ascend() {
 
         climbMotor.set(1.0);
 
     }
 
-    public void ascend(double power) {
-
-        climbMotor.set(power);
-
-    }
-
     public void descend() {
 
         climbMotor.set(-1.0);
-
-    }
-
-    public void descend(double power) {
-
-        climbMotor.set(-power);
 
     }
 
