@@ -76,7 +76,8 @@ public class Robot extends TimedRobot {
 
         driveBase.drive(driverLeft.getAxis(AxisType.kY), driverRight.getAxis(AxisType.kY));
 
-        intake.in(manipulator.getAxis(Axis.LEFT_Y));
+        intake.run(manipulator.getAxis(Axis.LEFT_Y));
+        
         if (manipulator.getButton(Button.X)) {
             climb.ascend();
         }
