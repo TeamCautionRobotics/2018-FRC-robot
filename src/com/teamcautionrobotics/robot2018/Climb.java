@@ -11,7 +11,7 @@ public class Climb {
     }
 
     /**
-     * @param power positive is ascending, negative is descending
+     * @param power positive is ascending, negative is descending, range of [-1, 1]
      */
     public void move(double power) {
         climbMotor.set(power);
