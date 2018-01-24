@@ -2,15 +2,11 @@ package com.teamcautionrobotics.autonomous;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.NamedSendable;
-import edu.wpi.first.wpilibj.tables.ITable;
-import edu.wpi.first.wpilibj.tables.ITableListener;
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.SendableBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-public class MissionSendable implements NamedSendable {
-
-    private ITable table;
-    private String name;
-
+public class MissionSendable extends SendableBase implements Sendable {
     private Supplier<Mission> missionSupplier;
 
     private boolean running = false;
@@ -19,7 +15,7 @@ public class MissionSendable implements NamedSendable {
     private Mission selectedMission;
 
     public MissionSendable(String name, Supplier<Mission> selectedMissionSupplier) {
-        this.name = name;
+        setName(name);
         missionSupplier = selectedMissionSupplier;
     }
 
@@ -35,7 +31,6 @@ public class MissionSendable implements NamedSendable {
                     return running;
                 } else {
                     running = false;
-                    table.putBoolean("running", false);
                 }
             }
 
@@ -44,7 +39,6 @@ public class MissionSendable implements NamedSendable {
             if (finished) {
                 running = false;
                 initialized = false;
-                table.putBoolean("running", false);
                 System.out.format("Teleop mission '%s' Completed Successfully%n", selectedMission.getName());
             }
         } else if (!finished) {
@@ -57,39 +51,10 @@ public class MissionSendable implements NamedSendable {
     }
 
 
-    private final ITableListener listener = (table, key, value, isNew) -> {
-        running = (boolean) value;
-    };
-
     @Override
-    public void initTable(ITable subtable) {
-        if (table != null) {
-            table.removeTableListener(listener);
-        }
-
-        table = subtable;
-        if (table != null) {
-        table.putString("name", name);
-        table.putBoolean("running", false);
-        table.addTableListener("running", listener, false);
-        } else {
-            System.err.println("MissionSendable initTable passed null ITable!");
-        }
+    public void initSendable(SendableBuilder builder) {
+      builder.setSmartDashboardType("Command");
+      builder.addStringProperty(".name", this::getName, null);
+      builder.addBooleanProperty("running", ()->this.running, (value)->running=value);
     }
-
-    @Override
-    public ITable getTable() {
-        return table;
-    }
-
-    @Override
-    public String getSmartDashboardType() {
-        return "Command";
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
 }
