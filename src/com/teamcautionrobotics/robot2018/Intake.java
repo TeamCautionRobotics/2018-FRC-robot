@@ -12,20 +12,20 @@ public class Intake {
         intake2 = new VictorSP(motorPort2);
     }
 
-    // in is positive
+    /**
+     * @param power positive for in, negative is out, range of [-1, 1]
+     */
     public void run(double power) {
         intake1.set(power);
         intake2.set(power);
     }
 
     public void in() {
-        intake1.set(1.0);
-        intake2.set(1.0);
+        this.run(1.0);
     }
 
     public void out() {
-        intake1.set(-1.0);
-        intake2.set(-1.0);
+        this.run(-1.0);
     }
 
 }

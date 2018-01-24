@@ -10,16 +10,19 @@ public class Climb {
         climbMotor = new VictorSP(motorPort);
     }
 
+    /**
+     * @param power positive is ascending, negative is descending
+     */
     public void move(double power) {
         climbMotor.set(power);
     }
 
     public void ascend() {
-        climbMotor.set(1.0);
+        this.move(1.0);
     }
 
     public void descend() {
-        climbMotor.set(-1.0);
+        this.move(-1.0);
     }
 
 }
