@@ -26,6 +26,10 @@ public class Mission {
     public String getName() {
         return name;
     }
+    
+    public ArrayList<Command> getMission() {
+        return commands;
+    }
 
     public void reset() {
         step = 0;

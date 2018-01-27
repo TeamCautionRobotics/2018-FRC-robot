@@ -6,9 +6,9 @@ import java.text.ParseException;
 import java.util.List;
 
 public class MissionScript {
-    
-    public static Mission parseMission(String missionName, List<String> code, CommandFactory factory)
-            throws ParseException {
+
+    public static Mission parseMission(String missionName, List<String> code,
+            CommandFactory factory) throws ParseException {
         Mission mission = new Mission(missionName);
         int lineNumber = 1;
         for (String line : code) {
@@ -41,9 +41,10 @@ public class MissionScript {
                                 parameterValues[paramIndex] = Double.parseDouble(parameter);
                             } catch (NumberFormatException e) {
                                 String exceptionMessage = String.format(
-                                        "Failed to parse parameter as boolean or double on line %d: \"%s\"",
+                                        "Failed to parse parameter as boolean or double on line %d: \"%s\"%n",
                                         lineNumber, parameter);
-                                throw new ParseException(e.getMessage(), lineNumber);
+                                throw new ParseException(exceptionMessage + e.getMessage(),
+                                        lineNumber);
                             }
                         }
                         paramIndex++;
