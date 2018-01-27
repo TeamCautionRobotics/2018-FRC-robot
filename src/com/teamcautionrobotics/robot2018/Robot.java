@@ -77,6 +77,16 @@ public class Robot extends TimedRobot {
         if (manipulator.getButton(Button.X)) {
             climb.ascend();
         }
+
+        double spinSpeed = 0;
+
+        if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0) {
+            spinSpeed = -manipulator.getAxis(Axis.LEFT_TRIGGER);
+        }
+        if (manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0) {
+            spinSpeed = manipulator.getAxis(Axis.RIGHT_TRIGGER);
+        }
+        intake.spin(spinSpeed);
     }
 
     /**
