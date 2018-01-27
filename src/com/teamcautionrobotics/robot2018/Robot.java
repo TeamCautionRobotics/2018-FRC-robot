@@ -7,10 +7,9 @@
 
 package com.teamcautionrobotics.robot2018;
 
-import com.teamcautionrobotics.robot2018.Gamepad.Button;
 import com.teamcautionrobotics.robot2018.Gamepad.Axis;
+import com.teamcautionrobotics.robot2018.Gamepad.Button;
 
-import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 /**
@@ -36,8 +35,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-
-        driveBase = new DriveBase(0, 1, 0, 0, 1, 2, 3);
+        driveBase = new DriveBase(0, 1, 0, 1, 2, 3);
 
         driverLeft = new EnhancedJoystick(0, 0.1);
         driverRight = new EnhancedJoystick(1, 0.1);
@@ -45,7 +43,6 @@ public class Robot extends TimedRobot {
 
         intake = new Intake(2, 3);
         climb = new Climb(4);
-
     }
 
     /**
@@ -73,15 +70,13 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-
-        driveBase.drive(driverLeft.getAxis(AxisType.kY), driverRight.getAxis(AxisType.kY));
+        driveBase.drive(driverLeft.getY(), driverRight.getY());
 
         intake.run(manipulator.getAxis(Axis.LEFT_Y));
-        
+
         if (manipulator.getButton(Button.X)) {
             climb.ascend();
         }
-
     }
 
     /**

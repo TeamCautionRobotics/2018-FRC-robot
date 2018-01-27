@@ -20,6 +20,14 @@ public class Intake {
         intake2.set(power);
     }
 
+    /**
+     * @param power positive for spin right, negative is left, range of [-1, 1]
+     */
+    public void spin(double power) {
+        intake1.set(power);
+        intake2.set(-power);
+    }
+
     public void in() {
         this.run(1.0);
     }
@@ -28,4 +36,11 @@ public class Intake {
         this.run(-1.0);
     }
 
+    public void spinRight() {
+        this.spin(1.0);
+    }
+
+    public void spinLeft() {
+        this.spin(-1.0);
+    }
 }
