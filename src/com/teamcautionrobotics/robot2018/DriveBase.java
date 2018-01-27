@@ -25,7 +25,7 @@ public class DriveBase implements PIDOutput, PIDSource {
 
     public PIDController pidController;
 
-    public DriveBase(int left, int right, int shifterChannel, int leftA, int leftB, int rightA,
+    public DriveBase(int left, int right, int leftA, int leftB, int rightA,
             int rightB) {
         driveLeft = new VictorSP(left);
         driveRight = new VictorSP(right);

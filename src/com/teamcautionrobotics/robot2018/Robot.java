@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        driveBase = new DriveBase(0, 1, 0, 0, 1, 2, 3);
+        driveBase = new DriveBase(0, 1, 0, 1, 2, 3);
 
         driverLeft = new EnhancedJoystick(0, 0.1);
         driverRight = new EnhancedJoystick(1, 0.1);
