@@ -27,7 +27,7 @@ public class Mission {
         return name;
     }
     
-    public ArrayList<Command> getMission() {
+    public ArrayList<Command> getCommands() {
         return commands;
     }
 
