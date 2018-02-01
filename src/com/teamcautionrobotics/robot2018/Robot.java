@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
     CommandFactory commandFactory;
     MissionScriptMission missionScriptMission;
     MissionSendable missionSendable;
-    SendableChooser<Mission> missionChooser = new SendableChooser<Mission>();
+    SendableChooser<Mission> missionChooser;
 
     @Override
     public void robotInit() {
@@ -61,8 +61,11 @@ public class Robot extends TimedRobot {
         climb = new Climb(4);
 
         commandFactory = new CommandFactory(driveBase);
+        
+        missionChooser = new SendableChooser<Mission>();
+        missionChooser.setName("Mission Chooser");
 
-        missionSendable = new MissionSendable("Teleop Mission", () -> missionChooser.getSelected());
+        missionSendable = new MissionSendable("Run Auto in Teleop", missionChooser::getSelected);
         SmartDashboard.putData(missionSendable);
 
         missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
@@ -70,6 +73,8 @@ public class Robot extends TimedRobot {
         missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
         
         missionChooser.addDefault("Do Nothing Mission", new Mission("Do Nothing Mission"));
+        
+        SmartDashboard.putData(missionChooser);
     }
 
     /**
@@ -97,6 +102,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        if ((missionSendable.run() && !missionChooser.getSelected().enableControls)
+                || driveBase.pidController.isEnabled()) {
+            return;
+        }
+        
         driveBase.drive(driverLeft.getY(), driverRight.getY());
 
         intake.run(manipulator.getAxis(Axis.LEFT_Y));
@@ -104,6 +114,15 @@ public class Robot extends TimedRobot {
         if (manipulator.getButton(Button.X)) {
             climb.ascend();
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
 
     /**
