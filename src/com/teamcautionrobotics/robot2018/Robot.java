@@ -48,6 +48,7 @@ public class Robot extends TimedRobot {
     MissionScriptMission missionScriptMission;
     MissionSendable missionSendable;
     SendableChooser<Mission> missionChooser;
+    Mission activeMission;
 
     @Override
     public void robotInit() {
@@ -65,9 +66,6 @@ public class Robot extends TimedRobot {
         missionChooser = new SendableChooser<Mission>();
         missionChooser.setName("Mission Chooser");
 
-        missionSendable = new MissionSendable("Run Auto in Teleop", missionChooser::getSelected);
-        SmartDashboard.putData(missionSendable);
-
         missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
                 commandFactory);
         missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
@@ -75,6 +73,9 @@ public class Robot extends TimedRobot {
         missionChooser.addDefault("Do Nothing Mission", new Mission("Do Nothing Mission"));
         
         SmartDashboard.putData(missionChooser);
+        
+        missionSendable = new MissionSendable("Run Auto in Teleop", missionChooser::getSelected);
+        SmartDashboard.putData(missionSendable);
     }
 
     /**
@@ -89,13 +90,27 @@ public class Robot extends TimedRobot {
      * chooser code above as well.
      */
     @Override
-    public void autonomousInit() {}
+    public void autonomousInit() {
+        activeMission = missionChooser.getSelected();
+
+        if (activeMission != null) {
+            activeMission.reset();
+            System.out.println("Mission '" + activeMission.getName() + "' Started");
+        }
+    }
 
     /**
      * This function is called periodically during autonomous.
      */
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+        if (activeMission != null) {
+            if (activeMission.run()) {
+                System.out.println("Mission '" + activeMission.getName() + "' Complete");
+                activeMission = null;
+            }
+        }
+    }
 
     /**
      * This function is called periodically during operator control.
