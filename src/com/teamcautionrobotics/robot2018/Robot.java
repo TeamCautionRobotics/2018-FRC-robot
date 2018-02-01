@@ -7,10 +7,20 @@
 
 package com.teamcautionrobotics.robot2018;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import com.teamcautionrobotics.autonomous.Command;
+import com.teamcautionrobotics.autonomous.CommandFactory;
+import com.teamcautionrobotics.autonomous.Mission;
+import com.teamcautionrobotics.autonomous.MissionScriptMission;
+import com.teamcautionrobotics.autonomous.MissionSendable;
 import com.teamcautionrobotics.robot2018.Gamepad.Axis;
 import com.teamcautionrobotics.robot2018.Gamepad.Button;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -24,6 +34,7 @@ public class Robot extends TimedRobot {
      * initialization code.
      */
 
+    static final Path missionScriptPath = Paths.get("/opt/roborio/mission.ms");
     DriveBase driveBase;
 
     EnhancedJoystick driverLeft;
@@ -32,6 +43,11 @@ public class Robot extends TimedRobot {
 
     Intake intake;
     Climb climb;
+
+    CommandFactory commandFactory;
+    MissionScriptMission missionScriptMission;
+    MissionSendable missionSendable;
+    SendableChooser<Mission> missionChooser = new SendableChooser<Mission>();
 
     @Override
     public void robotInit() {
@@ -43,6 +59,17 @@ public class Robot extends TimedRobot {
 
         intake = new Intake(2, 3);
         climb = new Climb(4);
+
+        commandFactory = new CommandFactory(driveBase);
+
+        missionSendable = new MissionSendable("Teleop Mission", () -> missionChooser.getSelected());
+        SmartDashboard.putData(missionSendable);
+
+        missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
+                commandFactory);
+        missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
+        
+        missionChooser.addDefault("Do Nothing Mission", new Mission("Do Nothing Mission"));
     }
 
     /**
