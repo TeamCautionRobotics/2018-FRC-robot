@@ -60,11 +60,18 @@ public class Robot extends TimedRobot {
 
         intake = new Intake(2, 3);
         climb = new Climb(4);
+        
+        missionChooser = new SendableChooser<Mission>();
+        missionChooser.setName("Mission Chooser");
 
         commandFactory = new CommandFactory(driveBase);
         
         missionChooser = new SendableChooser<Mission>();
         missionChooser.setName("Mission Chooser");
+
+        missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
+
+        SmartDashboard.putData(missionSendable);
 
         missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
                 commandFactory);
@@ -76,6 +83,7 @@ public class Robot extends TimedRobot {
         
         missionSendable = new MissionSendable("Run Auto in Teleop", missionChooser::getSelected);
         SmartDashboard.putData(missionSendable);
+
     }
 
     /**
