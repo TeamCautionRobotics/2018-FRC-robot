@@ -12,6 +12,8 @@ import com.teamcautionrobotics.robot2018.Gamepad.Button;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the IterativeRobot documentation. If you change the name of this class
@@ -32,6 +34,10 @@ public class Robot extends TimedRobot {
 
     Intake intake;
     Climb climb;
+    
+    Timer timer;
+    
+    boolean spinFinished = true;
 
     @Override
     public void robotInit() {
@@ -41,8 +47,12 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        intake = new Intake(2, 3);
+        //motor ports??
+        intake = new Intake(2, 3, 5);
         climb = new Climb(4);
+        
+        timer = new Timer();
+        
     }
 
     /**
@@ -77,16 +87,26 @@ public class Robot extends TimedRobot {
         if (manipulator.getButton(Button.X)) {
             climb.ascend();
         }
-
-        double spinSpeed = 0;
-
-        if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0) {
-            spinSpeed = -manipulator.getAxis(Axis.LEFT_TRIGGER);
+        
+        if (manipulator.getButton(Button.LEFT_BUMPER)) {
+            intake.spinLeft();
+            spinFinished = false;
+            resetAndStartTimer();
         }
-        if (manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0) {
-            spinSpeed = manipulator.getAxis(Axis.RIGHT_TRIGGER);
+        
+        if (manipulator.getButton(Button.RIGHT_BUMPER)) {
+            intake.spinRight();
+            spinFinished = false;
+            resetAndStartTimer();
         }
-        intake.spin(spinSpeed);
+        
+        if (timer.get() >= 0.2) {
+            intake.stop();
+            timer.stop();
+            timer.reset();
+            spinFinished = true;
+        }
+        
     }
 
     /**
@@ -94,4 +114,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testPeriodic() {}
+    
+    public void resetAndStartTimer () {
+        timer.reset();
+        timer.start();
+    }
 }
