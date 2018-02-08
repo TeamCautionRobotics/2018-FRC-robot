@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
      * initialization code.
      */
 
-    static final Path missionScriptPath = Paths.get("/opt/roborio/mission.ms");
+    static final Path missionScriptPath = Paths.get("/opt/mission.ms");
     DriveBase driveBase;
 
     EnhancedJoystick driverLeft;
