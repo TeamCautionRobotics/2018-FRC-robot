@@ -29,6 +29,7 @@ public class MissionScript {
                     parameterClasses = new Class[parameters.length];
                     parameterValues = new Object[parameters.length];
                     for (String parameter : parameters) {
+                        parameter = parameter.trim();
                         if (parameter.equals("true")) {
                             parameterClasses[paramIndex] = boolean.class;
                             parameterValues[paramIndex] = true;
