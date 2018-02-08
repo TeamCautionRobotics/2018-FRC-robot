@@ -38,6 +38,8 @@ public class MissionScriptMission extends Mission {
 
         if (parsedMission != null) {
             commands = parsedMission.getCommands();
+        } else {
+            System.err.println("MissionScriptMission: MissionScript parser returned null Mission!");
         }
 
         super.reset();
