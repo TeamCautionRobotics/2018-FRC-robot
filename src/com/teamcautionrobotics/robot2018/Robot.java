@@ -21,11 +21,6 @@ import edu.wpi.first.wpilibj.Timer;
  * project.
  */
 public class Robot extends TimedRobot {
-    /**
-     * This function is run when the robot is first started up and should be used for any
-     * initialization code.
-     */
-
     DriveBase driveBase;
 
     EnhancedJoystick driverLeft;
@@ -37,8 +32,14 @@ public class Robot extends TimedRobot {
     
     Timer timer;
     
+    double spinProportion = 0;
+    double spinRatio = 1;
     boolean spinFinished = true;
-
+    
+    /**
+     * This function is run when the robot is first started up and should be used for any
+     * initialization code.
+     */
     @Override
     public void robotInit() {
         driveBase = new DriveBase(0, 1, 0, 1, 2, 3);
@@ -48,11 +49,8 @@ public class Robot extends TimedRobot {
         manipulator = new Gamepad(2);
 
         //motor ports??
-        intake = new Intake(2, 3, 5);
-        climb = new Climb(4);
-        
-        timer = new Timer();
-        
+        intake = new Intake(3, 4, 5);
+        climb = new Climb(2);
     }
 
     /**
@@ -89,24 +87,32 @@ public class Robot extends TimedRobot {
         }
         
         if (manipulator.getButton(Button.LEFT_BUMPER)) {
-            intake.spinLeft();
+            spinProportion = 0.75;
+            spinRatio = 4.0/3;
             spinFinished = false;
-            resetAndStartTimer();
+            timer.reset();
+            timer.start();
         }
         
         if (manipulator.getButton(Button.RIGHT_BUMPER)) {
-            intake.spinRight();
+            spinProportion = 1.0;
+            spinRatio = 0.75;
             spinFinished = false;
-            resetAndStartTimer();
+            timer.reset();
+            timer.start();
         }
         
         if (timer.get() >= 0.2) {
-            intake.stop();
-            timer.stop();
-            timer.reset();
             spinFinished = true;
         }
         
+        if (spinFinished) {
+            intake.stop();
+            timer.stop();
+            timer.reset();
+        } else {
+            intake.spin(spinProportion, spinRatio);
+        }
     }
 
     /**
@@ -114,9 +120,4 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testPeriodic() {}
-    
-    public void resetAndStartTimer () {
-        timer.reset();
-        timer.start();
-    }
 }
