@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
     Gamepad manipulator;
 
     Intake intake;
-    Climb climb;
+    Tower climb;
 
     @Override
     public void robotInit() {
@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
         manipulator = new Gamepad(2);
 
         intake = new Intake(2, 3);
-        climb = new Climb(4);
+        climb = new Tower(4, 4, 5);
     }
 
     /**
