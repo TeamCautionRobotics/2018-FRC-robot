@@ -1,5 +1,7 @@
 /**
- * 
+ * A Mission that will load a MissionScript file every time it is run.
+ * The MissionScriptMission commands are set by the MissionScript file
+ * and updated every time its reset function is called.
  */
 package com.teamcautionrobotics.autonomous;
 
