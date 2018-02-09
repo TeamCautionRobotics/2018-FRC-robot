@@ -26,7 +26,7 @@ public class Mission {
     public String getName() {
         return name;
     }
-    
+
     public ArrayList<Command> getCommands() {
         return commands;
     }
