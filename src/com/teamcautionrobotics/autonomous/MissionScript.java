@@ -44,8 +44,7 @@ public class MissionScript {
                                 String exceptionMessage = String.format(
                                         "Failed to parse parameter as boolean or double on line %d: \"%s\"%n",
                                         lineNumber, parameter);
-                                throw new ParseException(exceptionMessage + e.getMessage(),
-                                        lineNumber);
+                                throw new ParseException(exceptionMessage + e.getMessage(), lineNumber);
                             }
                         }
                         paramIndex++;
@@ -80,13 +79,8 @@ public class MissionScript {
                             String.format("Failed to find method: %s%nFull signature: %s",
                                     signature, e.getMessage());
                     throw new ParseException(exceptionMessage, lineNumber);
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                } catch (SecurityException | IllegalAccessException | IllegalArgumentException
+                        | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             } else if (parenSplit.length == 1) {
@@ -95,8 +89,8 @@ public class MissionScript {
                         lineNumber, lineWithoutComment);
             } else {
                 String exceptionMessage =
-                        String.format("Too many opening parentheses in line %d: \"%s\"", lineNumber,
-                                lineWithoutComment);
+                        String.format("Too many opening parentheses in line %d: \"%s\"",
+                                lineNumber, lineWithoutComment);
                 // Determining the position of the parenthesis is difficult, so we just use the line
                 // number
                 throw new ParseException(exceptionMessage, lineNumber);
