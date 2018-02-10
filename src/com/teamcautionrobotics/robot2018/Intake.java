@@ -5,40 +5,58 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Intake {
 
-    private VictorSP intake1;
+    private VictorSP intake;
     private VictorSP grabberLeft;
     private VictorSP grabberRight;
+    private Timer timer;
 
-    public Intake(int motorPortIntake, int motorPortGrabber1, int motorPortGrabber2) {
-        intake1 = new VictorSP(motorPortIntake);
-        grabberLeft = new VictorSP(motorPortGrabber1);
-        grabberRight = new VictorSP(motorPortGrabber2);
+    public Intake(int motorPortIntake, int motorPortGrabberLeft, int motorPortGrabberRight) {
+        intake = new VictorSP(motorPortIntake);
+        grabberLeft = new VictorSP(motorPortGrabberLeft);
+        grabberRight = new VictorSP(motorPortGrabberRight);
+        timer = new Timer();
     }
 
     /**
      * @param power positive for in, negative is out, range of [-1, 1]
      */
     public void run(double intakePower, double grabberPowerLeft, double grabberPowerRight) {
-        intake1.set(intakePower);
+        intake.set(intakePower);
         grabberLeft.set(grabberPowerLeft);
         grabberRight.set(grabberPowerRight);
     }
-    
+
     public void run(double power) {
         run(power, power, power);
     }
 
     /**
-     * @param proportion is value set to grabberRight, range of [0, 1]. 
-     * Values from [-1, 0) will not throw an error, but are recommended against.
-     * @param ratio is multiplied by proportion into grabberLeft. 
-     * Math.abs(ratio * proportion) cannot be greater than 1
-     * Always spins both motors inward.
+     * @param inPower is average magnitude of grabberLeft and grabberRight, range of [-1, 1].
+     * @param spinPower is added to grabberRight and subtracted from grabberLeft.
+     * @time spins for that amount of time
+     * @return true if spin is finished, false if not
      */
-    public void spin(double proportion, double ratio) {
-        double leftPower = proportion * ratio;
-        double rightPower = proportion;
+    public boolean spin(double inPower, double spinPower, double time) {
+        double leftPower = inPower + spinPower;
+        double rightPower = inPower - spinPower;
         run(0.0, leftPower, rightPower);
+        startTimerWithoutResetting();
+        return tick(time);
+    }
+
+    public boolean spin(double proportion, double ratio) {
+        return spin(proportion, ratio, 0.2);
+    }
+
+    public boolean tick(double time) {
+        boolean finished = false;
+        if (timer.get() >= time) {
+            this.stop();
+            timer.stop();
+            timer.reset();
+            finished = true;
+        }
+        return finished;
     }
 
     public void in() {
@@ -50,14 +68,24 @@ public class Intake {
     }
 
     public void spinRight() {
-        this.spin(1, 3.0/4);
+        this.spin(1, 3.0 / 4);
     }
 
     public void spinLeft() {
-        this.spin(0.75, 4.0/3);
+        this.spin(0.75, 4.0 / 3);
     }
-    
+
     public void stop() {
         this.run(0.0);
+    }
+    
+    public void startTimerWithoutResetting() {
+        if (timer.get() == 0) {
+            timer.start();
+        }
+    }
+    
+    public void resetTimer() {
+        timer.reset();
     }
 }

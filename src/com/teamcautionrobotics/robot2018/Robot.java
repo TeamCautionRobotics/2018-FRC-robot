@@ -29,13 +29,10 @@ public class Robot extends TimedRobot {
 
     Intake intake;
     Climb climb;
-    
-    Timer timer;
-    
-    double spinProportion = 0;
-    double spinRatio = 1;
-    boolean spinFinished = true;
-    
+
+    double spinDifference = 0;
+    boolean keepSpinning = false;
+
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -48,9 +45,8 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        //motor ports??
-        intake = new Intake(3, 4, 5);
-        climb = new Climb(2);
+        intake = new Intake(2, 3, 4);
+        climb = new Climb(5);
     }
 
     /**
@@ -85,33 +81,19 @@ public class Robot extends TimedRobot {
         if (manipulator.getButton(Button.X)) {
             climb.ascend();
         }
-        
+
         if (manipulator.getButton(Button.LEFT_BUMPER)) {
-            spinProportion = 0.75;
-            spinRatio = 4.0/3;
-            spinFinished = false;
-            timer.reset();
-            timer.start();
+            spinDifference = -0.15;
+            keepSpinning = true;
         }
-        
+
         if (manipulator.getButton(Button.RIGHT_BUMPER)) {
-            spinProportion = 1.0;
-            spinRatio = 0.75;
-            spinFinished = false;
-            timer.reset();
-            timer.start();
+            spinDifference = 0.15;
+            keepSpinning = true;
         }
-        
-        if (timer.get() >= 0.2) {
-            spinFinished = true;
-        }
-        
-        if (spinFinished) {
-            intake.stop();
-            timer.stop();
-            timer.reset();
-        } else {
-            intake.spin(spinProportion, spinRatio);
+
+        if (keepSpinning) {
+            keepSpinning = !intake.spin(0.75, spinDifference);
         }
     }
 
