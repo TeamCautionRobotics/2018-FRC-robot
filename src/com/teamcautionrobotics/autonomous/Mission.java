@@ -5,9 +5,9 @@ import java.util.Arrays;
 
 public class Mission {
 
-    int step = 0;
+    protected int step = 0;
 
-    private ArrayList<Command> commands = new ArrayList<Command>();
+    protected ArrayList<Command> commands = new ArrayList<Command>();
 
     private String name;
     public final boolean enableControls;
@@ -25,6 +25,10 @@ public class Mission {
 
     public String getName() {
         return name;
+    }
+
+    public ArrayList<Command> getCommands() {
+        return commands;
     }
 
     public void reset() {

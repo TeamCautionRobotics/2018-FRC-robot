@@ -7,10 +7,19 @@
 
 package com.teamcautionrobotics.robot2018;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import com.teamcautionrobotics.autonomous.CommandFactory;
+import com.teamcautionrobotics.autonomous.Mission;
+import com.teamcautionrobotics.autonomous.MissionScriptMission;
+import com.teamcautionrobotics.autonomous.MissionSendable;
 import com.teamcautionrobotics.robot2018.Gamepad.Axis;
 import com.teamcautionrobotics.robot2018.Gamepad.Button;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -24,6 +33,7 @@ public class Robot extends TimedRobot {
      * initialization code.
      */
 
+    static final Path missionScriptPath = Paths.get("/opt/mission.ms");
     DriveBase driveBase;
 
     EnhancedJoystick driverLeft;
@@ -32,6 +42,12 @@ public class Robot extends TimedRobot {
 
     Intake intake;
     Climb climb;
+
+    CommandFactory commandFactory;
+    MissionScriptMission missionScriptMission;
+    MissionSendable missionSendable;
+    SendableChooser<Mission> missionChooser;
+    Mission activeMission;
 
     @Override
     public void robotInit() {
@@ -43,8 +59,26 @@ public class Robot extends TimedRobot {
 
         intake = new Intake(2, 3);
         climb = new Climb(4);
+
+        commandFactory = new CommandFactory(driveBase);
+
+        missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
+                commandFactory);
+
+        missionChooser = new SendableChooser<>();
+
+        missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
+        missionChooser.addDefault("Do Nothing Mission", new Mission("Do Nothing Mission"));
+        SmartDashboard.putData("Autonomous Mode Select", missionChooser);
+
+        missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
+        SmartDashboard.putData(missionSendable);
     }
 
+    @Override
+    public void disabledPeriodic() {
+        SmartDashboard.putString("selected mission", missionChooser.getSelected().getName());
+    }
     /**
      * This autonomous (along with the chooser code above) shows how to select between different
      * autonomous modes using the dashboard. The sendable chooser code works with the Java
@@ -57,19 +91,40 @@ public class Robot extends TimedRobot {
      * chooser code above as well.
      */
     @Override
-    public void autonomousInit() {}
+    public void autonomousInit() {
+        activeMission = missionChooser.getSelected();
+
+        if (activeMission != null) {
+            activeMission.reset();
+            System.out.println("Mission '" + activeMission.getName() + "' Started");
+        }
+    }
 
     /**
      * This function is called periodically during autonomous.
      */
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+        if (activeMission != null) {
+            if (activeMission.run()) {
+                System.out.println("Mission '" + activeMission.getName() + "' Complete");
+                activeMission = null;
+            }
+        }
+    }
 
     /**
      * This function is called periodically during operator control.
      */
     @Override
     public void teleopPeriodic() {
+        SmartDashboard.putString("selected mission", missionChooser.getSelected().getName());
+
+        if ((missionSendable.run() && !missionChooser.getSelected().enableControls)
+                || driveBase.pidController.isEnabled()) {
+            return;
+        }
+
         double forwardCommand = -driverRight.getY();
         double turnCommand = driverLeft.getX();
         driveBase.drive(forwardCommand + turnCommand, forwardCommand - turnCommand);
