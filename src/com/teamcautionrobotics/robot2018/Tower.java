@@ -2,8 +2,13 @@ package com.teamcautionrobotics.robot2018;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class Tower {
+public class Tower implements PIDOutput, PIDSource {
     
     enum TowerPosition {
         GROUND,
@@ -14,14 +19,18 @@ public class Tower {
 
     private VictorSP towerMotor;
     private Encoder towerEncoder;
+    private PIDController pidController;
     
     private double desiredPosition;
 
-    public Tower(int motorPort, int encoderChannelA, int encoderChannelB) {
+    public Tower(int motorPort, int encoderChannelA, int encoderChannelB, double Kp, double Ki, double Kd) {
         towerMotor = new VictorSP(motorPort);
         towerEncoder = new Encoder(encoderChannelA, encoderChannelB);
         towerEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
         towerEncoder.reset();
+        pidController = new PIDController(Kp, Ki, Kd, 0, this, this);
+        pidController.setOutputRange(-1, 1);
+        pidController.setAbsoluteTolerance(3);
     }
 
     /**
@@ -44,7 +53,6 @@ public class Tower {
     }
     
     public boolean setPosition(TowerPosition towerPosition) {
-        boolean finished = false;
         switch (towerPosition) {
             case GROUND:
                 desiredPosition = 0;
@@ -62,22 +70,48 @@ public class Tower {
                 break;
         }
         
-        if (towerEncoder.getDistance() > desiredPosition) {
-            this.descend();
-            finished = false;
-        } else if (towerEncoder.getDistance() < desiredPosition) {
-            this.ascend();
-            finished = false;
-        } else if (towerEncoder.getDistance() == desiredPosition) {
-            this.stop();
-            finished = true;
+        enablePID();
+        pidController.setSetpoint(desiredPosition);
+        return pidController.onTarget();
+    }
+    
+    public void enablePID () {
+        if (!pidController.isEnabled()) {
+            pidController.enable();
         }
-        
-        return finished;
     }
     
     public void resetEncoder() {
         towerEncoder.reset();
+    }
+    
+    public double getDistance() {
+        return towerEncoder.getDistance();
+    }
+    
+    @Override
+    public void pidWrite(double speed) {
+        SmartDashboard.putNumber("pid drive speed", speed);
+    }
+    
+    @Override
+    /**
+     * Not implemented. Always displacement pid source.
+     * 
+     * @see edu.wpi.first.wpilibj.PIDSource#setPIDSourceType(edu.wpi.first.wpilibj.PIDSourceType)
+     */
+    public void setPIDSourceType(PIDSourceType pidSource) {
+
+    }
+
+    @Override
+    public PIDSourceType getPIDSourceType() {
+        return PIDSourceType.kDisplacement;
+    }
+
+    @Override
+    public double pidGet() {
+        return getDistance();
     }
 
 }

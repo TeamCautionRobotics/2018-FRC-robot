@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
     Gamepad manipulator;
 
     Intake intake;
-    Tower climb;
+    Tower tower;
 
     @Override
     public void robotInit() {
@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
         manipulator = new Gamepad(2);
 
         intake = new Intake(2, 3);
-        climb = new Tower(4, 4, 5);
+        tower = new Tower(4, 4, 5, 1, 1, 1);
     }
 
     /**
@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
         intake.run(manipulator.getAxis(Axis.LEFT_Y));
 
         if (manipulator.getButton(Button.X)) {
-            climb.ascend();
+            tower.ascend();
         }
 
         double spinSpeed = 0;
