@@ -93,7 +93,6 @@ public class MissionScript {
                 System.err.format(
                         "Failed to find opening parenthesis in line %d, continuing: \"%s\"%n",
                         lineNumber, lineWithoutComment);
-                continue;
             } else {
                 String exceptionMessage =
                         String.format("Too many opening parentheses in line %d: \"%s\"", lineNumber,
