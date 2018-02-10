@@ -70,7 +70,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        driveBase.drive(-driverLeft.getY(), -driverRight.getY());
+        double forwardCommand = -driverRight.getY();
+        double turnCommand = driverLeft.getX();
+        driveBase.drive(forwardCommand + turnCommand, forwardCommand - turnCommand);
 
         intake.run(manipulator.getAxis(Axis.LEFT_Y));
 
