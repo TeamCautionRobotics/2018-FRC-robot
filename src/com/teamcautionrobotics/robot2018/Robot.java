@@ -12,8 +12,6 @@ import com.teamcautionrobotics.robot2018.Gamepad.Button;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 
-import edu.wpi.first.wpilibj.Timer;
-
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the IterativeRobot documentation. If you change the name of this class
@@ -76,25 +74,21 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         driveBase.drive(-driverLeft.getY(), -driverRight.getY());
 
-        intake.run(manipulator.getAxis(Axis.LEFT_Y));
-
         if (manipulator.getButton(Button.X)) {
             climb.ascend();
         }
 
+        // Left bumper spins counterclockwise
         if (manipulator.getButton(Button.LEFT_BUMPER)) {
-            spinDifference = -0.15;
-            keepSpinning = true;
+            intake.timedSpin(-0.25, 0.1);
         }
 
+        // Right bumper spins clockwise
         if (manipulator.getButton(Button.RIGHT_BUMPER)) {
-            spinDifference = 0.15;
-            keepSpinning = true;
+            intake.timedSpin(0.25, 0.1);
         }
 
-        if (keepSpinning) {
-            keepSpinning = !intake.spin(0.75, spinDifference);
-        }
+        intake.move(manipulator.getAxis(Axis.LEFT_Y));
     }
 
     /**

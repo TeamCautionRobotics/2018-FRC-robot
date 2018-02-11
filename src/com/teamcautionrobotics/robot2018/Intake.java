@@ -1,91 +1,91 @@
 package com.teamcautionrobotics.robot2018;
 
-import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.VictorSP;
 
 public class Intake {
 
     private VictorSP intake;
     private VictorSP grabberLeft;
     private VictorSP grabberRight;
+
     private Timer timer;
+    private boolean timedSpin = false;
+    private double spinDuration = 0;
 
-    public Intake(int motorPortIntake, int motorPortGrabberLeft, int motorPortGrabberRight) {
-        intake = new VictorSP(motorPortIntake);
-        grabberLeft = new VictorSP(motorPortGrabberLeft);
-        grabberRight = new VictorSP(motorPortGrabberRight);
+    private double spinPower = 0;
+
+    public Intake(int intakeChannel, int grabberLeftChannel, int grabberRightChannel) {
+        intake = new VictorSP(intakeChannel);
+        grabberLeft = new VictorSP(grabberLeftChannel);
+        grabberRight = new VictorSP(grabberRightChannel);
+
         timer = new Timer();
+        timer.start();
     }
 
     /**
-     * @param power positive for in, negative is out, range of [-1, 1]
+     * Set the individual motor powers directly. {@link #move(double)},
+     * {@link #spin(double, double)}, or {@link #timedSpin} should probably be used instead.
+     * 
+     * @param power positive for in, negative for out, range of [-1, 1]
      */
-    public void run(double intakePower, double grabberPowerLeft, double grabberPowerRight) {
+    public void moveMotors(double intakePower, double grabberLeftPower, double grabberRightPower) {
         intake.set(intakePower);
-        grabberLeft.set(grabberPowerLeft);
-        grabberRight.set(grabberPowerRight);
-    }
-
-    public void run(double power) {
-        run(power, power, power);
+        grabberLeft.set(grabberLeftPower);
+        grabberRight.set(grabberRightPower);
     }
 
     /**
-     * @param inPower is average magnitude of grabberLeft and grabberRight, range of [-1, 1].
-     * @param spinPower is added to grabberRight and subtracted from grabberLeft.
-     * @time spins for that amount of time
-     * @return true if spin is finished, false if not
+     * Move the intake motors. This also applies the spin power and handles resetting the spin power
+     * when the specified time has elapsed. The grabber motors will never move in the opposite
+     * direction as the inPower specifies (this could happen if a fast spin and slow inPower is
+     * requested).
+     * @param inPower overall speed of the entire intake (grabber and inner part). Positive for in,
+     *        negative for out. range of [-1, 1]
      */
-    public boolean spin(double inPower, double spinPower, double time) {
-        double leftPower = inPower + spinPower;
-        double rightPower = inPower - spinPower;
-        run(0.0, leftPower, rightPower);
-        startTimerWithoutResetting();
-        return tick(time);
-    }
-
-    public boolean spin(double proportion, double ratio) {
-        return spin(proportion, ratio, 0.2);
-    }
-
-    public boolean tick(double time) {
-        boolean finished = false;
-        if (timer.get() >= time) {
-            this.stop();
-            timer.stop();
-            timer.reset();
-            finished = true;
+    public void move(double inPower) {
+        // Check if the spinDuration has elapsed
+        if (timedSpin && timer.get() > spinDuration) {
+            this.spinPower = 0;
+            timedSpin = false;
         }
-        return finished;
-    }
 
-    public void in() {
-        this.run(1.0);
-    }
+        double leftPower = inPower - this.spinPower;
+        double rightPower = inPower + this.spinPower;
 
-    public void out() {
-        this.run(-1.0);
-    }
-
-    public void spinRight() {
-        this.spin(1, 3.0 / 4);
-    }
-
-    public void spinLeft() {
-        this.spin(0.75, 4.0 / 3);
-    }
-
-    public void stop() {
-        this.run(0.0);
-    }
-    
-    public void startTimerWithoutResetting() {
-        if (timer.get() == 0) {
-            timer.start();
+        // Keep the grabber motors from being sent opposite of the inPower
+        if (inPower > 0) {
+            leftPower = Math.max(leftPower, 0);
+            rightPower = Math.max(rightPower, 0);
+        } else {
+            leftPower = Math.min(leftPower, 0);
+            rightPower = Math.min(rightPower, 0);
         }
+
+        moveMotors(inPower, leftPower, rightPower);
     }
-    
-    public void resetTimer() {
+
+    /**
+     * Do a timed spin. After the specified time, the spinPower reverts to zero. 
+     * @param spinPower The speed difference between the left and right sides. Negative to spin
+     *        counterclockwise, positive to spin clockwise. range of [-1, 1]
+     * @time How long from now the spin should apply for.
+     */
+    public void timedSpin(double spinPower, double time) {
         timer.reset();
+        this.spinPower = spinPower;
+
+        timedSpin = true;
+        spinDuration = time;
+    }
+
+    /**
+     * Do a spin. This will stop any currently running timed spin and has no expiration.
+     * @param spinPower
+     */
+    public void spin(double spinPower) {
+        timedSpin = false;
+        this.spinPower = spinPower;
     }
 }
