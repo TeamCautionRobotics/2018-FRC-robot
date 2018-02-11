@@ -34,6 +34,7 @@ public class Robot extends TimedRobot {
      */
 
     static final Path missionScriptPath = Paths.get("/opt/mission.ms");
+
     DriveBase driveBase;
 
     EnhancedJoystick driverLeft;
@@ -57,8 +58,8 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        intake = new Intake(2, 3);
-        climb = new Climb(4);
+        intake = new Intake(2, 3, 4);
+        climb = new Climb(5);
 
         commandFactory = new CommandFactory(driveBase);
 
@@ -129,21 +130,21 @@ public class Robot extends TimedRobot {
         double turnCommand = driverLeft.getX();
         driveBase.drive(forwardCommand + turnCommand, forwardCommand - turnCommand);
 
-        intake.run(manipulator.getAxis(Axis.LEFT_Y));
-
         if (manipulator.getButton(Button.X)) {
             climb.ascend();
         }
 
-        double spinSpeed = 0;
+        // Left bumper spins counterclockwise
+        if (manipulator.getButton(Button.LEFT_BUMPER)) {
+            intake.timedSpin(-0.25, 0.1);
+        }
 
-        if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0) {
-            spinSpeed = -manipulator.getAxis(Axis.LEFT_TRIGGER);
+        // Right bumper spins clockwise
+        if (manipulator.getButton(Button.RIGHT_BUMPER)) {
+            intake.timedSpin(0.25, 0.1);
         }
-        if (manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0) {
-            spinSpeed = manipulator.getAxis(Axis.RIGHT_TRIGGER);
-        }
-        intake.spin(spinSpeed);
+
+        intake.move(manipulator.getAxis(Axis.LEFT_Y));
     }
 
     /**
