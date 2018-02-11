@@ -28,9 +28,6 @@ public class Robot extends TimedRobot {
     Intake intake;
     Climb climb;
 
-    double spinDifference = 0;
-    boolean keepSpinning = false;
-
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
