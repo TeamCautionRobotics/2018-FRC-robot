@@ -33,6 +33,12 @@ public class Robot extends TimedRobot {
     Intake intake;
     Tower tower;
 
+    boolean towerRaiseStatePressed = false;
+    boolean towerRaisingState = false;
+
+    boolean towerLowerStatePressed = false;
+    boolean towerLoweringState = false;
+
     @Override
     public void robotInit() {
         driveBase = new DriveBase(0, 1, 0, 1, 2, 3);
@@ -87,6 +93,31 @@ public class Robot extends TimedRobot {
             spinSpeed = manipulator.getAxis(Axis.RIGHT_TRIGGER);
         }
         intake.spin(spinSpeed);
+
+        boolean towerRaiseStateButton = manipulator.getButton(Button.Y);
+        if (towerRaiseStateButton != towerRaiseStatePressed) {
+            if (towerRaiseStateButton) {
+                towerRaisingState = !towerRaisingState;
+            }
+            towerRaiseStatePressed = towerRaiseStateButton;
+        }
+
+        if (towerRaisingState) {
+            tower.setPosition(tower.getCurrentTowerPosition().next());
+            towerRaisingState = false;
+        }
+
+        boolean towerLowerStateButton = manipulator.getButton(Button.Y);
+        if (towerLowerStateButton != towerRaiseStatePressed) {
+            if (towerLowerStateButton) {
+                towerLoweringState = !towerRaisingState;
+            }
+            towerLowerStatePressed = towerLowerStateButton;
+        }
+
+        if (towerLoweringState) {
+            tower.setPosition(tower.getCurrentTowerPosition().previous());
+        }
     }
 
     /**
