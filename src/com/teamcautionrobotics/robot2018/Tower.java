@@ -45,8 +45,6 @@ public class Tower implements PIDOutput, PIDSource {
         towerMotor = new VictorSP(motorPort);
         towerEncoder = new Encoder(encoderChannelA, encoderChannelB);
         towerEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
-        pidController.setOutputRange(-1, 1);
-        pidController.setAbsoluteTolerance(3);
         pidController = new PIDController(Kp, Ki, Kd, 0, this, this);
         pidController.setOutputRange(-1, 1);
         pidController.setAbsoluteTolerance(3);
