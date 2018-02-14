@@ -31,13 +31,10 @@ public class Robot extends TimedRobot {
     Gamepad manipulator;
 
     Intake intake;
-    Tower tower;
+    Lift tower;
 
-    boolean towerRaiseStatePressed = false;
-    boolean towerRaisingState = false;
-
-    boolean towerLowerStatePressed = false;
-    boolean towerLoweringState = false;
+    boolean liftRaiseButtonPressed = false;
+    boolean liftLowerButtonPressed = false;
 
     @Override
     public void robotInit() {
@@ -48,7 +45,7 @@ public class Robot extends TimedRobot {
         manipulator = new Gamepad(2);
 
         intake = new Intake(2, 3);
-        tower = new Tower(4, 4, 5, 1, 1, 1);
+        tower = new Lift(4, 4, 5, 1, 1, 1);
     }
 
     /**
@@ -94,30 +91,22 @@ public class Robot extends TimedRobot {
         }
         intake.spin(spinSpeed);
 
-        boolean towerRaiseStateButton = manipulator.getButton(Button.Y);
-        if (towerRaiseStateButton != towerRaiseStatePressed) {
-            if (towerRaiseStateButton) {
-                towerRaisingState = !towerRaisingState;
+        boolean liftRaiseButton = manipulator.getButton(Button.Y);
+        if (liftRaiseButton != liftRaiseButtonPressed) {
+            if (liftRaiseButton) {
+                tower.setLevel(tower.getCurrentLiftLevel().next());
             }
-            towerRaiseStatePressed = towerRaiseStateButton;
+            liftRaiseButtonPressed = liftRaiseButton;
         }
 
-        if (towerRaisingState) {
-            tower.setPosition(tower.getCurrentTowerPosition().next());
-            towerRaisingState = false;
-        }
-
-        boolean towerLowerStateButton = manipulator.getButton(Button.Y);
-        if (towerLowerStateButton != towerRaiseStatePressed) {
-            if (towerLowerStateButton) {
-                towerLoweringState = !towerRaisingState;
+        boolean liftLowerButton = manipulator.getButton(Button.Y);
+        if (liftLowerButton != liftRaiseButtonPressed) {
+            if (liftLowerButton) {
+                tower.setLevel(tower.getCurrentLiftLevel().previous());
             }
-            towerLowerStatePressed = towerLowerStateButton;
+            liftLowerButtonPressed = liftLowerButton;
         }
 
-        if (towerLoweringState) {
-            tower.setPosition(tower.getCurrentTowerPosition().previous());
-        }
     }
 
     /**

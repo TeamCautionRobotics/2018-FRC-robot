@@ -8,14 +8,20 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class Tower implements PIDOutput, PIDSource {
+public class Lift implements PIDOutput, PIDSource {
 
-    enum TowerPosition {
-        GROUND, SWITCH, LOW_SCALE, HIGH_SCALE;
+    enum LiftLevel {
+        GROUND(0), SWITCH(19), LOW_SCALE(48), HIGH_SCALE(76);
 
-        private static TowerPosition[] vals = values();
+        private static LiftLevel[] vals = values();
 
-        public TowerPosition next() {
+        double position;
+
+        private LiftLevel(double position) {
+            this.position = position;
+        }
+
+        public LiftLevel next() {
             if (this.ordinal() == vals.length - 1) {
                 return vals[this.ordinal()];
             } else {
@@ -23,7 +29,7 @@ public class Tower implements PIDOutput, PIDSource {
             }
         }
 
-        public TowerPosition previous() {
+        public LiftLevel previous() {
             if (this.ordinal() == 0) {
                 return vals[this.ordinal()];
             } else {
@@ -32,19 +38,19 @@ public class Tower implements PIDOutput, PIDSource {
         }
     }
 
-    private TowerPosition currentTowerPosition;
+    private LiftLevel currentLiftLevel;
 
-    private VictorSP towerMotor;
-    private Encoder towerEncoder;
+    private VictorSP liftMotor;
+    private Encoder liftEncoder;
     private PIDController pidController;
 
     private double desiredPosition;
 
-    public Tower(int motorPort, int encoderChannelA, int encoderChannelB, double Kp, double Ki,
+    public Lift(int motorPort, int encoderChannelA, int encoderChannelB, double Kp, double Ki,
             double Kd) {
-        towerMotor = new VictorSP(motorPort);
-        towerEncoder = new Encoder(encoderChannelA, encoderChannelB);
-        towerEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
+        liftMotor = new VictorSP(motorPort);
+        liftEncoder = new Encoder(encoderChannelA, encoderChannelB);
+        liftEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
         pidController = new PIDController(Kp, Ki, Kd, 0, this, this);
         pidController.setOutputRange(-1, 1);
         pidController.setAbsoluteTolerance(3);
@@ -54,8 +60,8 @@ public class Tower implements PIDOutput, PIDSource {
      * @param power positive is ascending, negative is descending, range of [-1, 1]
      */
     public void move(double power) {
-        towerMotor.set(power);
         disablePID();
+        liftMotor.set(power);
     }
 
     public void ascend() {
@@ -70,28 +76,12 @@ public class Tower implements PIDOutput, PIDSource {
         this.move(0);
     }
 
-    public void setPosition(TowerPosition desiredTowerPosition) {
-        switch (desiredTowerPosition) {
-            case GROUND:
-                desiredPosition = 0;
-                break;
-            case SWITCH:
-                desiredPosition = 19;
-                break;
-            case LOW_SCALE:
-                desiredPosition = 48;
-                break;
-            case HIGH_SCALE:
-                desiredPosition = 76;
-                break;
-            default:
-                System.err.println("towerPosition is not set to a normal value. Continuing.");
-                break;
-        }
-        setCurrentTowerPosition();
+    public void setLevel(LiftLevel desiredLiftLevel) {
+        desiredPosition = desiredLiftLevel.position;
+        setCurrentLiftLevel();
         pidController.setSetpoint(desiredPosition);
         enablePID();
-        currentTowerPosition = desiredTowerPosition;
+        currentLiftLevel = desiredLiftLevel;
     }
 
     public void setPosition(double position) {
@@ -99,22 +89,22 @@ public class Tower implements PIDOutput, PIDSource {
         enablePID();
     }
 
-    public TowerPosition getCurrentTowerPosition() {
-        return (currentTowerPosition);
+    public LiftLevel getCurrentLiftLevel() {
+        return (currentLiftLevel);
     }
 
-    public void setCurrentTowerPosition() {
-        TowerPosition towerPosition;
+    public void setCurrentLiftLevel() {
+        LiftLevel liftLevel;
         if (getDistance() < 9.5) {
-            towerPosition = TowerPosition.GROUND;
+            liftLevel = LiftLevel.GROUND;
         } else if (getDistance() >= 9.5 && getDistance() < (19 + 48) / 2) {
-            towerPosition = TowerPosition.SWITCH;
+            liftLevel = LiftLevel.SWITCH;
         } else if (getDistance() >= (19 + 48) / 2 && getDistance() < (48 + 76) / 2) {
-            towerPosition = TowerPosition.LOW_SCALE;
+            liftLevel = LiftLevel.LOW_SCALE;
         } else {
-            towerPosition = TowerPosition.HIGH_SCALE;
+            liftLevel = LiftLevel.HIGH_SCALE;
         }
-        currentTowerPosition = towerPosition;
+        currentLiftLevel = liftLevel;
     }
 
     public void enablePID() {
@@ -130,16 +120,16 @@ public class Tower implements PIDOutput, PIDSource {
     }
 
     public void resetEncoder() {
-        towerEncoder.reset();
+        liftEncoder.reset();
     }
 
     public double getDistance() {
-        return towerEncoder.getDistance();
+        return liftEncoder.getDistance();
     }
 
     @Override
-    public void pidWrite(double speed) {
-        SmartDashboard.putNumber("pid drive speed", speed);
+    public void pidWrite(double position) {
+        SmartDashboard.putNumber("pid lift position", position);
     }
 
     @Override
