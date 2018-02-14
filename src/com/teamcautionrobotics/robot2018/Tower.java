@@ -91,9 +91,14 @@ public class Tower implements PIDOutput, PIDSource {
                 break;
         }
         setCurrentTowerPosition();
-        enablePID();
         pidController.setSetpoint(desiredPosition);
+        enablePID();
         currentTowerPosition = desiredTowerPosition;
+    }
+
+    public void setPosition(double position) {
+        pidController.setSetpoint(position);
+        enablePID();
     }
 
     public TowerPosition getCurrentTowerPosition() {
@@ -119,7 +124,7 @@ public class Tower implements PIDOutput, PIDSource {
             pidController.enable();
         }
     }
-    
+
     public void disablePID() {
         if (pidController.isEnabled()) {
             pidController.disable();
