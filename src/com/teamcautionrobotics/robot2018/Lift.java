@@ -13,38 +13,36 @@ public class Lift implements PIDOutput, PIDSource {
     enum LiftLevel {
         GROUND(0), SWITCH(19), LOW_SCALE(48), HIGH_SCALE(76);
 
-        private static LiftLevel[] vals = values();
+        private static LiftLevel[] values = values();
 
-        double position;
+        double height;
 
-        private LiftLevel(double position) {
-            this.position = position;
+        private LiftLevel(double height) {
+            this.height = height;
         }
 
         public LiftLevel next() {
-            if (this.ordinal() == vals.length - 1) {
-                return vals[this.ordinal()];
+            if (this.ordinal() == values.length - 1) {
+                return values[this.ordinal()];
             } else {
-                return vals[this.ordinal() + 1];
+                return values[this.ordinal() + 1];
             }
         }
 
         public LiftLevel previous() {
             if (this.ordinal() == 0) {
-                return vals[this.ordinal()];
+                return values[this.ordinal()];
             } else {
-                return vals[this.ordinal() - 1];
+                return values[this.ordinal() - 1];
             }
         }
     }
-
-    private LiftLevel currentLiftLevel;
 
     private VictorSP liftMotor;
     private Encoder liftEncoder;
     private PIDController pidController;
 
-    private double desiredPosition;
+    private double destinationHeight;
 
     public Lift(int motorPort, int encoderChannelA, int encoderChannelB, double Kp, double Ki,
             double Kd) {
@@ -60,8 +58,9 @@ public class Lift implements PIDOutput, PIDSource {
      * @param power positive is ascending, negative is descending, range of [-1, 1]
      */
     public void move(double power) {
-        disablePID();
-        liftMotor.set(power);
+        double rateOfChange = power * 10; //inches per second
+        double dt = 0.02; //seconds
+        pidController.setSetpoint(getCurrentHeight() + rateOfChange * dt);
     }
 
     public void ascend() {
@@ -76,35 +75,43 @@ public class Lift implements PIDOutput, PIDSource {
         this.move(0);
     }
 
-    public void setLevel(LiftLevel desiredLiftLevel) {
-        desiredPosition = desiredLiftLevel.position;
-        setCurrentLiftLevel();
-        pidController.setSetpoint(desiredPosition);
+    public void setLevel(LiftLevel destinationLiftLevel) {
+        destinationHeight = destinationLiftLevel.height;
+        pidController.setSetpoint(destinationHeight);
         enablePID();
-        currentLiftLevel = desiredLiftLevel;
     }
 
-    public void setPosition(double position) {
-        pidController.setSetpoint(position);
+    public void setHeight(double height) {
+        pidController.setSetpoint(height);
         enablePID();
     }
 
     public LiftLevel getCurrentLiftLevel() {
-        return (currentLiftLevel);
+        return convertHeightToLiftLevel(getCurrentHeight());
     }
 
-    public void setCurrentLiftLevel() {
-        LiftLevel liftLevel;
-        if (getDistance() < 9.5) {
-            liftLevel = LiftLevel.GROUND;
-        } else if (getDistance() >= 9.5 && getDistance() < (19 + 48) / 2) {
-            liftLevel = LiftLevel.SWITCH;
-        } else if (getDistance() >= (19 + 48) / 2 && getDistance() < (48 + 76) / 2) {
-            liftLevel = LiftLevel.LOW_SCALE;
-        } else {
-            liftLevel = LiftLevel.HIGH_SCALE;
+    public double getCurrentHeight() {
+        return getDistance();
+    }
+
+    public double getDestinationHeight() {
+        return pidController.getSetpoint();
+    }
+
+    public LiftLevel getDestinationLiftLevel() {
+        return convertHeightToLiftLevel(getDestinationHeight());
+    }
+
+    private LiftLevel convertHeightToLiftLevel(double height) {
+        LiftLevel convertedLiftLevel = LiftLevel.GROUND;
+        for (LiftLevel liftLevel : LiftLevel.values) {
+            double midpoint = (liftLevel.height + liftLevel.next().height) / 2;
+            convertedLiftLevel = liftLevel;
+            if (height < midpoint) {
+                break;
+            }
         }
-        currentLiftLevel = liftLevel;
+        return convertedLiftLevel;
     }
 
     public void enablePID() {
@@ -128,8 +135,8 @@ public class Lift implements PIDOutput, PIDSource {
     }
 
     @Override
-    public void pidWrite(double position) {
-        SmartDashboard.putNumber("pid lift position", position);
+    public void pidWrite(double height) {
+        SmartDashboard.putNumber("pid lift height", height);
     }
 
     @Override

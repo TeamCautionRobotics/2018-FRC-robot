@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
     Gamepad manipulator;
 
     Intake intake;
-    Lift tower;
+    Lift lift;
 
     boolean liftRaiseButtonPressed = false;
     boolean liftLowerButtonPressed = false;
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
         manipulator = new Gamepad(2);
 
         intake = new Intake(2, 3);
-        tower = new Lift(4, 4, 5, 1, 1, 1);
+        lift = new Lift(4, 4, 5, 1, 1, 1);
     }
 
     /**
@@ -77,10 +77,6 @@ public class Robot extends TimedRobot {
 
         intake.run(manipulator.getAxis(Axis.LEFT_Y));
 
-        if (manipulator.getButton(Button.X)) {
-            tower.ascend();
-        }
-
         double spinSpeed = 0;
 
         if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0) {
@@ -94,7 +90,7 @@ public class Robot extends TimedRobot {
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {
             if (liftRaiseButton) {
-                tower.setLevel(tower.getCurrentLiftLevel().next());
+                lift.setLevel(lift.getCurrentLiftLevel().next());
             }
             liftRaiseButtonPressed = liftRaiseButton;
         }
@@ -102,11 +98,13 @@ public class Robot extends TimedRobot {
         boolean liftLowerButton = manipulator.getButton(Button.Y);
         if (liftLowerButton != liftRaiseButtonPressed) {
             if (liftLowerButton) {
-                tower.setLevel(tower.getCurrentLiftLevel().previous());
+                lift.setLevel(lift.getCurrentLiftLevel().previous());
             }
             liftLowerButtonPressed = liftLowerButton;
         }
 
+        // manual control
+        lift.move(manipulator.getAxis(Axis.RIGHT_Y));
     }
 
     /**
