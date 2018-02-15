@@ -77,7 +77,7 @@ public class Lift implements PIDSource {
     }
 
     public double getCurrentHeight() {
-        return getDistance();
+        return liftEncoder.getDistance();
     }
 
     public double getDestinationHeight() {
@@ -119,8 +119,6 @@ public class Lift implements PIDSource {
         liftEncoder.reset();
     }
 
-    public double getDistance() {
-        return liftEncoder.getDistance();
     }
 
     @Override
@@ -140,6 +138,6 @@ public class Lift implements PIDSource {
 
     @Override
     public double pidGet() {
-        return getDistance();
+        return getCurrentHeight();
     }
 }
