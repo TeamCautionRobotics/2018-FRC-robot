@@ -88,11 +88,14 @@ public class Lift implements PIDSource {
         return convertHeightToLiftLevel(getDestinationHeight());
     }
 
-    private LiftLevel convertHeightToLiftLevel(double height) {
-        LiftLevel convertedLiftLevel = LiftLevel.GROUND;
+    public static LiftLevel convertHeightToLiftLevel(double height) {
+        LiftLevel convertedLiftLevel = LiftLevel.values()[0];
         for (LiftLevel liftLevel : LiftLevel.values) {
             double midpoint = (liftLevel.height + liftLevel.next().height) / 2;
             convertedLiftLevel = liftLevel;
+            // OHHHHH WE'RE HALFWAY THERE! WHOAWHOA then move on to the next LiftLevel and try
+            // again; if not, break out of the loop and return the current liftPosition the for loop
+            // is on
             if (height < midpoint) {
                 break;
             }
