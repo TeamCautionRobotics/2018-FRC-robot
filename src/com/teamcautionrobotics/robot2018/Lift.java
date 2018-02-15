@@ -23,7 +23,7 @@ public class Lift implements PIDOutput, PIDSource {
 
         public LiftLevel next() {
             if (this.ordinal() == values.length - 1) {
-                return values[this.ordinal()];
+                return this;
             } else {
                 return values[this.ordinal() + 1];
             }
@@ -31,7 +31,7 @@ public class Lift implements PIDOutput, PIDSource {
 
         public LiftLevel previous() {
             if (this.ordinal() == 0) {
-                return values[this.ordinal()];
+                return this;
             } else {
                 return values[this.ordinal() - 1];
             }
