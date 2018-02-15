@@ -61,14 +61,6 @@ public class Lift implements PIDSource {
         liftMotor.set(power);
     }
 
-    public void ascend() {
-        this.move(1.0);
-    }
-
-    public void descend() {
-        this.move(-1.0);
-    }
-
     public void stop() {
         this.move(0);
     }
