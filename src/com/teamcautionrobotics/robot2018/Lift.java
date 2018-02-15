@@ -64,9 +64,7 @@ public class Lift implements PIDSource {
     }
 
     public void setLevel(LiftLevel destinationLiftLevel) {
-        destinationHeight = destinationLiftLevel.height;
-        pidController.setSetpoint(destinationHeight);
-        enablePID();
+        setHeight(destinationLiftLevel.height);
     }
 
     public void setHeight(double height) {
