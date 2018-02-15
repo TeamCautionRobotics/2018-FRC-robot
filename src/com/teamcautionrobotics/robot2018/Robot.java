@@ -36,6 +36,10 @@ public class Robot extends TimedRobot {
     boolean liftRaiseButtonPressed = false;
     boolean liftLowerButtonPressed = false;
 
+    // DEFAULT_PERIOD
+    static final double dt = DEFAULT_PERIOD; // seconds
+    static final double LIFT_NUDGE_SPEED = 10; // inches per second
+
     @Override
     public void robotInit() {
         driveBase = new DriveBase(0, 1, 0, 1, 2, 3);
@@ -104,7 +108,9 @@ public class Robot extends TimedRobot {
         }
 
         // manual control
-        lift.move(manipulator.getAxis(Axis.RIGHT_Y));
+        double manualLiftAxis = manipulator.getAxis(Axis.RIGHT_Y);
+        double changeInHeight = LIFT_NUDGE_SPEED * manualLiftAxis * dt; // inches
+        lift.setHeight(lift.getCurrentHeight() + changeInHeight);
     }
 
     /**
