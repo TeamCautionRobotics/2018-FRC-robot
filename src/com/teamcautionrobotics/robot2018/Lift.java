@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class Lift implements PIDOutput, PIDSource {
+public class Lift implements PIDSource {
 
     enum LiftLevel {
         GROUND(0), SWITCH(19), LOW_SCALE(48), HIGH_SCALE(76);
@@ -49,7 +49,7 @@ public class Lift implements PIDOutput, PIDSource {
         liftMotor = new VictorSP(motorPort);
         liftEncoder = new Encoder(encoderChannelA, encoderChannelB);
         liftEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
-        pidController = new PIDController(Kp, Ki, Kd, 0, this, this);
+        pidController = new PIDController(Kp, Ki, Kd, 0, this, this::move);
         pidController.setOutputRange(-1, 1);
         pidController.setAbsoluteTolerance(3);
     }
@@ -58,9 +58,7 @@ public class Lift implements PIDOutput, PIDSource {
      * @param power positive is ascending, negative is descending, range of [-1, 1]
      */
     public void move(double power) {
-        double rateOfChange = power * 10; //inches per second
-        double dt = 0.02; //seconds
-        pidController.setSetpoint(getCurrentHeight() + rateOfChange * dt);
+        liftMotor.set(power);
     }
 
     public void ascend() {
@@ -132,11 +130,6 @@ public class Lift implements PIDOutput, PIDSource {
 
     public double getDistance() {
         return liftEncoder.getDistance();
-    }
-
-    @Override
-    public void pidWrite(double height) {
-        SmartDashboard.putNumber("pid lift height", height);
     }
 
     @Override
