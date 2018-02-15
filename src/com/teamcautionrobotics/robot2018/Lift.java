@@ -119,6 +119,36 @@ public class Lift implements PIDSource {
         liftEncoder.reset();
     }
 
+    class LiftPIDSource implements PIDSource {
+
+        private PIDSourceType type;
+
+        public LiftPIDSource(PIDSourceType sourceType) {
+            type = sourceType;
+        }
+
+        @Override
+        public void setPIDSourceType(PIDSourceType sourceType) {
+            type = sourceType;
+        }
+
+        @Override
+        public PIDSourceType getPIDSourceType() {
+            return type;
+        }
+
+        @Override
+        public double pidGet() {
+            switch (type) {
+                case kDisplacement:
+                  return getCurrentHeight();
+                case kRate:
+                  return liftEncoder.getRate();
+                default:
+                  return 0.0;
+              }
+        }
+        
     }
 
     @Override
