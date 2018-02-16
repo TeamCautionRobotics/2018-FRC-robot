@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class Lift implements PIDSource {
+public class Lift {
 
     enum LiftLevel {
         GROUND(0), SWITCH(19), LOW_SCALE(48), HIGH_SCALE(76);
@@ -47,7 +47,8 @@ public class Lift implements PIDSource {
         liftMotor = new VictorSP(motorPort);
         liftEncoder = new Encoder(encoderChannelA, encoderChannelB);
         liftEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
-        pidController = new PIDController(Kp, Ki, Kd, 0, this, this::move);
+        pidController = new PIDController(Kp, Ki, Kd, 0,
+                new LiftPIDSource(PIDSourceType.kDisplacement), this::move);
         pidController.setOutputRange(-1, 1);
         pidController.setAbsoluteTolerance(3);
     }
@@ -149,25 +150,5 @@ public class Lift implements PIDSource {
               }
         }
         
-    }
-
-    @Override
-    /**
-     * Not implemented. Always displacement pid source.
-     * 
-     * @see edu.wpi.first.wpilibj.PIDSource#setPIDSourceType(edu.wpi.first.wpilibj.PIDSourceType)
-     */
-    public void setPIDSourceType(PIDSourceType pidSource) {
-
-    }
-
-    @Override
-    public PIDSourceType getPIDSourceType() {
-        return PIDSourceType.kDisplacement;
-    }
-
-    @Override
-    public double pidGet() {
-        return getCurrentHeight();
     }
 }
