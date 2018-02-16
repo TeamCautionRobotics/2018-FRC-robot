@@ -1,10 +1,10 @@
 package com.teamcautionrobotics.robot2018;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.VictorSP;
 
 public class Lift {
 
@@ -51,17 +51,14 @@ public class Lift {
         pidController.setAbsoluteTolerance(3);
     }
 
-/** Directly set the power of the motors.
- * Probably best not to use this, but use {@link #setLevel(LiftLevel)} or
- * {@link #setHeight(double)} instead.
- * @param power positive is ascending, negative is descending, range of [-1, 1]
- */
+    /**
+     * Directly set the power of the motors. Probably best not to use this, but use
+     * {@link #setLevel(LiftLevel)} or {@link #setHeight(double)} instead.
+     * 
+     * @param power positive is ascending, negative is descending, range of [-1, 1]
+     */
     public void move(double power) {
         liftMotor.set(power);
-    }
-
-    public void setLevel(LiftLevel destinationLiftLevel) {
-        setHeight(destinationLiftLevel.height);
     }
 
     public void setHeight(double height) {
@@ -69,12 +66,16 @@ public class Lift {
         enablePID();
     }
 
-    public LiftLevel getCurrentLiftLevel() {
-        return convertHeightToLiftLevel(getCurrentHeight());
+    public void setLevel(LiftLevel destinationLiftLevel) {
+        setHeight(destinationLiftLevel.height);
     }
 
     public double getCurrentHeight() {
         return liftEncoder.getDistance();
+    }
+
+    public LiftLevel getCurrentLiftLevel() {
+        return convertHeightToLiftLevel(getCurrentHeight());
     }
 
     public double getDestinationHeight() {
@@ -138,13 +139,12 @@ public class Lift {
         public double pidGet() {
             switch (type) {
                 case kDisplacement:
-                  return getCurrentHeight();
+                    return getCurrentHeight();
                 case kRate:
-                  return liftEncoder.getRate();
+                    return liftEncoder.getRate();
                 default:
-                  return 0.0;
-              }
+                    return 0.0;
+            }
         }
-        
     }
 }
