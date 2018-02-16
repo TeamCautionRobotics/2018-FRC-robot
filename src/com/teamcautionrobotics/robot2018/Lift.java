@@ -40,8 +40,6 @@ public class Lift {
     private Encoder liftEncoder;
     private PIDController pidController;
 
-    private double destinationHeight;
-
     public Lift(int motorPort, int encoderChannelA, int encoderChannelB, double Kp, double Ki,
             double Kd) {
         liftMotor = new VictorSP(motorPort);
