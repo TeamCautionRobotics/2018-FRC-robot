@@ -42,7 +42,12 @@ public class Robot extends TimedRobot {
     Gamepad manipulator;
 
     Intake intake;
-    Climb climb;
+    Lift lift;
+
+    boolean liftRaiseButtonPressed = false;
+    boolean liftLowerButtonPressed = false;
+
+    static final double LIFT_NUDGE_SPEED = 10; // Units are inches per second
 
     CommandFactory commandFactory;
     MissionScriptMission missionScriptMission;
@@ -59,7 +64,7 @@ public class Robot extends TimedRobot {
         manipulator = new Gamepad(2);
 
         intake = new Intake(2, 3, 4);
-        climb = new Climb(5);
+        lift = new Lift(4, 4, 5, 1, 1, 1);
 
         commandFactory = new CommandFactory(driveBase);
 
@@ -130,10 +135,6 @@ public class Robot extends TimedRobot {
         double turnCommand = driverLeft.getX();
         driveBase.drive(forwardCommand + turnCommand, forwardCommand - turnCommand);
 
-        if (manipulator.getButton(Button.X)) {
-            climb.ascend();
-        }
-
         // Left bumper spins counterclockwise
         if (manipulator.getButton(Button.LEFT_BUMPER)) {
             intake.timedSpin(-0.25, 0.1);
@@ -145,6 +146,29 @@ public class Robot extends TimedRobot {
         }
 
         intake.move(manipulator.getAxis(Axis.LEFT_Y));
+
+
+        boolean liftRaiseButton = manipulator.getButton(Button.Y);
+        if (liftRaiseButton != liftRaiseButtonPressed) {
+            if (liftRaiseButton) {
+                lift.setLevel(lift.getCurrentLiftLevel().next());
+            }
+            liftRaiseButtonPressed = liftRaiseButton;
+        }
+
+        boolean liftLowerButton = manipulator.getButton(Button.Y);
+        if (liftLowerButton != liftRaiseButtonPressed) {
+            if (liftLowerButton) {
+                lift.setLevel(lift.getCurrentLiftLevel().previous());
+            }
+            liftLowerButtonPressed = liftLowerButton;
+        }
+
+        // manual lift control
+        double dt = this.getPeriod();
+        double liftNudgeCommand = manipulator.getAxis(Axis.RIGHT_Y);
+        double changeInHeight = LIFT_NUDGE_SPEED * liftNudgeCommand * dt; // inches
+        lift.setHeight(lift.getCurrentHeight() + changeInHeight);
     }
 
     /**

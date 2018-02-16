@@ -104,7 +104,7 @@ public class DriveBase implements PIDOutput, PIDSource {
 
     @Override
     /**
-     * Not implemented. Always displacment pid source.
+     * Not implemented. Always displacement pid source.
      * 
      * @see edu.wpi.first.wpilibj.PIDSource#setPIDSourceType(edu.wpi.first.wpilibj.PIDSourceType)
      */
