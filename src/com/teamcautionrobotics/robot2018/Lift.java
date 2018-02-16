@@ -60,10 +60,6 @@ public class Lift {
         liftMotor.set(power);
     }
 
-    public void stop() {
-        this.move(0);
-    }
-
     public void setLevel(LiftLevel destinationLiftLevel) {
         setHeight(destinationLiftLevel.height);
     }
