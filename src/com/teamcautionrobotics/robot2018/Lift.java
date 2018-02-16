@@ -51,9 +51,11 @@ public class Lift {
         pidController.setAbsoluteTolerance(3);
     }
 
-    /**
-     * @param power positive is ascending, negative is descending, range of [-1, 1]
-     */
+/** Directly set the power of the motors.
+ * Probably best not to use this, but use {@link #setLevel(LiftLevel)} or
+ * {@link #setHeight(double)} instead.
+ * @param power positive is ascending, negative is descending, range of [-1, 1]
+ */
     public void move(double power) {
         liftMotor.set(power);
     }
