@@ -77,7 +77,7 @@ public class DriveBase {
     }
 
     public double getSpeed() {
-        return getRightDistance();
+        return getRightSpeed();
     }
 
     public double getRightDistance() {
