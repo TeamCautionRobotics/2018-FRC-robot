@@ -10,10 +10,10 @@ package com.teamcautionrobotics.robot2018;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.teamcautionrobotics.autonomous.CommandFactory;
 import com.teamcautionrobotics.autonomous.Mission;
 import com.teamcautionrobotics.autonomous.MissionScriptMission;
 import com.teamcautionrobotics.autonomous.MissionSendable;
+import com.teamcautionrobotics.autonomous.commands2018.CommandFactory2018;
 import com.teamcautionrobotics.misc2018.EnhancedJoystick;
 import com.teamcautionrobotics.misc2018.Gamepad;
 import com.teamcautionrobotics.misc2018.Gamepad.Axis;
@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
 
     static final double LIFT_NUDGE_SPEED = 10; // Units are inches per second
 
-    CommandFactory commandFactory;
+    CommandFactory2018 commandFactory;
     MissionScriptMission missionScriptMission;
     MissionSendable missionSendable;
     SendableChooser<Mission> missionChooser;
@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
         intake = new Intake(2, 3, 4);
         lift = new Lift(4, 4, 5, 1, 1, 1);
 
-        commandFactory = new CommandFactory(driveBase);
+        commandFactory = new CommandFactory2018(driveBase);
 
         missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
                 commandFactory);

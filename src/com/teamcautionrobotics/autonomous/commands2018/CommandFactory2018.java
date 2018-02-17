@@ -1,17 +1,13 @@
-package com.teamcautionrobotics.autonomous;
+package com.teamcautionrobotics.autonomous.commands2018;
 
-import com.teamcautionrobotics.autonomous.commands2018.DelayCommand;
-import com.teamcautionrobotics.autonomous.commands2018.MoveStraightCommand;
-import com.teamcautionrobotics.autonomous.commands2018.MoveStraightDistanceCommand;
-import com.teamcautionrobotics.autonomous.commands2018.MoveStraightPIDCommand;
-import com.teamcautionrobotics.autonomous.commands2018.ResetEncoders;
-import com.teamcautionrobotics.autonomous.commands2018.TurnInPlaceCommand;
+import com.teamcautionrobotics.autonomous.Command;
+import com.teamcautionrobotics.autonomous.commands.CommandFactory;
 import com.teamcautionrobotics.robot2018.DriveBase;
 
-public class CommandFactory {
+public class CommandFactory2018 extends CommandFactory {
     private DriveBase driveBase;
 
-    public CommandFactory(DriveBase driveBase) {
+    public CommandFactory2018(DriveBase driveBase) {
         this.driveBase = driveBase;
     }
 
@@ -39,9 +35,4 @@ public class CommandFactory {
     public Command resetEncoders() {
         return new ResetEncoders(driveBase);
     }
-
-    public Command delay(double time) {
-        return new DelayCommand(time);
-    }
-
 }
