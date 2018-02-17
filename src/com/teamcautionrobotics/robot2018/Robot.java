@@ -78,9 +78,25 @@ public class Robot extends TimedRobot {
                 commandFactory.moveStraightDistance(0.5, 140, true),
                 commandFactory.turnInPlace(0.3, 45),
                 commandFactory.moveStraightDistance(0.5, 20, true),
+                // LIFT THE CUBE!!!!!!!
                 commandFactory.turnInPlace(0.3, 90),
-                commandFactory.moveStraightDistance(0.5, 25, true));
+                commandFactory.moveStraightDistance(0.5, 25, true)
+                // DEPLOY THE CUBE!!!!!!!
+        );
         missionChooser.addObject("center mission right switch", centerMissionRightSwitch);
+
+        Mission centerMissionLeftSwitch = new Mission("center mission left switch",
+                commandFactory.moveStraightDistance(0.5, 30, true),
+                commandFactory.turnInPlace(0.3, 60),
+                commandFactory.moveStraightDistance(0.5, 160, true),
+                commandFactory.turnInPlace(-0.3, 50),
+                commandFactory.moveStraightDistance(0.5, 30, true),
+                // LIFT THE CUBE!!!!!!!
+                commandFactory.turnInPlace(-0.3, 90),
+                commandFactory.moveStraightDistance(0.5, 25, true)
+                // DEPLOY THE CUBE!!!!!!!
+        );
+        missionChooser.addObject("center mission left switch", centerMissionLeftSwitch);
 
         missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
         SmartDashboard.putData(missionSendable);
