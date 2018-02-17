@@ -1,8 +1,9 @@
 package com.teamcautionrobotics.robot2018;
 
+import com.teamcautionrobotics.misc2018.AbstractPIDSource;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.VictorSP;
 
@@ -117,22 +118,10 @@ public class Lift {
         liftEncoder.reset();
     }
 
-    class LiftPIDSource implements PIDSource {
-
-        private PIDSourceType type;
+    class LiftPIDSource extends AbstractPIDSource {
 
         public LiftPIDSource(PIDSourceType sourceType) {
-            type = sourceType;
-        }
-
-        @Override
-        public void setPIDSourceType(PIDSourceType sourceType) {
-            type = sourceType;
-        }
-
-        @Override
-        public PIDSourceType getPIDSourceType() {
-            return type;
+            super(sourceType);
         }
 
         @Override
