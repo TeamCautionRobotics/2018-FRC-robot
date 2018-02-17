@@ -61,7 +61,7 @@ public class MissionScript {
                 }
                 signature += ")";
                 try {
-                    Method method = CommandFactory.class.getMethod(name, parameterClasses);
+                    Method method = factory.getClass().getMethod(name, parameterClasses);
 
                     Object returnValue = method.invoke(factory, parameterValues);
 
