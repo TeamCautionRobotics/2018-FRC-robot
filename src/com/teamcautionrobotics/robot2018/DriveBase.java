@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DriveBase implements PIDOutput {
+public class DriveBase {
 
     private VictorSP driveLeft;
     private VictorSP driveRight;
@@ -25,6 +25,7 @@ public class DriveBase implements PIDOutput {
     public double courseHeading;
 
     public PIDController pidController;
+    public final DriveBasePIDOutput pidOutput;
 
     public DriveBase(int left, int right, int leftA, int leftB, int rightA,
             int rightB) {
@@ -37,8 +38,10 @@ public class DriveBase implements PIDOutput {
         leftEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
         rightEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
 
+        pidOutput = new DriveBasePIDOutput();
+
         pidController = new PIDController(0.04, 0, 0.1, 0,
-                new DriveBasePIDSource(PIDSourceType.kDisplacement), this);
+                new DriveBasePIDSource(PIDSourceType.kDisplacement), pidOutput);
         pidController.setOutputRange(-1, 1);
         pidController.setAbsoluteTolerance(3);
 
@@ -100,11 +103,17 @@ public class DriveBase implements PIDOutput {
         courseHeading = heading;
     }
 
-    @Override
-    public void pidWrite(double speed) {
-        SmartDashboard.putNumber("pid drive speed", speed);
-        double angle = heading - getGyroAngle();
-        drive(speed, speed - angle * 0.03);
+
+    private class DriveBasePIDOutput implements PIDOutput {
+
+        private DriveBasePIDOutput() {}
+
+        @Override
+        public void pidWrite(double speed) {
+            SmartDashboard.putNumber("pid drive speed", speed);
+            double angle = heading - getGyroAngle();
+            drive(speed, speed - angle * 0.03);
+        }
     }
 
     class DriveBasePIDSource extends AbstractPIDSource {
