@@ -27,8 +27,7 @@ public class DriveBase {
     public PIDController pidController;
     public final DriveBasePIDOutput pidOutput;
 
-    public DriveBase(int left, int right, int leftA, int leftB, int rightA,
-            int rightB) {
+    public DriveBase(int left, int right, int leftA, int leftB, int rightA, int rightB) {
         driveLeft = new VictorSP(left);
         driveRight = new VictorSP(right);
 
