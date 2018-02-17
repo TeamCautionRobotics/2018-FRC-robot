@@ -65,8 +65,8 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        intake = new Intake(2, 3, 4);
-        lift = new Lift(4, 4, 5, 1, 1, 1);
+        intake = new Intake(3, 4, 5);
+        lift = new Lift(2, 4, 5, 1, 1, 1);
 
         commandFactory = new CommandFactory2018(driveBase);
 
