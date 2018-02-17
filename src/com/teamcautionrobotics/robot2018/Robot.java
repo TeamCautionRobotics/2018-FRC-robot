@@ -68,8 +68,10 @@ public class Robot extends TimedRobot {
 
         missionChooser = new SendableChooser<>();
 
-        missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
         missionChooser.addDefault("Do Nothing Mission", new Mission("Do Nothing Mission"));
+        missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
+        missionChooser.addObject("Drive Forward Mission", new Mission("Drive Forward Mission",
+                commandFactory.moveStraightDistance(0.5, 130, true)));
         SmartDashboard.putData("Autonomous Mode Select", missionChooser);
 
         Mission centerMissionRightSwitch = new Mission("center mission right switch",
@@ -194,6 +196,19 @@ public class Robot extends TimedRobot {
                 // DEPLOY THE CUBE!!!!!!!
         );
         missionChooser.addObject("right mission left scale", rightMissionLeftScale);
+
+        Mission leftMissionRightScale = new Mission("left mission right scale",
+                commandFactory.moveStraightDistance(0.5, 10, true),
+                commandFactory.turnInPlace(0.3, 70),
+                commandFactory.moveStraightDistance(0.5, 250, true),
+                commandFactory.turnInPlace(-0.3, 60),
+                commandFactory.moveStraightDistance(0.5, 180, true),
+                // LIFT THE CUBE!!!!!!!
+                commandFactory.turnInPlace(-0.3, 90),
+                commandFactory.moveStraightDistance(0.5, 10, true)
+                // DEPLOY THE CUBE!!!!!!!
+        );
+        missionChooser.addObject("left mission right scale", leftMissionRightScale);
 
         missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
         SmartDashboard.putData(missionSendable);
