@@ -14,8 +14,10 @@ import com.teamcautionrobotics.autonomous.CommandFactory;
 import com.teamcautionrobotics.autonomous.Mission;
 import com.teamcautionrobotics.autonomous.MissionScriptMission;
 import com.teamcautionrobotics.autonomous.MissionSendable;
-import com.teamcautionrobotics.robot2018.Gamepad.Axis;
-import com.teamcautionrobotics.robot2018.Gamepad.Button;
+import com.teamcautionrobotics.misc2018.EnhancedJoystick;
+import com.teamcautionrobotics.misc2018.Gamepad;
+import com.teamcautionrobotics.misc2018.Gamepad.Axis;
+import com.teamcautionrobotics.misc2018.Gamepad.Button;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
