@@ -72,6 +72,16 @@ public class Robot extends TimedRobot {
         missionChooser.addDefault("Do Nothing Mission", new Mission("Do Nothing Mission"));
         SmartDashboard.putData("Autonomous Mode Select", missionChooser);
 
+        Mission centerMissionRightSwitch = new Mission("center mission right switch",
+                commandFactory.moveStraightDistance(0.5, 30, true),
+                commandFactory.turnInPlace(-0.3, 45),
+                commandFactory.moveStraightDistance(0.5, 140, true),
+                commandFactory.turnInPlace(0.3, 45),
+                commandFactory.moveStraightDistance(0.5, 20, true),
+                commandFactory.turnInPlace(0.3, 90),
+                commandFactory.moveStraightDistance(0.5, 25, true));
+        missionChooser.addObject("center mission right switch", centerMissionRightSwitch);
+
         missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
         SmartDashboard.putData(missionSendable);
     }
@@ -80,6 +90,7 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
         SmartDashboard.putString("selected mission", missionChooser.getSelected().getName());
     }
+
     /**
      * This autonomous (along with the chooser code above) shows how to select between different
      * autonomous modes using the dashboard. The sendable chooser code works with the Java
