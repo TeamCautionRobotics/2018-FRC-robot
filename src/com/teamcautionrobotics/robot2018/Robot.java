@@ -151,6 +151,15 @@ public class Robot extends TimedRobot {
         );
         missionChooser.addObject("right mission right scale", rightMissionRightScale);
 
+        Mission leftMissionLeftScale = new Mission("left mission left scale",
+                commandFactory.moveStraightDistance(0.5, 310, true),
+                // LIFT THE CUBE!!!!!!!
+                commandFactory.turnInPlace(-0.3, 90),
+                commandFactory.moveStraightDistance(0.5, 10, true)
+                // DEPLOY THE CUBE!!!!!!!
+        );
+        missionChooser.addObject("left mission left scale", leftMissionLeftScale);
+
         missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
         SmartDashboard.putData(missionSendable);
     }
