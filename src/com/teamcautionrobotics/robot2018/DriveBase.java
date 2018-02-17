@@ -1,16 +1,17 @@
 package com.teamcautionrobotics.robot2018;
 
+import com.teamcautionrobotics.misc2018.AbstractPIDSource;
+
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DriveBase implements PIDOutput, PIDSource {
+public class DriveBase implements PIDOutput {
 
     private VictorSP driveLeft;
     private VictorSP driveRight;
@@ -36,7 +37,8 @@ public class DriveBase implements PIDOutput, PIDSource {
         leftEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
         rightEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
 
-        pidController = new PIDController(0.04, 0, 0.1, 0, this, this);
+        pidController = new PIDController(0.04, 0, 0.1, 0,
+                new DriveBasePIDSource(PIDSourceType.kDisplacement), this);
         pidController.setOutputRange(-1, 1);
         pidController.setAbsoluteTolerance(3);
 
@@ -72,6 +74,10 @@ public class DriveBase implements PIDOutput, PIDSource {
         return getRightDistance();
     }
 
+    public double getSpeed() {
+        return getRightDistance();
+    }
+
     public double getRightDistance() {
         return rightEncoder.getDistance();
     }
@@ -101,24 +107,22 @@ public class DriveBase implements PIDOutput, PIDSource {
         drive(speed, speed - angle * 0.03);
     }
 
+    class DriveBasePIDSource extends AbstractPIDSource {
 
-    @Override
-    /**
-     * Not implemented. Always displacement pid source.
-     * 
-     * @see edu.wpi.first.wpilibj.PIDSource#setPIDSourceType(edu.wpi.first.wpilibj.PIDSourceType)
-     */
-    public void setPIDSourceType(PIDSourceType pidSource) {
+        public DriveBasePIDSource(PIDSourceType sourceType) {
+            super(sourceType);
+        }
 
-    }
-
-    @Override
-    public PIDSourceType getPIDSourceType() {
-        return PIDSourceType.kDisplacement;
-    }
-
-    @Override
-    public double pidGet() {
-        return getDistance();
+        @Override
+        public double pidGet() {
+            switch (type) {
+                case kDisplacement:
+                    return getDistance();
+                case kRate:
+                    return getSpeed();
+                default:
+                    return 0.0;
+            }
+        }
     }
 }
