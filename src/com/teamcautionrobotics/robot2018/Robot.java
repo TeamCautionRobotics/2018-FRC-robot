@@ -135,7 +135,15 @@ public class Robot extends TimedRobot {
 
         double forwardCommand = -driverRight.getY();
         double turnCommand = driverLeft.getX();
-        driveBase.drive(forwardCommand + turnCommand, forwardCommand - turnCommand);
+        double leftPower = forwardCommand + turnCommand;
+        double rightPower = forwardCommand - turnCommand;
+
+        double speedLimit = speedLimitFromLiftHeight(lift.getCurrentHeight());
+        leftPower *= speedLimit;
+        rightPower *= speedLimit;
+
+        driveBase.drive(leftPower, rightPower);
+
 
         // Left bumper spins counterclockwise
         if (manipulator.getButton(Button.LEFT_BUMPER)) {
@@ -178,4 +186,14 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testPeriodic() {}
+
+    double speedLimitFromLiftHeight(double height) {
+        // Chosen by linear fit through (30 in, 1) and (70 in, 0.5)
+        double limit = height * -0.0125 + 1.375;
+
+        // Keep speed limit in range of [0.4, 1]
+        limit = Math.max(Math.min(limit, 1), 0.4);
+
+        return limit;
+    }
 }
