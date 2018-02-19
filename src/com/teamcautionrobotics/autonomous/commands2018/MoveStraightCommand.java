@@ -21,7 +21,8 @@ public class MoveStraightCommand implements Command {
 
     private double heading;
 
-    public MoveStraightCommand(DriveBase driveBase, double speed, double time, boolean keepHeading) {
+    public MoveStraightCommand(DriveBase driveBase, double speed, double time,
+            boolean keepHeading) {
         this.driveBase = driveBase;
 
         this.speed = speed;
@@ -42,9 +43,7 @@ public class MoveStraightCommand implements Command {
             needsToStart = false;
         }
 
-        if (complete) {
-            return true;
-        } else {
+        if (!complete) {
             if (timer.get() >= time) {
                 driveBase.drive(0);
                 timer.stop();
@@ -54,8 +53,8 @@ public class MoveStraightCommand implements Command {
                 System.out.println("Angle: " + angle + "  Heading: " + heading);
                 driveBase.drive(speed, speed - angle * 0.03);
             }
-            return false;
         }
+        return complete;
     }
 
     @Override
