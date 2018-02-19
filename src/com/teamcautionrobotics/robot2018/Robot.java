@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
         intake = new Intake(3, 4, 5);
         lift = new Lift(2, 4, 5, 1, 1, 1);
 
-        commandFactory = new CommandFactory2018(driveBase);
+        commandFactory = new CommandFactory2018(driveBase, intake);
 
         missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
                 commandFactory);
