@@ -4,15 +4,18 @@ import com.teamcautionrobotics.autonomous.Command;
 import com.teamcautionrobotics.autonomous.commands.CommandFactory;
 import com.teamcautionrobotics.robot2018.DriveBase;
 import com.teamcautionrobotics.robot2018.Intake;
+import com.teamcautionrobotics.robot2018.Lift;
+import com.teamcautionrobotics.robot2018.Lift.LiftLevel;
 
 public class CommandFactory2018 extends CommandFactory {
     private DriveBase driveBase;
     private Intake intake;
-    
+    private Lift lift;
 
-    public CommandFactory2018(DriveBase driveBase, Intake intake) {
+    public CommandFactory2018(DriveBase driveBase, Intake intake, Lift lift) {
         this.driveBase = driveBase;
         this.intake = intake;
+        this.lift = lift;
     }
 
 
@@ -42,6 +45,10 @@ public class CommandFactory2018 extends CommandFactory {
 
     public Command deployCube() {
         return moveIntake(-1.0, 0.5);
+    }
+
+    public Command setLift(LiftLevel liftLevel) {
+        return new SetLiftCommand(lift, liftLevel);
     }
 
     public Command resetEncoders() {
