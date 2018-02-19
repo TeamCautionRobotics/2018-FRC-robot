@@ -91,4 +91,8 @@ public class Intake {
         timedSpin = false;
         this.spinPower = spinPower;
     }
+    
+    public void bulldoze() {
+        move(intake.get(), -1.0);
+    }
 }

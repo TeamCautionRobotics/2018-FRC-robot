@@ -145,6 +145,11 @@ public class Robot extends TimedRobot {
 
         driveBase.drive(leftPower, rightPower);
 
+        if (lift.getCurrentHeight() < 3) {
+            intake.move(manipulator.getAxis(Axis.LEFT_Y));
+        } else {
+            intake.move(manipulator.getAxis(Axis.LEFT_Y), 0);
+        }
 
         // Left bumper spins counterclockwise
         if (manipulator.getButton(Button.LEFT_BUMPER) && lift.getCurrentHeight() < 3) {
@@ -156,10 +161,8 @@ public class Robot extends TimedRobot {
             intake.timedSpin(0.25, 0.1);
         }
 
-        if (lift.getCurrentHeight() < 3) {
-            intake.move(manipulator.getAxis(Axis.LEFT_Y));
-        } else {
-            intake.moveMotors(manipulator.getAxis(Axis.LEFT_Y), 0, 0);
+        if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+            intake.bulldoze();
         }
 
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
