@@ -19,6 +19,16 @@ public class MoveIntakeCommand implements Command {
     private boolean needsToStart;
     private boolean complete;
 
+    /**
+     * Run the intake for a period of time. Waits for the lift to be at its destination before
+     * running the intake.
+     * 
+     * @param intake
+     * @param lift
+     * @param power The power to run the intake at
+     * @param time Number of seconds to run the intake for
+     * @see {@link Intake#move(double)}
+     */
     public MoveIntakeCommand(Intake intake, Lift lift, double power, double time) {
         this.intake = intake;
         this.power = power;

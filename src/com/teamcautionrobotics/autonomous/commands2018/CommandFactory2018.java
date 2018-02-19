@@ -38,9 +38,9 @@ public class CommandFactory2018 extends CommandFactory {
     public Command turnInPlace(double speed, double targetAngle) {
         return new TurnInPlaceCommand(driveBase, speed, targetAngle);
     }
-    
-    public Command moveIntake(double speed, double time) {
-        return new MoveIntakeCommand(intake, lift, speed, time);
+
+    public Command moveIntake(double power, double time) {
+        return new MoveIntakeCommand(intake, lift, power, time);
     }
 
     public Command deployCube() {
