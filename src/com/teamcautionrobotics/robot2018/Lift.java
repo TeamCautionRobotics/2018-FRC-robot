@@ -86,6 +86,14 @@ public class Lift {
     public LiftLevel getDestinationLiftLevel() {
         return convertHeightToLiftLevel(getDestinationHeight());
     }
+    
+    public boolean atDestination() {
+        if (getDestinationHeight() <= getCurrentHeight() + 1
+                && getDestinationHeight() >= getCurrentHeight() - 1) {
+            return true;
+        }
+        return false;
+    }
 
     public static LiftLevel convertHeightToLiftLevel(double height) {
         LiftLevel convertedLiftLevel = LiftLevel.values()[0];

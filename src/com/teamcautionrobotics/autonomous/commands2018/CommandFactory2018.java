@@ -40,7 +40,7 @@ public class CommandFactory2018 extends CommandFactory {
     }
     
     public Command moveIntake(double speed, double time) {
-        return new MoveIntakeCommand(intake, speed, time);
+        return new MoveIntakeCommand(intake, lift, speed, time);
     }
 
     public Command deployCube() {
