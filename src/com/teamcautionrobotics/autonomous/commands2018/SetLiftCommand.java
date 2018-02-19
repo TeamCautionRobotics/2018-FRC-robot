@@ -8,22 +8,32 @@ public class SetLiftCommand implements Command {
     
     private Lift lift;
     private LiftLevel liftLevel;
+    private final boolean waitForLiftAtDestination;
+    private boolean liftCommanded = false;
 
-    public SetLiftCommand(Lift lift, LiftLevel liftLevel) {
+    public SetLiftCommand(Lift lift, LiftLevel liftLevel, boolean waitForLiftAtDestination) {
         this.lift = lift;
         this.liftLevel = liftLevel;
-        reset();
+        this.waitForLiftAtDestination = waitForLiftAtDestination;
     }
 
     @Override
     public boolean run() {
-        lift.setLevel(liftLevel);
-        return true;
+        if (!liftCommanded) {
+            lift.setLevel(liftLevel);
+            liftCommanded = true;
+        }
+
+        if (waitForLiftAtDestination) {
+            return lift.atDestination();
+        } else {
+            return true;
+        }
     }
 
     @Override
     public void reset() {
-        
+        liftCommanded = false;
     }
 
 }
