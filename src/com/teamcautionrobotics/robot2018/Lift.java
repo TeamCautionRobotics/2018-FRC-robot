@@ -14,7 +14,7 @@ public class Lift {
 
         private static LiftLevel[] values = values();
 
-        double height;
+        public final double height;
 
         private LiftLevel(double height) {
             this.height = height;

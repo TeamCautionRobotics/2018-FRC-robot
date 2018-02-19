@@ -2,25 +2,24 @@ package com.teamcautionrobotics.autonomous.commands2018;
 
 import com.teamcautionrobotics.autonomous.Command;
 import com.teamcautionrobotics.robot2018.Lift;
-import com.teamcautionrobotics.robot2018.Lift.LiftLevel;
 
 public class SetLiftCommand implements Command {
     
     private Lift lift;
-    private LiftLevel liftLevel;
+    private double height;
     private final boolean waitForLiftAtDestination;
     private boolean liftCommanded = false;
 
-    public SetLiftCommand(Lift lift, LiftLevel liftLevel, boolean waitForLiftAtDestination) {
+    public SetLiftCommand(Lift lift, double height, boolean waitForLiftAtDestination) {
         this.lift = lift;
-        this.liftLevel = liftLevel;
+        this.height = height;
         this.waitForLiftAtDestination = waitForLiftAtDestination;
     }
 
     @Override
     public boolean run() {
         if (!liftCommanded) {
-            lift.setLevel(liftLevel);
+            lift.setHeight(height);
             liftCommanded = true;
         }
 

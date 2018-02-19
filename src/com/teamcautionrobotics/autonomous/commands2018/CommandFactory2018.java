@@ -48,11 +48,19 @@ public class CommandFactory2018 extends CommandFactory {
     }
 
     public Command setLift(LiftLevel liftLevel) {
-        return setLift(liftLevel, false);
+        return setLift(liftLevel.height);
+    }
+
+    public Command setLift(double height) {
+        return setLift(height, false);
     }
 
     public Command setLift(LiftLevel liftLevel, boolean waitForLift) {
-        return new SetLiftCommand(lift, liftLevel, waitForLift);
+        return setLift(liftLevel.height, waitForLift);
+    }
+
+    public Command setLift(double height, boolean waitForLift) {
+        return new SetLiftCommand(lift, height, waitForLift);
     }
 
     public Command resetEncoders() {
