@@ -87,6 +87,7 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
         SmartDashboard.putString("selected mission", missionChooser.getSelected().getName());
     }
+
     /**
      * This autonomous (along with the chooser code above) shows how to select between different
      * autonomous modes using the dashboard. The sendable chooser code works with the Java
@@ -146,17 +147,20 @@ public class Robot extends TimedRobot {
 
 
         // Left bumper spins counterclockwise
-        if (manipulator.getButton(Button.LEFT_BUMPER)) {
+        if (manipulator.getButton(Button.LEFT_BUMPER) && lift.getCurrentHeight() < 3) {
             intake.timedSpin(-0.25, 0.1);
         }
 
         // Right bumper spins clockwise
-        if (manipulator.getButton(Button.RIGHT_BUMPER)) {
+        if (manipulator.getButton(Button.RIGHT_BUMPER) && lift.getCurrentHeight() < 3) {
             intake.timedSpin(0.25, 0.1);
         }
 
-        intake.move(manipulator.getAxis(Axis.LEFT_Y));
-
+        if (lift.getCurrentHeight() < 3) {
+            intake.move(manipulator.getAxis(Axis.LEFT_Y));
+        } else {
+            intake.moveMotors(manipulator.getAxis(Axis.LEFT_Y), 0, 0);
+        }
 
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {
