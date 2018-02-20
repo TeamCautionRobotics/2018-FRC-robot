@@ -1,13 +1,16 @@
 package com.teamcautionrobotics.robot2018;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 
 public class Intake {
 
-    private VictorSP intake;
-    private VictorSP grabberLeft;
-    private VictorSP grabberRight;
+    private VictorSP grabber;
+    private VictorSP intakeLeft;
+    private VictorSP intakeRight;
+
+    private DigitalInput cubeInGrabber;
 
     private Timer timer;
     private boolean timedSpin = false;
@@ -15,10 +18,13 @@ public class Intake {
 
     private double spinPower = 0;
 
-    public Intake(int intakeChannel, int grabberLeftChannel, int grabberRightChannel) {
-        intake = new VictorSP(intakeChannel);
-        grabberLeft = new VictorSP(grabberLeftChannel);
-        grabberRight = new VictorSP(grabberRightChannel);
+    public Intake(int intakeChannel, int grabberLeftChannel, int grabberRightChannel,
+            int cubeInGrabberChannel) {
+        grabber = new VictorSP(intakeChannel);
+        intakeLeft = new VictorSP(grabberLeftChannel);
+        intakeRight = new VictorSP(grabberRightChannel);
+
+        cubeInGrabber = new DigitalInput(cubeInGrabberChannel);
 
         timer = new Timer();
         timer.start();
@@ -30,10 +36,11 @@ public class Intake {
      * 
      * @param power positive for in, negative for out, range of [-1, 1]
      */
-    public void moveMotors(double intakePower, double grabberLeftPower, double grabberRightPower) {
-        intake.set(intakePower);
-        grabberLeft.set(grabberLeftPower);
-        grabberRight.set(grabberRightPower);
+    public void moveMotors(double grabberPower, double intakeLeftPower, double intakeRightPower) {
+        // stops grabber from spinning in if cubeInGrabber color sensor is triggered
+        grabber.set(cubeInGrabber.get() ? Math.max(grabberPower, 0) : grabberPower);
+        intakeLeft.set(intakeLeftPower);
+        intakeRight.set(intakeRightPower);
     }
 
     /**
@@ -41,6 +48,7 @@ public class Intake {
      * when the specified time has elapsed. The grabber motors will never move in the opposite
      * direction as the inPower specifies (this could happen if a fast spin and slow inPower is
      * requested).
+     * 
      * @param inPower overall speed of the entire intake (grabber and inner part). Positive for in,
      *        negative for out. range of [-1, 1]
      */
@@ -67,7 +75,8 @@ public class Intake {
     }
 
     /**
-     * Do a timed spin. After the specified time, the spinPower reverts to zero. 
+     * Do a timed spin. After the specified time, the spinPower reverts to zero.
+     * 
      * @param spinPower The speed difference between the left and right sides. Negative to spin
      *        counterclockwise, positive to spin clockwise. range of [-1, 1]
      * @time How long from now the spin should apply for.
@@ -82,10 +91,15 @@ public class Intake {
 
     /**
      * Do a spin. This will stop any currently running timed spin and has no expiration.
+     * 
      * @param spinPower
      */
     public void spin(double spinPower) {
         timedSpin = false;
         this.spinPower = spinPower;
+    }
+
+    public boolean getCubeInGrabber() {
+        return cubeInGrabber.get();
     }
 }
