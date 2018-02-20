@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
 
     Intake intake;
     Lift lift;
-    
+
     DigitalInput stageOneDown;
     DigitalInput stageTwoDown;
 
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
 
         intake = new Intake(3, 4, 5);
         lift = new Lift(2, 4, 5, 1, 1, 1);
-        
+
         stageOneDown = new DigitalInput(6);
         stageTwoDown = new DigitalInput(7);
 
@@ -94,6 +94,7 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
         SmartDashboard.putString("selected mission", missionChooser.getSelected().getName());
     }
+
     /**
      * This autonomous (along with the chooser code above) shows how to select between different
      * autonomous modes using the dashboard. The sendable chooser code works with the Java
@@ -159,7 +160,7 @@ public class Robot extends TimedRobot {
         if (stageOneDown.get() && stageTwoDown.get()) {
             lift.resetEncoder();
         }
-        
+
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {
             if (liftRaiseButton) {
