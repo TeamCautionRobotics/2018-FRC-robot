@@ -25,8 +25,8 @@ public class MoveIntakeCommand implements Command {
      * 
      * @param intake
      * @param lift
-     * @param power The power to run the intake at
-     * @param time Number of seconds to run the intake for
+     * @param power The power at which to run the intake
+     * @param time Number of seconds for which to run the intake
      * @see {@link Intake#move(double)}
      */
     public MoveIntakeCommand(Intake intake, Lift lift, double power, double time) {
