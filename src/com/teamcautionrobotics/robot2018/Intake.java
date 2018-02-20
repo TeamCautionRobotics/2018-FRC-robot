@@ -15,10 +15,10 @@ public class Intake {
 
     private double spinPower = 0;
 
-    public Intake(int intakeChannel, int grabberLeftChannel, int grabberRightChannel) {
-        intake = new VictorSP(intakeChannel);
-        grabberLeft = new VictorSP(grabberLeftChannel);
-        grabberRight = new VictorSP(grabberRightChannel);
+    public Intake(int grabberChannel, int intakeLeftChannel, int intakeRightChannel) {
+        intake = new VictorSP(grabberChannel);
+        grabberLeft = new VictorSP(intakeLeftChannel);
+        grabberRight = new VictorSP(intakeRightChannel);
 
         timer = new Timer();
         timer.start();
@@ -41,29 +41,32 @@ public class Intake {
      * when the specified time has elapsed. The grabber motors will never move in the opposite
      * direction as the inPower specifies (this could happen if a fast spin and slow inPower is
      * requested).
-     * @param inPower overall speed of the entire intake (grabber and inner part). Positive for in,
+     * @param grabberPower overall speed of the entire intake (grabber and inner part). Positive for in,
      *        negative for out. range of [-1, 1]
      */
-    public void move(double inPower) {
+    public void move(double grabberPower, double intakePower) {
         // Check if the spinDuration has elapsed
         if (timedSpin && timer.get() > spinDuration) {
             this.spinPower = 0;
             timedSpin = false;
         }
 
-        double leftPower = inPower - this.spinPower;
-        double rightPower = inPower + this.spinPower;
+        double leftPower = intakePower - this.spinPower;
+        double rightPower = intakePower + this.spinPower;
 
         // Keep the grabber motors from being sent opposite of the inPower
-        if (inPower > 0) {
+        if (grabberPower > 0) {
             leftPower = Math.max(leftPower, 0);
             rightPower = Math.max(rightPower, 0);
         } else {
             leftPower = Math.min(leftPower, 0);
             rightPower = Math.min(rightPower, 0);
         }
-
-        moveMotors(inPower, leftPower, rightPower);
+        moveMotors(grabberPower, leftPower, rightPower);
+    }
+    
+    public void move(double inPower) {
+        move(inPower, inPower);
     }
 
     /**
@@ -87,5 +90,9 @@ public class Intake {
     public void spin(double spinPower) {
         timedSpin = false;
         this.spinPower = spinPower;
+    }
+    
+    public void bulldoze() {
+        move(intake.get(), -1.0);
     }
 }
