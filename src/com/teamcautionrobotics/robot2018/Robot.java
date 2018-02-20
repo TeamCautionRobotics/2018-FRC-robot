@@ -19,7 +19,6 @@ import com.teamcautionrobotics.misc2018.Gamepad;
 import com.teamcautionrobotics.misc2018.Gamepad.Axis;
 import com.teamcautionrobotics.misc2018.Gamepad.Button;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,9 +46,6 @@ public class Robot extends TimedRobot {
     Intake intake;
     Lift lift;
 
-    DigitalInput stageOneDown;
-    DigitalInput stageTwoDown;
-
     boolean liftRaiseButtonPressed = false;
     boolean liftLowerButtonPressed = false;
 
@@ -70,10 +66,7 @@ public class Robot extends TimedRobot {
         manipulator = new Gamepad(2);
 
         intake = new Intake(3, 4, 5);
-        lift = new Lift(2, 4, 5, 1, 1, 1);
-
-        stageOneDown = new DigitalInput(6);
-        stageTwoDown = new DigitalInput(7);
+        lift = new Lift(2, 4, 5, 6, 7, 1, 1, 1);
 
         commandFactory = new CommandFactory2018(driveBase);
 
@@ -164,10 +157,6 @@ public class Robot extends TimedRobot {
         }
 
         intake.move(manipulator.getAxis(Axis.LEFT_Y));
-
-        if (stageOneDown.get() && stageTwoDown.get()) {
-            lift.resetEncoder();
-        }
 
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {

@@ -2,6 +2,7 @@ package com.teamcautionrobotics.robot2018;
 
 import com.teamcautionrobotics.misc2018.AbstractPIDSource;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -38,14 +39,19 @@ public class Lift {
     }
 
     private VictorSP liftMotor;
+    private DigitalInput stageOneDown;
+    private DigitalInput stageTwoDown;
     private Encoder liftEncoder;
     private PIDController pidController;
 
-    public Lift(int motorPort, int encoderChannelA, int encoderChannelB, double Kp, double Ki,
-            double Kd) {
+    public Lift(int motorPort, int encoderChannelA, int encoderChannelB, int stageOneDownPort,
+            int stageTwoDownPort, double Kp, double Ki, double Kd) {
         liftMotor = new VictorSP(motorPort);
+        stageOneDown = new DigitalInput(stageOneDownPort);
+        stageTwoDown = new DigitalInput(stageTwoDownPort);
         liftEncoder = new Encoder(encoderChannelA, encoderChannelB);
         liftEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
+
         pidController = new PIDController(Kp, Ki, Kd, 0,
                 new LiftPIDSource(PIDSourceType.kDisplacement), this::move);
         pidController.setOutputRange(-1, 1);
@@ -59,6 +65,9 @@ public class Lift {
      * @param power positive is ascending, negative is descending, range of [-1, 1]
      */
     public void move(double power) {
+        if (stageOneDown.get() && stageTwoDown.get()) {
+            resetEncoder();
+        }
         liftMotor.set(power);
     }
 
@@ -100,6 +109,14 @@ public class Lift {
             }
         }
         return convertedLiftLevel;
+    }
+    
+    public boolean getStageOneDown() {
+        return stageOneDown.get();
+    }
+    
+    public boolean getStageTwoDown() {
+        return stageTwoDown.get();
     }
 
     public void enablePID() {
