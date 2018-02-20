@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj.VictorSP;
 
 public class Lift {
 
-    enum LiftLevel {
+    public enum LiftLevel {
         GROUND(0), SWITCH(19), LOW_SCALE(48), HIGH_SCALE(76);
 
         private static LiftLevel[] values = values();
 
-        double height;
+        public final double height;
 
         private LiftLevel(double height) {
             this.height = height;
@@ -85,6 +85,14 @@ public class Lift {
 
     public LiftLevel getDestinationLiftLevel() {
         return convertHeightToLiftLevel(getDestinationHeight());
+    }
+    
+    public boolean atDestination() {
+        if (getDestinationHeight() <= getCurrentHeight() + 1
+                && getDestinationHeight() >= getCurrentHeight() - 1) {
+            return true;
+        }
+        return false;
     }
 
     public static LiftLevel convertHeightToLiftLevel(double height) {
