@@ -148,6 +148,7 @@ public class Robot extends TimedRobot {
         if (lift.getCurrentHeight() < 3) {
             intake.move(manipulator.getAxis(Axis.LEFT_Y));
         } else {
+            // disable intake
             intake.move(manipulator.getAxis(Axis.LEFT_Y), 0);
         }
 
