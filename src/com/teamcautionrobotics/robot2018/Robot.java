@@ -82,6 +82,8 @@ public class Robot extends TimedRobot {
 
         missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
         SmartDashboard.putData(missionSendable);
+
+        SmartDashboard.putData("lift PID", lift.pidController);
     }
 
     @Override
