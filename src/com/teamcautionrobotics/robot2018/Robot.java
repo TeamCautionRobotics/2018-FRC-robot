@@ -228,6 +228,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("drive left speed", driveBase.getLeftSpeed());
         SmartDashboard.putNumber("drive right speed", driveBase.getRightSpeed());
 
+        SmartDashboard.putString("desired lift level", lift.getDestinationLiftLevel().toString());
         SmartDashboard.putString("lift level", lift.getCurrentLiftLevel().toString());
         SmartDashboard.putNumber("lift distance", lift.getCurrentHeight());
         SmartDashboard.putNumber("lift speed", lift.liftEncoder.getRate());
