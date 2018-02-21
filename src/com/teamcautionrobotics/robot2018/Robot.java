@@ -192,6 +192,10 @@ public class Robot extends TimedRobot {
         double liftNudgeCommand = manipulator.getAxis(Axis.RIGHT_Y);
         double changeInHeight = LIFT_NUDGE_SPEED * liftNudgeCommand * dt; // inches
         lift.setHeight(lift.getCurrentHeight() + changeInHeight);
+        if (manipulator.getButton(Button.X)) {
+            lift.resetEncoder();
+        }
+
     }
 
     /**
