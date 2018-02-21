@@ -162,54 +162,54 @@ public class Robot extends TimedRobot {
                 // DEPLOY THE CUBE!!!!!!!
         );
         missionChooser.addObject("left mission left scale", leftMissionLeftScale);
-
-        Mission rightMissionLeftSwitch = new Mission("right mission left switch",
-                commandFactory.moveStraightDistance(0.5, 10, true),
-                commandFactory.turnInPlace(0.3, 70),
-                commandFactory.moveStraightDistance(0.5, 200, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 65),
-                commandFactory.moveStraightDistance(0.5, 10, true)
-                // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject("right mission left switch", rightMissionLeftSwitch);
-
-        Mission leftMissionRightSwitch = new Mission("left mission right switch",
-                commandFactory.moveStraightDistance(0.5, 10, true),
-                commandFactory.turnInPlace(-0.3, 70),
-                commandFactory.moveStraightDistance(0.5, 200, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.3, 65),
-                commandFactory.moveStraightDistance(0.5, 10, true)
-                // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject("left mission right switch", leftMissionRightSwitch);
-
-        Mission rightMissionLeftScale = new Mission("right mission left scale",
-                commandFactory.moveStraightDistance(0.5, 10, true),
-                commandFactory.turnInPlace(0.3, 70),
-                commandFactory.moveStraightDistance(0.5, 250, true),
-                commandFactory.turnInPlace(-0.3, 60),
-                commandFactory.moveStraightDistance(0.5, 180, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 90),
-                commandFactory.moveStraightDistance(0.5, 10, true)
-                // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject("right mission left scale", rightMissionLeftScale);
-
-        Mission leftMissionRightScale = new Mission("left mission right scale",
-                commandFactory.moveStraightDistance(0.5, 10, true),
-                commandFactory.turnInPlace(0.3, 70),
-                commandFactory.moveStraightDistance(0.5, 250, true),
-                commandFactory.turnInPlace(-0.3, 60),
-                commandFactory.moveStraightDistance(0.5, 180, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 90),
-                commandFactory.moveStraightDistance(0.5, 10, true)
-                // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject("left mission right scale", leftMissionRightScale);
+//
+//        Mission rightMissionLeftSwitch = new Mission("right mission left switch",
+//                commandFactory.moveStraightDistance(0.5, 10, true),
+//                commandFactory.turnInPlace(0.3, 70),
+//                commandFactory.moveStraightDistance(0.5, 200, true),
+//                // LIFT THE CUBE!!!!!!!
+//                commandFactory.turnInPlace(-0.3, 65),
+//                commandFactory.moveStraightDistance(0.5, 10, true)
+//                // DEPLOY THE CUBE!!!!!!!
+//        );
+//        missionChooser.addObject("right mission left switch", rightMissionLeftSwitch);
+//
+//        Mission leftMissionRightSwitch = new Mission("left mission right switch",
+//                commandFactory.moveStraightDistance(0.5, 10, true),
+//                commandFactory.turnInPlace(-0.3, 70),
+//                commandFactory.moveStraightDistance(0.5, 200, true),
+//                // LIFT THE CUBE!!!!!!!
+//                commandFactory.turnInPlace(0.3, 65),
+//                commandFactory.moveStraightDistance(0.5, 10, true)
+//                // DEPLOY THE CUBE!!!!!!!
+//        );
+//        missionChooser.addObject("left mission right switch", leftMissionRightSwitch);
+//
+//        Mission rightMissionLeftScale = new Mission("right mission left scale",
+//                commandFactory.moveStraightDistance(0.5, 10, true),
+//                commandFactory.turnInPlace(0.3, 70),
+//                commandFactory.moveStraightDistance(0.5, 250, true),
+//                commandFactory.turnInPlace(-0.3, 60),
+//                commandFactory.moveStraightDistance(0.5, 180, true),
+//                // LIFT THE CUBE!!!!!!!
+//                commandFactory.turnInPlace(-0.3, 90),
+//                commandFactory.moveStraightDistance(0.5, 10, true)
+//                // DEPLOY THE CUBE!!!!!!!
+//        );
+//        missionChooser.addObject("right mission left scale", rightMissionLeftScale);
+//
+//        Mission leftMissionRightScale = new Mission("left mission right scale",
+//                commandFactory.moveStraightDistance(0.5, 10, true),
+//                commandFactory.turnInPlace(0.3, 70),
+//                commandFactory.moveStraightDistance(0.5, 250, true),
+//                commandFactory.turnInPlace(-0.3, 60),
+//                commandFactory.moveStraightDistance(0.5, 180, true),
+//                // LIFT THE CUBE!!!!!!!
+//                commandFactory.turnInPlace(-0.3, 90),
+//                commandFactory.moveStraightDistance(0.5, 10, true)
+//                // DEPLOY THE CUBE!!!!!!!
+//        );
+//        missionChooser.addObject("left mission right scale", leftMissionRightScale);
 
         missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
         SmartDashboard.putData(missionSendable);
