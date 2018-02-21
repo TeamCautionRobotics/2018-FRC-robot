@@ -174,15 +174,15 @@ public class Robot extends TimedRobot {
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {
             if (liftRaiseButton) {
-                lift.setLevel(lift.getCurrentLiftLevel().next());
+                lift.setLevel(lift.getDestinationLiftLevel().next());
             }
             liftRaiseButtonPressed = liftRaiseButton;
         }
 
-        boolean liftLowerButton = manipulator.getButton(Button.Y);
-        if (liftLowerButton != liftRaiseButtonPressed) {
+        boolean liftLowerButton = manipulator.getButton(Button.A);
+        if (liftLowerButton != liftLowerButtonPressed) {
             if (liftLowerButton) {
-                lift.setLevel(lift.getCurrentLiftLevel().previous());
+                lift.setLevel(lift.getDestinationLiftLevel().previous());
             }
             liftLowerButtonPressed = liftLowerButton;
         }
