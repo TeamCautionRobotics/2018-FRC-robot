@@ -70,9 +70,13 @@ public class Robot extends TimedRobot {
 
         missionChooser.addDefault("Do Nothing Mission", new Mission("Do Nothing Mission"));
         missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
-        missionChooser.addObject("Drive Forward Mission", new Mission("Drive Forward Mission",
-                commandFactory.moveStraightDistance(0.5,60,true), commandFactory.moveStraight(-0.1, 0.2, false)));
         SmartDashboard.putData("Autonomous Mode Select", missionChooser);
+
+        Mission driveForwardMission = new Mission("Drive Forward Mission",
+                commandFactory.moveStraightDistance(0.5,60,true),
+                commandFactory.moveStraight(-0.1, 0.2, false)
+        );
+        missionChooser.addObject("Drive Forward Mission", driveForwardMission);
 
         Mission centerMissionRightSwitch = new Mission("center mission right switch",
                 commandFactory.moveStraightDistance(0.5, 30, true),
