@@ -137,10 +137,10 @@ public class Robot extends TimedRobot {
         missionChooser.addObject("right mission right switch", rightMissionRightSwitch);
 
         Mission leftMissionLeftSwitch = new Mission("left mission left switch",
-                commandFactory.moveStraightDistance(0.5, 160, true),
+                commandFactory.moveStraightDistance(0.5, 130, true),
                 // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 90),
-                commandFactory.moveStraightDistance(0.5, 25, true)
+                commandFactory.turnInPlace(0.5, 90),
+                commandFactory.moveStraight(0.5, 0.3, false)
                 // DEPLOY THE CUBE!!!!!!!
         );
         missionChooser.addObject("left mission left switch", leftMissionLeftSwitch);
