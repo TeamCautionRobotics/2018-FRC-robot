@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
                 commandFactory.moveStraightDistance(0.5, 20, true),
                 // LIFT THE CUBE!!!!!!!
                 commandFactory.turnInPlace(0.3, 90),
-                commandFactory.moveStraightDistance(0.5, 25, true)
+                commandFactory.moveStraight(0.5, 0.3, false)
                 // DEPLOY THE CUBE!!!!!!!
         );
         missionChooser.addObject("center mission right switch", centerMissionRightSwitch);
@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
                 commandFactory.moveStraightDistance(0.5, 30, true),
                 // LIFT THE CUBE!!!!!!!
                 commandFactory.turnInPlace(-0.3, 90),
-                commandFactory.moveStraightDistance(0.5, 25, true)
+                commandFactory.moveStraight(0.5, 0.3, false)
                 // DEPLOY THE CUBE!!!!!!!
         );
         missionChooser.addObject("center mission left switch", centerMissionLeftSwitch);
@@ -112,7 +112,7 @@ public class Robot extends TimedRobot {
                 commandFactory.moveStraightDistance(0.5, 195, true),
                 // LIFT THE CUBE!!!!!!!
                 commandFactory.turnInPlace(0.3, 90),
-                commandFactory.moveStraightDistance(0.25, 25, true)
+                commandFactory.moveStraight(0.5, 0.3, false)
                 // DEPLOY THE CUBE!!!!!!!
         );
         missionChooser.addObject("center mission right scale", centerMissionRightScale);
@@ -125,7 +125,7 @@ public class Robot extends TimedRobot {
                 commandFactory.moveStraightDistance(0.5, 185, true),
                 // LIFT THE CUBE!!!!!!!
                 commandFactory.turnInPlace(-0.3, 85),
-                commandFactory.moveStraightDistance(0.25, 10, true)
+                commandFactory.moveStraight(0.5, 0.3, false)
                 // DEPLOY THE CUBE!!!!!!!
         );
         missionChooser.addObject("center mission left scale", centerMissionLeftScale);
@@ -145,7 +145,7 @@ public class Robot extends TimedRobot {
                 commandFactory.moveStraightDistance(0.5, 310, true),
                 // LIFT THE CUBE!!!!!!!
                 commandFactory.turnInPlace(0.3, 90),
-                commandFactory.moveStraightDistance(0.5, 10, true)
+                commandFactory.moveStraight(0.5, 0.3, false)
                 // DEPLOY THE CUBE!!!!!!!
         );
         missionChooser.addObject("right mission right scale", rightMissionRightScale);
@@ -163,7 +163,7 @@ public class Robot extends TimedRobot {
                 commandFactory.moveStraightDistance(0.5, 310, true),
                 // LIFT THE CUBE!!!!!!!
                 commandFactory.turnInPlace(-0.3, 90),
-                commandFactory.moveStraightDistance(0.5, 10, true)
+                commandFactory.moveStraight(0.5, 0.3, false)
                 // DEPLOY THE CUBE!!!!!!!
         );
         missionChooser.addObject("left mission left scale", leftMissionLeftScale);
