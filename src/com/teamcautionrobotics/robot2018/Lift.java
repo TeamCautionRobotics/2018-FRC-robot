@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Lift {
 
@@ -61,6 +62,7 @@ public class Lift {
      * @param power positive is ascending, negative is descending, range of [-1, 1]
      */
     public void move(double power) {
+        SmartDashboard.putNumber("lift power", power);
         liftMotor.set(power);
     }
 
