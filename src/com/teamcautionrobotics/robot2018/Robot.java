@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
         manipulator = new Gamepad(2);
 
         intake = new Intake(3, 4, 5);
-        lift = new Lift(2, 4, 5, 1, 1, 1);
+        lift = new Lift(2, 4, 5, 0.8, 0.1, 0.4);
 
         commandFactory = new CommandFactory2018(driveBase, intake, lift);
 
