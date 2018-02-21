@@ -19,6 +19,10 @@ public class CommandFactory {
     public Command moveStraight(double speed, double time, boolean keepHeading) {
         return new MoveStraightCommand(driveBase, speed, time, keepHeading);
     }
+    
+    public Command moveStraight(double speed, double time) {
+        return moveStraight(speed, time, false);
+    }
 
     public Command moveStraightDistance(double speed, double distance, boolean stopAtEnd) {
         return new MoveStraightDistanceCommand(driveBase, speed, distance, stopAtEnd);
