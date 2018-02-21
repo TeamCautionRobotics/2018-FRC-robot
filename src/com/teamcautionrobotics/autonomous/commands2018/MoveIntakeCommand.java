@@ -33,6 +33,7 @@ public class MoveIntakeCommand implements Command {
         this.intake = intake;
         this.power = power;
         this.lift = lift;
+        timer = new Timer();
         reset();
     }
 
