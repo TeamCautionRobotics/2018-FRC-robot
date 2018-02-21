@@ -45,7 +45,9 @@ public class Lift {
             double Kd) {
         liftMotor = new VictorSP(motorPort);
         liftEncoder = new Encoder(encoderChannelA, encoderChannelB);
-        liftEncoder.setDistancePerPulse((4 * Math.PI) / 1024);
+
+        // Winch drum diameter is 1.25 inches
+        liftEncoder.setDistancePerPulse((1.25 * Math.PI) / 1024);
         pidController = new PIDController(Kp, Ki, Kd, 0,
                 new LiftPIDSource(PIDSourceType.kDisplacement), this::move);
         pidController.setOutputRange(-1, 1);
