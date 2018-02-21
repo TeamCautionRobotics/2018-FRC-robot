@@ -39,8 +39,8 @@ public class Lift {
     }
 
     private VictorSP liftMotor;
-    private Encoder liftEncoder;
-    private PIDController pidController;
+    public Encoder liftEncoder;
+    public PIDController pidController;
 
     public Lift(int motorPort, int encoderChannelA, int encoderChannelB, double Kp, double Ki,
             double Kd) {
