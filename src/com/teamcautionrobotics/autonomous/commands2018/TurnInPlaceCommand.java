@@ -38,10 +38,10 @@ public class TurnInPlaceCommand implements Command {
                 driveBase.drive(0);
                 complete = true;
             } else {
-                if (targetAngle > startAngle) {
-                    driveBase.drive(-speed, speed);
-                } else {
+                if (targetAngle > 0) {
                     driveBase.drive(speed, -speed);
+                } else {
+                    driveBase.drive(-speed, speed);
                 }
             }
             return false;
