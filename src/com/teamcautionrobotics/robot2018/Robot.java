@@ -49,7 +49,8 @@ public class Robot extends TimedRobot {
     boolean liftRaiseButtonPressed = false;
     boolean liftLowerButtonPressed = false;
 
-    static final double LIFT_NUDGE_SPEED = 10; // Units are inches per second
+    // Based on eyeball averaging max lift speed
+    static final double LIFT_NUDGE_SPEED = 30; // Units are inches per second
 
     CommandFactory2018 commandFactory;
     MissionScriptMission missionScriptMission;
