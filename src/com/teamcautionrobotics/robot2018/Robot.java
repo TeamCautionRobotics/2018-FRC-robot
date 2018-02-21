@@ -128,6 +128,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        logEncoders();
+
         SmartDashboard.putString("selected mission", missionChooser.getSelected().getName());
 
         if ((missionSendable.run() && !missionChooser.getSelected().enableControls)
@@ -204,5 +206,17 @@ public class Robot extends TimedRobot {
         limit = Math.max(Math.min(limit, 1), 0.4);
 
         return limit;
+    }
+
+    void logEncoders() {
+        SmartDashboard.putNumber("drive left distance", driveBase.getLeftDistance());
+        SmartDashboard.putNumber("drive right distance", driveBase.getRightDistance());
+
+        SmartDashboard.putNumber("drive left speed", driveBase.getLeftSpeed());
+        SmartDashboard.putNumber("drive right speed", driveBase.getRightSpeed());
+
+        SmartDashboard.putString("lift level", lift.getCurrentLiftLevel().toString());
+        SmartDashboard.putNumber("lift distance", lift.getCurrentHeight());
+        SmartDashboard.putNumber("lift speed", lift.liftEncoder.getRate());
     }
 }
