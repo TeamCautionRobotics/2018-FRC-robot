@@ -45,6 +45,7 @@ public class Lift {
     public Lift(int motorPort, int encoderChannelA, int encoderChannelB, double Kp, double Ki,
             double Kd) {
         liftMotor = new VictorSP(motorPort);
+        liftMotor.setInverted(true);
         liftEncoder = new Encoder(encoderChannelA, encoderChannelB);
 
         // Winch drum diameter is 1.25 inches
