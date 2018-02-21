@@ -159,12 +159,12 @@ public class Robot extends TimedRobot {
 
         // Left bumper spins counterclockwise
         if (manipulator.getButton(Button.LEFT_BUMPER) && lift.getCurrentHeight() < 3) {
-            intake.timedSpin(-0.25, 0.1);
+            intake.timedSpin(-1, 0.1);
         }
 
         // Right bumper spins clockwise
         if (manipulator.getButton(Button.RIGHT_BUMPER) && lift.getCurrentHeight() < 3) {
-            intake.timedSpin(0.25, 0.1);
+            intake.timedSpin(1, 0.1);
         }
 
         if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {

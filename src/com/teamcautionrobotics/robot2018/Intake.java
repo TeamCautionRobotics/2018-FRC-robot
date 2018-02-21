@@ -51,8 +51,14 @@ public class Intake {
             timedSpin = false;
         }
 
-        double leftPower = intakePower - this.spinPower;
-        double rightPower = intakePower + this.spinPower;
+        double leftPower, rightPower;
+        if (false) {
+            leftPower = intakePower - this.spinPower;
+            rightPower = intakePower + this.spinPower;
+        } else {
+            leftPower = spinPower < 0 ? 0 : grabberPower;
+            rightPower = spinPower > 0 ? 0 : grabberPower;
+        }
 
         // Keep the grabber motors from being sent opposite of the inPower
         if (grabberPower > 0) {
