@@ -187,15 +187,22 @@ public class Robot extends TimedRobot {
             liftLowerButtonPressed = liftLowerButton;
         }
 
-        // manual lift control
-        double dt = this.getPeriod();
-        double liftNudgeCommand = manipulator.getAxis(Axis.RIGHT_Y);
-        double changeInHeight = LIFT_NUDGE_SPEED * liftNudgeCommand * dt; // inches
-        lift.setHeight(lift.getCurrentHeight() + changeInHeight);
         if (manipulator.getButton(Button.X)) {
             lift.resetEncoder();
         }
 
+
+        if (!lift.pidController.isEnabled()) {
+            lift.move(-manipulator.getAxis(Axis.RIGHT_Y));
+        } else {
+            // manual lift control
+            double dt = this.getPeriod();
+            double liftNudgeCommand = -manipulator.getAxis(Axis.RIGHT_Y);
+            double changeInHeight = LIFT_NUDGE_SPEED * liftNudgeCommand * dt; // inches
+            if (liftNudgeCommand != 0) {
+                lift.setHeight(lift.getCurrentHeight() + changeInHeight);
+            }
+        }
     }
 
     /**
