@@ -65,7 +65,7 @@ public class Lift {
      * @param power positive is ascending, negative is descending, range of [-1, 1]
      */
     public void move(double power) {
-        if (stageOneDown.get() && stageTwoDown.get()) {
+        if (!stageOneDown.get() && !stageTwoDown.get()) {
             resetEncoder();
         }
         liftMotor.set(power);

@@ -38,7 +38,7 @@ public class Intake {
      */
     public void moveMotors(double grabberPower, double intakeLeftPower, double intakeRightPower) {
         // stops grabber from spinning in if cubeInGrabber color sensor is triggered
-        grabber.set(cubeInGrabber.get() ? Math.max(grabberPower, 0) : grabberPower);
+        grabber.set(cubeInGrabber.get() ? grabberPower : Math.max(grabberPower, 0));
         intakeLeft.set(intakeLeftPower);
         intakeRight.set(intakeRightPower);
     }
