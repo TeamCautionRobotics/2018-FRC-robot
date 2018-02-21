@@ -62,7 +62,9 @@ public class Intake {
             leftPower = Math.min(leftPower, 0);
             rightPower = Math.min(rightPower, 0);
         }
-        moveMotors(grabberPower, leftPower, rightPower);
+
+        // TODO: maybe clean this up
+        moveMotors(grabberPower * 0.5, leftPower, rightPower);
     }
     
     public void move(double inPower) {
