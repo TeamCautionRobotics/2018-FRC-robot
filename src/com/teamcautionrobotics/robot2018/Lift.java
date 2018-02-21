@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 public class Lift {
 
     public enum LiftLevel {
-        GROUND(0), SWITCH(19), LOW_SCALE(48), HIGH_SCALE(76);
+        GROUND(0), SWITCH(13), LOW_SCALE(26), HIGH_SCALE(38);
 
         private static LiftLevel[] values = values();
 
