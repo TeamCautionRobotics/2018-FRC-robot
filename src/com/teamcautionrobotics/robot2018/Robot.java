@@ -9,6 +9,7 @@ package com.teamcautionrobotics.robot2018;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 import com.teamcautionrobotics.autonomous.CommandFactory;
 import com.teamcautionrobotics.autonomous.Mission;
@@ -53,6 +54,7 @@ public class Robot extends TimedRobot {
     SendableChooser<Mission> missionChooser;
     SendableChooser<StartingPosition> startingPositionChooser;
     SendableChooser<AutoFieldElement> autoFieldElementChooser;
+    HashMap<String, Mission> missions;
     Mission activeMission;
 
     @Override
@@ -68,9 +70,6 @@ public class Robot extends TimedRobot {
 
         commandFactory = new CommandFactory(driveBase);
 
-        missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
-                commandFactory);
-
         startingPositionChooser = new SendableChooser<>();
         for (StartingPosition i : StartingPosition.values()) {
             startingPositionChooser.addObject(i.name, i);
@@ -83,15 +82,20 @@ public class Robot extends TimedRobot {
 
         missionChooser = new SendableChooser<>();
 
-        missionChooser.addDefault("Do Nothing Mission", new Mission("Do Nothing Mission"));
-        missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
-        SmartDashboard.putData("Autonomous Mode Select", missionChooser);
+        Mission doNothingMission = new Mission("do nothing mission");
+        missionChooser.addDefault(doNothingMission.getName(), doNothingMission);
+        missions.put(doNothingMission.getName(), doNothingMission);
 
-        Mission crossAutoLineMission = new Mission("Drive Forward Mission",
-                commandFactory.moveStraightDistance(0.5,60,true),
-                commandFactory.moveStraight(-0.1, 0.2, false)
-        );
-        missionChooser.addObject("Drive Forward Mission", crossAutoLineMission);
+        missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
+                commandFactory);
+        missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
+        missions.put(missionScriptMission.getName(), missionScriptMission);
+
+        Mission driveForwardMission = new Mission("drive forward mission",
+                commandFactory.moveStraightDistance(0.5, 60, true),
+                commandFactory.moveStraight(-0.1, 0.2, false));
+        missionChooser.addObject(driveForwardMission.getName(), driveForwardMission);
+        missions.put(driveForwardMission.getName(), driveForwardMission);
 
         Mission centerMissionRightSwitch = new Mission("center mission right switch",
                 commandFactory.moveStraightDistance(0.5, 30, true),
@@ -100,11 +104,11 @@ public class Robot extends TimedRobot {
                 commandFactory.turnInPlace(0.3, 45),
                 commandFactory.moveStraightDistance(0.5, 20, true),
                 // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.3, 90),
-                commandFactory.moveStraight(0.5, 0.3, false)
-                // DEPLOY THE CUBE!!!!!!!
+                commandFactory.turnInPlace(0.3, 90), commandFactory.moveStraight(0.5, 0.3, false)
+        // DEPLOY THE CUBE!!!!!!!
         );
-        missionChooser.addObject("center mission right switch", centerMissionRightSwitch);
+        missionChooser.addObject(centerMissionRightSwitch.getName(), centerMissionRightSwitch);
+        missions.put(centerMissionRightSwitch.getName(), centerMissionRightSwitch);
 
         Mission centerMissionLeftSwitch = new Mission("center mission left switch",
                 commandFactory.moveStraightDistance(0.5, 30, true),
@@ -113,11 +117,11 @@ public class Robot extends TimedRobot {
                 commandFactory.turnInPlace(-0.3, 50),
                 commandFactory.moveStraightDistance(0.5, 30, true),
                 // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 90),
-                commandFactory.moveStraight(0.5, 0.3, false)
-                // DEPLOY THE CUBE!!!!!!!
+                commandFactory.turnInPlace(-0.3, 90), commandFactory.moveStraight(0.5, 0.3, false)
+        // DEPLOY THE CUBE!!!!!!!
         );
-        missionChooser.addObject("center mission left switch", centerMissionLeftSwitch);
+        missionChooser.addObject(centerMissionLeftSwitch.getName(), centerMissionLeftSwitch);
+        missions.put(centerMissionLeftSwitch.getName(), centerMissionLeftSwitch);
 
         Mission centerMissionRightScale = new Mission("center mission right scale",
                 commandFactory.moveStraightDistance(0.5, 30, true),
@@ -126,11 +130,11 @@ public class Robot extends TimedRobot {
                 commandFactory.turnInPlace(0.3, 50),
                 commandFactory.moveStraightDistance(0.5, 195, true),
                 // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.3, 90),
-                commandFactory.moveStraight(0.5, 0.3, false)
-                // DEPLOY THE CUBE!!!!!!!
+                commandFactory.turnInPlace(0.3, 90), commandFactory.moveStraight(0.5, 0.3, false)
+        // DEPLOY THE CUBE!!!!!!!
         );
-        missionChooser.addObject("center mission right scale", centerMissionRightScale);
+        missionChooser.addObject(centerMissionRightScale.getName(), centerMissionRightScale);
+        missions.put(centerMissionRightScale.getName(), centerMissionRightScale);
 
         Mission centerMissionLeftScale = new Mission("center mission left scale",
                 commandFactory.moveStraightDistance(0.5, 30, true),
@@ -139,52 +143,53 @@ public class Robot extends TimedRobot {
                 commandFactory.turnInPlace(-0.3, 50),
                 commandFactory.moveStraightDistance(0.5, 185, true),
                 // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 85),
-                commandFactory.moveStraight(0.5, 0.3, false)
-                // DEPLOY THE CUBE!!!!!!!
+                commandFactory.turnInPlace(-0.3, 85), commandFactory.moveStraight(0.5, 0.3, false)
+        // DEPLOY THE CUBE!!!!!!!
         );
-        missionChooser.addObject("center mission left scale", centerMissionLeftScale);
+        missionChooser.addObject(centerMissionLeftScale.getName(), centerMissionLeftScale);
+        missions.put(centerMissionLeftScale.getName(), centerMissionLeftScale);
 
         Mission rightMissionSwitch = new Mission("right mission switch",
                 commandFactory.moveStraightDistance(0.5, 130, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
                 // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, -90),
-                commandFactory.moveStraight(0.5, 0.3, false)
-                // DEPLOY THE CUBE!!!!!!!
+                commandFactory.turnInPlace(0.5, -90), commandFactory.moveStraight(0.5, 0.3, false)
+        // DEPLOY THE CUBE!!!!!!!
         );
-        missionChooser.addObject("right mission switch", rightMissionSwitch);
+        missionChooser.addObject(rightMissionSwitch.getName(), rightMissionSwitch);
+        missions.put(rightMissionSwitch.getName(), rightMissionSwitch);
 
-        
         Mission rightMissionScale = new Mission("right mission scale",
                 commandFactory.moveStraightDistance(0.5, 260, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
                 // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, -90),
-                commandFactory.moveStraight(0.5, 0.3, false)
-                // DEPLOY THE CUBE!!!!!!!
+                commandFactory.turnInPlace(0.5, -90), commandFactory.moveStraight(0.5, 0.3, false)
+        // DEPLOY THE CUBE!!!!!!!
         );
-        missionChooser.addObject("right mission scale", rightMissionScale);
-        
+        missionChooser.addObject(rightMissionScale.getName(), rightMissionScale);
+        missions.put(rightMissionScale.getName(), rightMissionScale);
+
         Mission leftMissionSwitch = new Mission("left mission switch",
                 commandFactory.moveStraightDistance(0.5, 130, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
                 // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, 90),
-                commandFactory.moveStraight(0.5, 0.3, false)
-                // DEPLOY THE CUBE!!!!!!!
+                commandFactory.turnInPlace(0.5, 90), commandFactory.moveStraight(0.5, 0.3, false)
+        // DEPLOY THE CUBE!!!!!!!
         );
-        missionChooser.addObject("left mission switch", leftMissionSwitch);
+        missionChooser.addObject(leftMissionSwitch.getName(), leftMissionSwitch);
+        missions.put(leftMissionSwitch.getName(), leftMissionSwitch);
 
         Mission leftMissionScale = new Mission("left mission scale",
                 commandFactory.moveStraightDistance(0.5, 260, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
                 // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, 90),
-                commandFactory.moveStraight(0.5, 0.3, false)
-                // DEPLOY THE CUBE!!!!!!!
+                commandFactory.turnInPlace(0.5, 90), commandFactory.moveStraight(0.5, 0.3, false)
+        // DEPLOY THE CUBE!!!!!!!
         );
-        missionChooser.addObject("left mission scale", leftMissionScale);
+        missionChooser.addObject(leftMissionScale.getName(), leftMissionScale);
+        missions.put(leftMissionScale.getName(), leftMissionScale);
+
+        SmartDashboard.putData("Autonomous Mode Select", missionChooser);
 
         missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
         SmartDashboard.putData(missionSendable);
