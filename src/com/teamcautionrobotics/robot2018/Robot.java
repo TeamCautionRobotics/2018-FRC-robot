@@ -15,6 +15,8 @@ import com.teamcautionrobotics.autonomous.CommandFactory;
 import com.teamcautionrobotics.autonomous.Mission;
 import com.teamcautionrobotics.autonomous.MissionScriptMission;
 import com.teamcautionrobotics.autonomous.MissionSendable;
+import com.teamcautionrobotics.robot2018.AutoEnums.AutoObjective;
+import com.teamcautionrobotics.robot2018.AutoEnums.StartingPosition;
 import com.teamcautionrobotics.robot2018.Gamepad.Axis;
 import com.teamcautionrobotics.robot2018.Gamepad.Button;
 
@@ -53,7 +55,7 @@ public class Robot extends TimedRobot {
     String fmsData;
     SendableChooser<Mission> missionChooser;
     SendableChooser<StartingPosition> startingPositionChooser;
-    SendableChooser<AutoFieldElement> autoFieldElementChooser;
+    SendableChooser<AutoObjective> autoFieldElementChooser;
     HashMap<String, Mission> missions;
     Mission activeMission;
 
@@ -72,11 +74,11 @@ public class Robot extends TimedRobot {
 
         startingPositionChooser = new SendableChooser<>();
         for (StartingPosition i : StartingPosition.values()) {
-            startingPositionChooser.addObject(i.name, i);
+            startingPositionChooser.addObject(i.name(), i);
         }
 
         autoFieldElementChooser = new SendableChooser<>();
-        for (AutoFieldElement i : AutoFieldElement.values()) {
+        for (AutoObjective i : AutoObjective.values()) {
             autoFieldElementChooser.addObject(i.name, i);
         }
 
@@ -219,49 +221,49 @@ public class Robot extends TimedRobot {
             char scalePosition = fmsData.charAt(1);
             char opponentSwitchPosition = fmsData.charAt(2);
             
-            if (autoFieldElementChooser.getSelected() == AutoFieldElement.AUTO_LINE) {
+            if (autoFieldElementChooser.getSelected() == AutoObjective.AUTO_LINE) {
                 // drive forward mission
-            } else if (autoFieldElementChooser.getSelected() == AutoFieldElement.SWITCH) {
-                if (startingPositionChooser.getSelected() == StartingPosition.CENTER_POSITION) {
+            } else if (autoFieldElementChooser.getSelected() == AutoObjective.SWITCH) {
+                if (startingPositionChooser.getSelected() == StartingPosition.CENTER) {
                     if (ourSwitchPosition == 'L') {
                         // mission center left switch
                     } else if (ourSwitchPosition == 'R') {
                         // mission center right switch
                     }
-                } else if (startingPositionChooser.getSelected() == StartingPosition.LEFT_POSITION) {
+                } else if (startingPositionChooser.getSelected() == StartingPosition.LEFT) {
                     if (ourSwitchPosition == 'L') {
                         // mission left switch
                     } else if (ourSwitchPosition == 'R') {
                         // do nothing
                     }
-                } else if (startingPositionChooser.getSelected() == StartingPosition.RIGHT_POSITION) {
+                } else if (startingPositionChooser.getSelected() == StartingPosition.RIGHT) {
                     if (ourSwitchPosition == 'L') {
                         // do nothing
                     } else if (ourSwitchPosition == 'R') {
                         // mission right switch
                     }
                 }
-            } else if (autoFieldElementChooser.getSelected() == AutoFieldElement.SCALE) {
-                if (startingPositionChooser.getSelected() == StartingPosition.CENTER_POSITION) {
+            } else if (autoFieldElementChooser.getSelected() == AutoObjective.SCALE) {
+                if (startingPositionChooser.getSelected() == StartingPosition.CENTER) {
                     if (ourSwitchPosition == 'L') {
                         // mission center left scale
                     } else if (ourSwitchPosition == 'R') {
                         // mission center right scale
                     }
-                } else if (startingPositionChooser.getSelected() == StartingPosition.LEFT_POSITION) {
+                } else if (startingPositionChooser.getSelected() == StartingPosition.LEFT) {
                     if (ourSwitchPosition == 'L') {
                         // mission left scale
                     } else if (ourSwitchPosition == 'R') {
                         // do nothing
                     }
-                } else if (startingPositionChooser.getSelected() == StartingPosition.RIGHT_POSITION) {
+                } else if (startingPositionChooser.getSelected() == StartingPosition.RIGHT) {
                     if (ourSwitchPosition == 'L') {
                         // do nothing
                     } else if (ourSwitchPosition == 'R') {
                         // mission right scale
                     }
                 }
-            } else if (autoFieldElementChooser.getSelected() == AutoFieldElement.DO_NOTHING) {
+            } else if (autoFieldElementChooser.getSelected() == AutoObjective.DO_NOTHING) {
                 // do nothing
             }
         } else {
