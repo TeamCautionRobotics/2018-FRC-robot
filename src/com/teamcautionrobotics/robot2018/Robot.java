@@ -17,6 +17,7 @@ import com.teamcautionrobotics.autonomous.MissionSendable;
 import com.teamcautionrobotics.robot2018.Gamepad.Axis;
 import com.teamcautionrobotics.robot2018.Gamepad.Button;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,8 +48,11 @@ public class Robot extends TimedRobot {
     CommandFactory commandFactory;
     MissionScriptMission missionScriptMission;
     MissionSendable missionSendable;
+
+    String fmsData;
     SendableChooser<Mission> missionChooser;
     SendableChooser<StartingPosition> startingPositionChooser;
+    SendableChooser<AutoFieldElement> autoFieldElementChooser;
     Mission activeMission;
 
     @Override
@@ -68,8 +72,13 @@ public class Robot extends TimedRobot {
                 commandFactory);
 
         startingPositionChooser = new SendableChooser<>();
-        for (StartingPosition i: StartingPosition.values()) {
+        for (StartingPosition i : StartingPosition.values()) {
             startingPositionChooser.addObject(i.name, i);
+        }
+
+        autoFieldElementChooser = new SendableChooser<>();
+        for (AutoFieldElement i : AutoFieldElement.values()) {
+            autoFieldElementChooser.addObject(i.name, i);
         }
 
         missionChooser = new SendableChooser<>();
@@ -199,7 +208,62 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        activeMission = missionChooser.getSelected();
+        fmsData = DriverStation.getInstance().getGameSpecificMessage();
+        if (fmsData.length() >= 3) {
+            char ourSwitchPosition = fmsData.charAt(0);
+            char scalePosition = fmsData.charAt(1);
+            char opponentSwitchPosition = fmsData.charAt(2);
+            
+            if (autoFieldElementChooser.getSelected() == AutoFieldElement.AUTO_LINE) {
+                // drive forward mission
+            } else if (autoFieldElementChooser.getSelected() == AutoFieldElement.SWITCH) {
+                if (startingPositionChooser.getSelected() == StartingPosition.CENTER_POSITION) {
+                    if (ourSwitchPosition == 'L') {
+                        // mission center left switch
+                    } else if (ourSwitchPosition == 'R') {
+                        // mission center right switch
+                    }
+                } else if (startingPositionChooser.getSelected() == StartingPosition.LEFT_POSITION) {
+                    if (ourSwitchPosition == 'L') {
+                        // mission left switch
+                    } else if (ourSwitchPosition == 'R') {
+                        // do nothing
+                    }
+                } else if (startingPositionChooser.getSelected() == StartingPosition.RIGHT_POSITION) {
+                    if (ourSwitchPosition == 'L') {
+                        // do nothing
+                    } else if (ourSwitchPosition == 'R') {
+                        // mission right switch
+                    }
+                }
+            } else if (autoFieldElementChooser.getSelected() == AutoFieldElement.SCALE) {
+                if (startingPositionChooser.getSelected() == StartingPosition.CENTER_POSITION) {
+                    if (ourSwitchPosition == 'L') {
+                        // mission center left scale
+                    } else if (ourSwitchPosition == 'R') {
+                        // mission center right scale
+                    }
+                } else if (startingPositionChooser.getSelected() == StartingPosition.LEFT_POSITION) {
+                    if (ourSwitchPosition == 'L') {
+                        // mission left scale
+                    } else if (ourSwitchPosition == 'R') {
+                        // do nothing
+                    }
+                } else if (startingPositionChooser.getSelected() == StartingPosition.RIGHT_POSITION) {
+                    if (ourSwitchPosition == 'L') {
+                        // do nothing
+                    } else if (ourSwitchPosition == 'R') {
+                        // mission right scale
+                    }
+                }
+            } else if (autoFieldElementChooser.getSelected() == AutoFieldElement.DO_NOTHING) {
+                // do nothing
+            }
+        } else {
+            // do nothing
+        }
+
+//        activeMission = missionChooser.getSelected();
 
         if (activeMission != null) {
             activeMission.reset();

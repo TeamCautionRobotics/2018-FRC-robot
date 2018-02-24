@@ -1,8 +1,8 @@
 package com.teamcautionrobotics.robot2018;
 
 public enum StartingPosition {
-    LEFT_POSITION("Left position"), CENTER_POSITION("Center position"),
-            RIGHT_POSITION("Right pisition");
+    LEFT_POSITION("left position"), CENTER_POSITION("center position"),
+            RIGHT_POSITION("right position");
 
     public String name;
 
