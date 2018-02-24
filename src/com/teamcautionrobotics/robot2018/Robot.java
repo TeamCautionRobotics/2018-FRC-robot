@@ -148,9 +148,10 @@ public class Robot extends TimedRobot {
 
         
         Mission rightMissionScale = new Mission("right mission scale",
-                commandFactory.moveStraightDistance(0.5, 310, true),
+                commandFactory.moveStraightDistance(0.5, 260, true),
+                commandFactory.moveStraight(-0.1, 0.2, false),
                 // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.3, 90),
+                commandFactory.turnInPlace(0.5, -90),
                 commandFactory.moveStraight(0.5, 0.3, false)
                 // DEPLOY THE CUBE!!!!!!!
         );
@@ -158,6 +159,7 @@ public class Robot extends TimedRobot {
         
         Mission leftMissionSwitch = new Mission("left mission switch",
                 commandFactory.moveStraightDistance(0.5, 130, true),
+                commandFactory.moveStraight(-0.1, 0.2, false),
                 // LIFT THE CUBE!!!!!!!
                 commandFactory.turnInPlace(0.5, 90),
                 commandFactory.moveStraight(0.5, 0.3, false)
@@ -166,9 +168,10 @@ public class Robot extends TimedRobot {
         missionChooser.addObject("left mission switch", leftMissionSwitch);
 
         Mission leftMissionScale = new Mission("left mission scale",
-                commandFactory.moveStraightDistance(0.5, 310, true),
+                commandFactory.moveStraightDistance(0.5, 260, true),
+                commandFactory.moveStraight(-0.1, 0.2, false),
                 // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 90),
+                commandFactory.turnInPlace(0.5, 90),
                 commandFactory.moveStraight(0.5, 0.3, false)
                 // DEPLOY THE CUBE!!!!!!!
         );
