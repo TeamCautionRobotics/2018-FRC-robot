@@ -52,10 +52,12 @@ public class Intake {
         }
 
         double leftPower, rightPower;
-        if (false) {
+        if (true) {
+            // Intake rollers can spin reverse of the grabber
             leftPower = intakePower - this.spinPower;
             rightPower = intakePower + this.spinPower;
         } else {
+            // Intake rollers can not spin reverse of the grabber
             leftPower = spinPower < 0 ? 0 : grabberPower;
             rightPower = spinPower > 0 ? 0 : grabberPower;
         }

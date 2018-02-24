@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Lift {
 
     public enum LiftLevel {
-        GROUND(0), SWITCH(13), LOW_SCALE(26), HIGH_SCALE(38);
+        GROUND(0), SWITCH(28), LOW_SCALE(56), HIGH_SCALE(62);
 
         private static LiftLevel[] values = values();
 
@@ -53,6 +53,8 @@ public class Lift {
         pidController = new PIDController(Kp, Ki, Kd, 0,
                 new LiftPIDSource(PIDSourceType.kDisplacement), this::move);
         pidController.setOutputRange(-1, 1);
+        // TODO: get from lift levels or other better non magic place for number
+        pidController.setInputRange(0, 62);
         pidController.setAbsoluteTolerance(3);
     }
 
@@ -116,13 +118,13 @@ public class Lift {
     }
 
     public void enablePID() {
-        if (!pidController.isEnabled()) {
+        if (false && !pidController.isEnabled()) {
             pidController.enable();
         }
     }
 
     public void disablePID() {
-        if (pidController.isEnabled()) {
+        if (false && pidController.isEnabled()) {
             pidController.disable();
         }
     }

@@ -51,6 +51,7 @@ public class Robot extends TimedRobot {
 
     // Based on eyeball averaging max lift speed
     static final double LIFT_NUDGE_SPEED = 30; // Units are inches per second
+    static final double MAX_LIFT_HEIGHT_FOR_INTAKE = 2.2; // Inches lift height
 
     CommandFactory2018 commandFactory;
     MissionScriptMission missionScriptMission;
@@ -150,21 +151,21 @@ public class Robot extends TimedRobot {
 
         driveBase.drive(leftPower, rightPower);
 
-        if (lift.getCurrentHeight() < 3) {
+        if (lift.getCurrentHeight() < MAX_LIFT_HEIGHT_FOR_INTAKE) {
             intake.move(manipulator.getAxis(Axis.LEFT_Y));
+
+            // Left bumper spins counterclockwise
+            if (manipulator.getButton(Button.LEFT_BUMPER)) {
+                intake.timedSpin(-0.5, 0.1);
+            }
+
+            // Right bumper spins clockwise
+            if (manipulator.getButton(Button.RIGHT_BUMPER)) {
+                intake.timedSpin(0.5, 0.1);
+            }
         } else {
             // disable intake
             intake.move(manipulator.getAxis(Axis.LEFT_Y), 0);
-        }
-
-        // Left bumper spins counterclockwise
-        if (manipulator.getButton(Button.LEFT_BUMPER) && lift.getCurrentHeight() < 3) {
-            intake.timedSpin(-1, 0.1);
-        }
-
-        // Right bumper spins clockwise
-        if (manipulator.getButton(Button.RIGHT_BUMPER) && lift.getCurrentHeight() < 3) {
-            intake.timedSpin(1, 0.1);
         }
 
         if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
@@ -193,7 +194,8 @@ public class Robot extends TimedRobot {
 
 
         if (!lift.pidController.isEnabled()) {
-            lift.move(-manipulator.getAxis(Axis.RIGHT_Y));
+            // Right manipulator joystick down for lift up
+            lift.move(manipulator.getAxis(Axis.RIGHT_Y));
         } else {
             // manual lift control
             double dt = this.getPeriod();
