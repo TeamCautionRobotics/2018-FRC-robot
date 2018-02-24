@@ -48,6 +48,7 @@ public class Robot extends TimedRobot {
     MissionScriptMission missionScriptMission;
     MissionSendable missionSendable;
     SendableChooser<Mission> missionChooser;
+    SendableChooser<StartingPosition> startingPositionChooser;
     Mission activeMission;
 
     @Override
@@ -65,6 +66,11 @@ public class Robot extends TimedRobot {
 
         missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
                 commandFactory);
+
+        startingPositionChooser = new SendableChooser<>();
+        for (StartingPosition i: StartingPosition.values()) {
+            startingPositionChooser.addObject(i.name, i);
+        }
 
         missionChooser = new SendableChooser<>();
 
