@@ -158,6 +158,8 @@ public class Robot extends TimedRobot {
 
         intake.move(manipulator.getAxis(Axis.LEFT_Y));
 
+        SmartDashboard.putBoolean("Power prismⁿ™ in grabber", intake.getCubeInGrabber());
+
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {
             if (liftRaiseButton) {
@@ -179,6 +181,7 @@ public class Robot extends TimedRobot {
         double liftNudgeCommand = manipulator.getAxis(Axis.RIGHT_Y);
         double changeInHeight = LIFT_NUDGE_SPEED * liftNudgeCommand * dt; // inches
         lift.setHeight(lift.getCurrentHeight() + changeInHeight);
+        
     }
 
     /**
