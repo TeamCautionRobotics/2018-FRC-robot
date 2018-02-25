@@ -158,7 +158,7 @@ public class Robot extends TimedRobot {
 
         intake.move(manipulator.getAxis(Axis.LEFT_Y));
 
-        SmartDashboard.putBoolean("Power prismⁿ™ in grabber", intake.getCubeInGrabber());
+        SmartDashboard.putBoolean("Power prismⁿ™ in grabber", intake.cubeIsInGrabber());
 
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {
@@ -182,9 +182,9 @@ public class Robot extends TimedRobot {
         double changeInHeight = LIFT_NUDGE_SPEED * liftNudgeCommand * dt; // inches
         lift.setHeight(lift.getCurrentHeight() + changeInHeight);
         
-        SmartDashboard.putBoolean("Stage one down", lift.getStageOneDown());
-        SmartDashboard.putBoolean("Stage two down", lift.getStageTwoDown());
-        SmartDashboard.putBoolean("Lift fully down", lift.getStageOneDown() && lift.getStageTwoDown());
+        SmartDashboard.putBoolean("Stage one down", lift.stageOneIsDown());
+        SmartDashboard.putBoolean("Stage two down", lift.StageTwoIsDown());
+        SmartDashboard.putBoolean("Lift fully down", lift.stageOneIsDown() && lift.StageTwoIsDown());
     }
 
     /**

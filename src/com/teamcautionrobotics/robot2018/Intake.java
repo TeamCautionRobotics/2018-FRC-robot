@@ -99,7 +99,7 @@ public class Intake {
         this.spinPower = spinPower;
     }
 
-    public boolean getCubeInGrabber() {
+    public boolean cubeIsInGrabber() {
         return !colorSensor.get();
     }
 }
