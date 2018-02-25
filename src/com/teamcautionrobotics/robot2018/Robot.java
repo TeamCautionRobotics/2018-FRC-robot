@@ -210,10 +210,6 @@ public class Robot extends TimedRobot {
             liftLowerButtonPressed = liftLowerButton;
         }
 
-        if (manipulator.getButton(Button.X)) {
-            lift.resetEncoder();
-        }
-
 
         if (!lift.pidController.isEnabled()) {
             // Right manipulator joystick down for lift up
