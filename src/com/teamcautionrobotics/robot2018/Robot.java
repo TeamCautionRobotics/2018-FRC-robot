@@ -16,6 +16,7 @@ import com.teamcautionrobotics.autonomous.Mission;
 import com.teamcautionrobotics.autonomous.MissionScriptMission;
 import com.teamcautionrobotics.autonomous.MissionSendable;
 import com.teamcautionrobotics.robot2018.AutoEnums.AutoObjective;
+import com.teamcautionrobotics.robot2018.AutoEnums.PlateSide;
 import com.teamcautionrobotics.robot2018.AutoEnums.StartingPosition;
 import com.teamcautionrobotics.robot2018.Gamepad.Axis;
 import com.teamcautionrobotics.robot2018.Gamepad.Button;
@@ -53,10 +54,12 @@ public class Robot extends TimedRobot {
     MissionSendable missionSendable;
 
     String fmsData;
+    PlateSide switchPosition;
+    PlateSide scalePosition;
+
     SendableChooser<Mission> missionChooser;
     SendableChooser<StartingPosition> startingPositionChooser;
-    SendableChooser<AutoObjective> autoFieldElementChooser;
-    HashMap<String, Mission> missions;
+    SendableChooser<AutoObjective> autoObjectiveChooser;
     Mission activeMission;
 
     @Override
@@ -73,14 +76,17 @@ public class Robot extends TimedRobot {
         commandFactory = new CommandFactory(driveBase);
 
         startingPositionChooser = new SendableChooser<>();
-        for (StartingPosition i : StartingPosition.values()) {
-            startingPositionChooser.addObject(i.name(), i);
-        }
+        startingPositionChooser.addDefault("Center", StartingPosition.CENTER);
+        startingPositionChooser.addObject("Left", StartingPosition.LEFT);
+        startingPositionChooser.addObject("Right", StartingPosition.RIGHT);
+        SmartDashboard.putData("Starting Position Select", startingPositionChooser);
 
-        autoFieldElementChooser = new SendableChooser<>();
-        for (AutoObjective i : AutoObjective.values()) {
-            autoFieldElementChooser.addObject(i.name, i);
-        }
+        autoObjectiveChooser = new SendableChooser<>();
+        autoObjectiveChooser.addDefault("Switch", AutoObjective.SWITCH);
+        autoObjectiveChooser.addObject("Scale", AutoObjective.SCALE);
+        autoObjectiveChooser.addObject("Auto line", AutoObjective.AUTO_LINE);
+        autoObjectiveChooser.addObject("Do nothing", AutoObjective.DO_NOTHING);
+        SmartDashboard.putData("Auto Objective Select", autoObjectiveChooser);
 
         missionChooser = new SendableChooser<>();
 
