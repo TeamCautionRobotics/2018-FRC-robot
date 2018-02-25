@@ -9,7 +9,6 @@ package com.teamcautionrobotics.robot2018;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 
 import com.teamcautionrobotics.autonomous.CommandFactory;
 import com.teamcautionrobotics.autonomous.Mission;
@@ -60,6 +59,7 @@ public class Robot extends TimedRobot {
     SendableChooser<Mission> missionChooser;
     SendableChooser<StartingPosition> startingPositionChooser;
     SendableChooser<AutoObjective> autoObjectiveChooser;
+    MissionSelector missionSelector;
     Mission activeMission;
 
     @Override
@@ -93,11 +93,12 @@ public class Robot extends TimedRobot {
         missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
                 commandFactory);
         missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
-
         SmartDashboard.putData("Autonomous Mode Select", missionChooser);
 
         missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
         SmartDashboard.putData(missionSendable);
+
+        missionSelector = new MissionSelector(commandFactory);
     }
 
     @Override
@@ -119,15 +120,28 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         fmsData = DriverStation.getInstance().getGameSpecificMessage();
-        if (fmsData.length() >= 3) {
-            char ourSwitchPosition = fmsData.charAt(0);
-            char scalePosition = fmsData.charAt(1);
-            char opponentSwitchPosition = fmsData.charAt(2);
+        System.out.println("dsg " + fmsData);
+        if (fmsData.length() == 3) {
+            if (fmsData.charAt(0) == 'L') {
+                switchPosition = PlateSide.LEFT;
+            } else if (fmsData.charAt(0) == 'R') {
+                switchPosition = PlateSide.RIGHT;
+            } else {
+                System.err.println("FMS switch char is neither 'L' nor 'R'");
+            }
+            if (fmsData.charAt(1) == 'L') {
+                scalePosition = PlateSide.LEFT;
+            } else if (fmsData.charAt(1) == 'R') {
+                scalePosition = PlateSide.RIGHT;
+            } else {
+                System.err.println("FMS scale char is neither 'L' nor 'R'");
+            }
         } else {
-            // do nothing
+            System.err.println("FMS does not pass a three-char string for plate position.");
         }
 
-//        activeMission = missionChooser.getSelected();
+        activeMission = missionSelector.selectMissionFromFieldData(switchPosition, scalePosition,
+                startingPositionChooser.getSelected(), autoObjectiveChooser.getSelected());
 
         if (activeMission != null) {
             activeMission.reset();
