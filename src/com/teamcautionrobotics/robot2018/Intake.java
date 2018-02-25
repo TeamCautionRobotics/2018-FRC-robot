@@ -10,7 +10,7 @@ public class Intake {
     private VictorSP intakeLeft;
     private VictorSP intakeRight;
 
-    private DigitalInput cubeInGrabber;
+    private DigitalInput colorSensor;
 
     private Timer timer;
     private boolean timedSpin = false;
@@ -19,12 +19,12 @@ public class Intake {
     private double spinPower = 0;
 
     public Intake(int intakeChannel, int grabberLeftChannel, int grabberRightChannel,
-            int cubeInGrabberChannel) {
+            int colorSensorChannel) {
         grabber = new VictorSP(intakeChannel);
         intakeLeft = new VictorSP(grabberLeftChannel);
         intakeRight = new VictorSP(grabberRightChannel);
 
-        cubeInGrabber = new DigitalInput(cubeInGrabberChannel);
+        colorSensor = new DigitalInput(colorSensorChannel);
 
         timer = new Timer();
         timer.start();
@@ -38,7 +38,7 @@ public class Intake {
      */
     public void moveMotors(double grabberPower, double intakeLeftPower, double intakeRightPower) {
         // stops grabber from spinning in if cubeInGrabber color sensor is triggered
-        grabber.set(cubeInGrabber.get() ? grabberPower : Math.max(grabberPower, 0));
+        grabber.set(grabberPower);
         intakeLeft.set(intakeLeftPower);
         intakeRight.set(intakeRightPower);
     }
@@ -100,6 +100,6 @@ public class Intake {
     }
 
     public boolean getCubeInGrabber() {
-        return cubeInGrabber.get();
+        return !colorSensor.get();
     }
 }
