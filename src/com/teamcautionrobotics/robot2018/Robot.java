@@ -182,6 +182,9 @@ public class Robot extends TimedRobot {
         double changeInHeight = LIFT_NUDGE_SPEED * liftNudgeCommand * dt; // inches
         lift.setHeight(lift.getCurrentHeight() + changeInHeight);
         
+        SmartDashboard.putBoolean("Stage one down", lift.getStageOneDown());
+        SmartDashboard.putBoolean("Stage two down", lift.getStageTwoDown());
+        SmartDashboard.putBoolean("Lift fully down", lift.getStageOneDown() && lift.getStageTwoDown());
     }
 
     /**
