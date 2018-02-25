@@ -84,112 +84,9 @@ public class Robot extends TimedRobot {
 
         missionChooser = new SendableChooser<>();
 
-        Mission doNothingMission = new Mission("do nothing mission");
-        missionChooser.addDefault(doNothingMission.getName(), doNothingMission);
-        missions.put(doNothingMission.getName(), doNothingMission);
-
         missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
                 commandFactory);
         missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
-        missions.put(missionScriptMission.getName(), missionScriptMission);
-
-        Mission driveForwardMission = new Mission("drive forward mission",
-                commandFactory.moveStraightDistance(0.5, 60, true),
-                commandFactory.moveStraight(-0.1, 0.2, false));
-        missionChooser.addObject(driveForwardMission.getName(), driveForwardMission);
-        missions.put(driveForwardMission.getName(), driveForwardMission);
-
-        Mission centerMissionRightSwitch = new Mission("center mission right switch",
-                commandFactory.moveStraightDistance(0.5, 30, true),
-                commandFactory.turnInPlace(-0.3, 45),
-                commandFactory.moveStraightDistance(0.5, 140, true),
-                commandFactory.turnInPlace(0.3, 45),
-                commandFactory.moveStraightDistance(0.5, 20, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.3, 90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject(centerMissionRightSwitch.getName(), centerMissionRightSwitch);
-        missions.put(centerMissionRightSwitch.getName(), centerMissionRightSwitch);
-
-        Mission centerMissionLeftSwitch = new Mission("center mission left switch",
-                commandFactory.moveStraightDistance(0.5, 30, true),
-                commandFactory.turnInPlace(0.3, 60),
-                commandFactory.moveStraightDistance(0.5, 160, true),
-                commandFactory.turnInPlace(-0.3, 50),
-                commandFactory.moveStraightDistance(0.5, 30, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject(centerMissionLeftSwitch.getName(), centerMissionLeftSwitch);
-        missions.put(centerMissionLeftSwitch.getName(), centerMissionLeftSwitch);
-
-        Mission centerMissionRightScale = new Mission("center mission right scale",
-                commandFactory.moveStraightDistance(0.5, 30, true),
-                commandFactory.turnInPlace(-0.3, 45),
-                commandFactory.moveStraightDistance(0.5, 140, true),
-                commandFactory.turnInPlace(0.3, 50),
-                commandFactory.moveStraightDistance(0.5, 195, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.3, 90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject(centerMissionRightScale.getName(), centerMissionRightScale);
-        missions.put(centerMissionRightScale.getName(), centerMissionRightScale);
-
-        Mission centerMissionLeftScale = new Mission("center mission left scale",
-                commandFactory.moveStraightDistance(0.5, 30, true),
-                commandFactory.turnInPlace(0.3, 60),
-                commandFactory.moveStraightDistance(0.5, 160, true),
-                commandFactory.turnInPlace(-0.3, 50),
-                commandFactory.moveStraightDistance(0.5, 185, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 85), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject(centerMissionLeftScale.getName(), centerMissionLeftScale);
-        missions.put(centerMissionLeftScale.getName(), centerMissionLeftScale);
-
-        Mission rightMissionSwitch = new Mission("right mission switch",
-                commandFactory.moveStraightDistance(0.5, 130, true),
-                commandFactory.moveStraight(-0.1, 0.2, false),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, -90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject(rightMissionSwitch.getName(), rightMissionSwitch);
-        missions.put(rightMissionSwitch.getName(), rightMissionSwitch);
-
-        Mission rightMissionScale = new Mission("right mission scale",
-                commandFactory.moveStraightDistance(0.5, 260, true),
-                commandFactory.moveStraight(-0.1, 0.2, false),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, -90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject(rightMissionScale.getName(), rightMissionScale);
-        missions.put(rightMissionScale.getName(), rightMissionScale);
-
-        Mission leftMissionSwitch = new Mission("left mission switch",
-                commandFactory.moveStraightDistance(0.5, 130, true),
-                commandFactory.moveStraight(-0.1, 0.2, false),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, 90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject(leftMissionSwitch.getName(), leftMissionSwitch);
-        missions.put(leftMissionSwitch.getName(), leftMissionSwitch);
-
-        Mission leftMissionScale = new Mission("left mission scale",
-                commandFactory.moveStraightDistance(0.5, 260, true),
-                commandFactory.moveStraight(-0.1, 0.2, false),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, 90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
-        );
-        missionChooser.addObject(leftMissionScale.getName(), leftMissionScale);
-        missions.put(leftMissionScale.getName(), leftMissionScale);
 
         SmartDashboard.putData("Autonomous Mode Select", missionChooser);
 
@@ -220,52 +117,6 @@ public class Robot extends TimedRobot {
             char ourSwitchPosition = fmsData.charAt(0);
             char scalePosition = fmsData.charAt(1);
             char opponentSwitchPosition = fmsData.charAt(2);
-            
-            if (autoFieldElementChooser.getSelected() == AutoObjective.AUTO_LINE) {
-                // drive forward mission
-            } else if (autoFieldElementChooser.getSelected() == AutoObjective.SWITCH) {
-                if (startingPositionChooser.getSelected() == StartingPosition.CENTER) {
-                    if (ourSwitchPosition == 'L') {
-                        // mission center left switch
-                    } else if (ourSwitchPosition == 'R') {
-                        // mission center right switch
-                    }
-                } else if (startingPositionChooser.getSelected() == StartingPosition.LEFT) {
-                    if (ourSwitchPosition == 'L') {
-                        // mission left switch
-                    } else if (ourSwitchPosition == 'R') {
-                        // do nothing
-                    }
-                } else if (startingPositionChooser.getSelected() == StartingPosition.RIGHT) {
-                    if (ourSwitchPosition == 'L') {
-                        // do nothing
-                    } else if (ourSwitchPosition == 'R') {
-                        // mission right switch
-                    }
-                }
-            } else if (autoFieldElementChooser.getSelected() == AutoObjective.SCALE) {
-                if (startingPositionChooser.getSelected() == StartingPosition.CENTER) {
-                    if (ourSwitchPosition == 'L') {
-                        // mission center left scale
-                    } else if (ourSwitchPosition == 'R') {
-                        // mission center right scale
-                    }
-                } else if (startingPositionChooser.getSelected() == StartingPosition.LEFT) {
-                    if (ourSwitchPosition == 'L') {
-                        // mission left scale
-                    } else if (ourSwitchPosition == 'R') {
-                        // do nothing
-                    }
-                } else if (startingPositionChooser.getSelected() == StartingPosition.RIGHT) {
-                    if (ourSwitchPosition == 'L') {
-                        // do nothing
-                    } else if (ourSwitchPosition == 'R') {
-                        // mission right scale
-                    }
-                }
-            } else if (autoFieldElementChooser.getSelected() == AutoObjective.DO_NOTHING) {
-                // do nothing
-            }
         } else {
             // do nothing
         }
