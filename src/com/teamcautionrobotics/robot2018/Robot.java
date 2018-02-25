@@ -15,10 +15,12 @@ import com.teamcautionrobotics.autonomous.MissionScriptMission;
 import com.teamcautionrobotics.autonomous.MissionSendable;
 import com.teamcautionrobotics.autonomous.commands2018.CommandFactory2018;
 import com.teamcautionrobotics.misc2018.EnhancedJoystick;
+import com.teamcautionrobotics.misc2018.FunctionRunnerSendable;
 import com.teamcautionrobotics.misc2018.Gamepad;
 import com.teamcautionrobotics.misc2018.Gamepad.Axis;
 import com.teamcautionrobotics.misc2018.Gamepad.Button;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -59,6 +61,8 @@ public class Robot extends TimedRobot {
     SendableChooser<Mission> missionChooser;
     Mission activeMission;
 
+    private FunctionRunnerSendable liftResetSendable;
+
     @Override
     public void robotInit() {
         driveBase = new DriveBase(0, 1, 0, 1, 2, 3);
@@ -69,6 +73,15 @@ public class Robot extends TimedRobot {
 
         intake = new Intake(3, 4, 5);
         lift = new Lift(2, 4, 5, 0.8, 0.1, 0.4);
+
+        liftResetSendable = new FunctionRunnerSendable("Reset lift", () -> {
+            DriverStation.reportWarning(String.format(
+                    "Resetting lift encoder from SmartDashboard. Encoder was at %f inches.%n",
+                    lift.getCurrentHeight()), false);
+            lift.resetEncoder();
+            return true;
+        });
+        SmartDashboard.putData(liftResetSendable);
 
         commandFactory = new CommandFactory2018(driveBase, intake, lift);
 
@@ -221,6 +234,12 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testPeriodic() {}
+
+    @Override
+    public void robotPeriodic() {
+        liftResetSendable.update();
+    }
+
 
     double speedLimitFromLiftHeight(double height) {
         // Chosen by linear fit through (30 in, 1) and (70 in, 0.5)
