@@ -3,7 +3,7 @@ package com.teamcautionrobotics.robot2018;
 class AutoEnums {
     // Which task we want to complete in autonomous
     public enum AutoObjective {
-        SWITCH("switch"), SCALE("scale"), AUTO_LINE("auto line"), DO_NOTHING("do nothing");
+        SWITCH("switch"), SCALE("scale"), SWITCH_OR_SCALE("auto select switch and scale"), AUTO_LINE("auto line"), DO_NOTHING("do nothing");
 
         public final String name;
 

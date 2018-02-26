@@ -124,22 +124,50 @@ public class MissionSelector {
             }
         } else if (autoObjective == AutoObjective.SCALE) {
             if (startingPosition == StartingPosition.CENTER) {
-                if (switchSide == PlateSide.LEFT) {
+                if (scaleSide == PlateSide.LEFT) {
                     return centerMissionLeftScale;
-                } else if (switchSide == PlateSide.RIGHT) {
+                } else if (scaleSide == PlateSide.RIGHT) {
                     return centerMissionRightScale;
                 }
             } else if (startingPosition == StartingPosition.LEFT) {
-                if (switchSide == PlateSide.LEFT) {
+                if (scaleSide == PlateSide.LEFT) {
                     return leftMissionLeftScale;
-                } else if (switchSide == PlateSide.RIGHT) {
+                } else if (scaleSide == PlateSide.RIGHT) {
                     return driveForwardMission;
                 }
             } else if (startingPosition == StartingPosition.RIGHT) {
-                if (switchSide == PlateSide.LEFT) {
+                if (scaleSide == PlateSide.LEFT) {
                     return driveForwardMission;
-                } else if (switchSide == PlateSide.RIGHT) {
+                } else if (scaleSide == PlateSide.RIGHT) {
                     return rightMissionRightScale;
+                }
+            }
+        } else if (autoObjective == AutoObjective.SWITCH_OR_SCALE) {
+            if (startingPosition == StartingPosition.CENTER) {
+                if (switchSide == PlateSide.LEFT) {
+                    return centerMissionLeftSwitch;
+                } else if (switchSide == PlateSide.RIGHT) {
+                    return centerMissionRightSwitch;
+                }
+            } else if (startingPosition == StartingPosition.LEFT) {
+                if (switchSide == PlateSide.LEFT) {
+                    return leftMissionLeftSwitch;
+                } else if (switchSide == PlateSide.RIGHT) {
+                    if (scaleSide == PlateSide.LEFT) {
+                        return leftMissionLeftScale;
+                    } else if (scaleSide == PlateSide.RIGHT) {
+                        return driveForwardMission;
+                    }
+                }
+            } else if (startingPosition == StartingPosition.RIGHT) {
+                if (switchSide == PlateSide.LEFT) {
+                    if (scaleSide == PlateSide.LEFT) {
+                        return driveForwardMission;
+                    } else if (scaleSide == PlateSide.RIGHT) {
+                        return rightMissionRightScale;
+                    }
+                } else if (switchSide == PlateSide.RIGHT) {
+                    return rightMissionRightSwitch;
                 }
             }
         } else if (autoObjective == AutoObjective.DO_NOTHING) {

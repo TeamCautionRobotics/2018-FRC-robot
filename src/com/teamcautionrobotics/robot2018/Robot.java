@@ -84,6 +84,7 @@ public class Robot extends TimedRobot {
         autoObjectiveChooser = new SendableChooser<>();
         autoObjectiveChooser.addDefault("Switch", AutoObjective.SWITCH);
         autoObjectiveChooser.addObject("Scale", AutoObjective.SCALE);
+        autoObjectiveChooser.addObject(AutoObjective.SWITCH_OR_SCALE.toString(), AutoObjective.SWITCH_OR_SCALE);
         autoObjectiveChooser.addObject("Auto line", AutoObjective.AUTO_LINE);
         autoObjectiveChooser.addObject("Do nothing", AutoObjective.DO_NOTHING);
         SmartDashboard.putData("Auto Objective Select", autoObjectiveChooser);
@@ -92,7 +93,7 @@ public class Robot extends TimedRobot {
 
         missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
                 commandFactory);
-        missionChooser.addObject("Do not use -- Mission Script", missionScriptMission);
+        missionChooser.addDefault("Do not use -- Mission Script", missionScriptMission);
         SmartDashboard.putData("Autonomous Mode Select", missionChooser);
 
         missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
