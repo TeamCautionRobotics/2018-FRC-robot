@@ -71,7 +71,6 @@ public class Lift {
 
     public void setHeight(double height) {
         pidController.setSetpoint(height);
-        enablePID();
     }
 
     public void setLevel(LiftLevel destinationLiftLevel) {
@@ -118,13 +117,13 @@ public class Lift {
     }
 
     public void enablePID() {
-        if (false && !pidController.isEnabled()) {
+        if (!pidController.isEnabled()) {
             pidController.enable();
         }
     }
 
     public void disablePID() {
-        if (false && pidController.isEnabled()) {
+        if (pidController.isEnabled()) {
             pidController.disable();
         }
     }

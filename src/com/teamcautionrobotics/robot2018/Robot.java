@@ -50,6 +50,7 @@ public class Robot extends TimedRobot {
 
     boolean liftRaiseButtonPressed = false;
     boolean liftLowerButtonPressed = false;
+    boolean liftPIDManualModeEnabled = false;
 
     // Based on eyeball averaging max lift speed
     static final double LIFT_NUDGE_SPEED = 30; // Units are inches per second
@@ -210,12 +211,25 @@ public class Robot extends TimedRobot {
             liftLowerButtonPressed = liftLowerButton;
         }
 
+        boolean liftPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0.5;
 
-        if (!lift.pidController.isEnabled()) {
+        if (!liftPIDManualModeTrigger && liftPIDManualModeTrigger != liftPIDManualModeEnabled) {
+            lift.setHeight(lift.getCurrentHeight());
+        }
+
+        liftPIDManualModeEnabled = liftPIDManualModeTrigger;
+
+        if (liftPIDManualModeEnabled) {
+            lift.disablePID();
+        } else {
+            lift.enablePID();
+        }
+
+        if (liftPIDManualModeEnabled) {
             // Right manipulator joystick down for lift up
             lift.move(manipulator.getAxis(Axis.RIGHT_Y));
         } else {
-            // manual lift control
+            // Use the manipulator right joystick Y to adjust the PID controller's setpoint
             double dt = this.getPeriod();
             double liftNudgeCommand = manipulator.getAxis(Axis.RIGHT_Y);
             double changeInHeight = LIFT_NUDGE_SPEED * liftNudgeCommand * dt; // inches
