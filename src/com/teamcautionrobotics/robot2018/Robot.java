@@ -183,8 +183,8 @@ public class Robot extends TimedRobot {
         lift.setHeight(lift.getCurrentHeight() + changeInHeight);
         
         SmartDashboard.putBoolean("Stage one down", lift.stageOneIsDown());
-        SmartDashboard.putBoolean("Stage two down", lift.StageTwoIsDown());
-        SmartDashboard.putBoolean("Lift fully down", lift.stageOneIsDown() && lift.StageTwoIsDown());
+        SmartDashboard.putBoolean("Stage two down", lift.stageTwoIsDown());
+        SmartDashboard.putBoolean("Lift fully down", lift.stageOneIsDown() && lift.stageTwoIsDown());
     }
 
     /**
