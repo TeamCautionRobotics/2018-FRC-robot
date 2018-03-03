@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
     SendableChooser<Mission> missionChooser;
     Mission activeMission;
 
-    private FunctionRunnerSendable liftResetSendable;
+    private FunctionRunnerSendable liftEncoderResetSendable;
 
     @Override
     public void robotInit() {
@@ -75,14 +75,14 @@ public class Robot extends TimedRobot {
         intake = new Intake(3, 4, 5);
         lift = new Lift(2, 4, 5, 0.8, 0.1, 0.4);
 
-        liftResetSendable = new FunctionRunnerSendable("Reset lift", () -> {
+        liftEncoderResetSendable = new FunctionRunnerSendable("Reset lift encoder", () -> {
             DriverStation.reportWarning(String.format(
                     "Resetting lift encoder from SmartDashboard. Encoder was at %f inches.%n",
                     lift.getCurrentHeight()), false);
             lift.resetEncoder();
             return true;
         });
-        SmartDashboard.putData(liftResetSendable);
+        SmartDashboard.putData(liftEncoderResetSendable);
 
         commandFactory = new CommandFactory2018(driveBase, intake, lift);
 
@@ -276,7 +276,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        liftResetSendable.update();
+        liftEncoderResetSendable.update();
     }
 
 
