@@ -15,10 +15,12 @@ import com.teamcautionrobotics.autonomous.MissionScriptMission;
 import com.teamcautionrobotics.autonomous.MissionSendable;
 import com.teamcautionrobotics.autonomous.commands2018.CommandFactory2018;
 import com.teamcautionrobotics.misc2018.EnhancedJoystick;
+import com.teamcautionrobotics.misc2018.FunctionRunnerSendable;
 import com.teamcautionrobotics.misc2018.Gamepad;
 import com.teamcautionrobotics.misc2018.Gamepad.Axis;
 import com.teamcautionrobotics.misc2018.Gamepad.Button;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,6 +50,7 @@ public class Robot extends TimedRobot {
 
     boolean liftRaiseButtonPressed = false;
     boolean liftLowerButtonPressed = false;
+    boolean liftPIDManualModeEnabled = false;
 
     // Based on eyeball averaging max lift speed
     static final double LIFT_NUDGE_SPEED = 30; // Units are inches per second
@@ -59,6 +62,8 @@ public class Robot extends TimedRobot {
     SendableChooser<Mission> missionChooser;
     Mission activeMission;
 
+    private FunctionRunnerSendable liftEncoderResetSendable;
+
     @Override
     public void robotInit() {
         driveBase = new DriveBase(0, 1, 0, 1, 2, 3);
@@ -69,6 +74,15 @@ public class Robot extends TimedRobot {
 
         intake = new Intake(3, 4, 5, 8);
         lift = new Lift(2, 4, 5, 6, 7, 0.8, 0.1, 0.4);
+
+        liftEncoderResetSendable = new FunctionRunnerSendable("Reset lift encoder", () -> {
+            DriverStation.reportWarning(String.format(
+                    "Resetting lift encoder from SmartDashboard. Encoder was at %f inches.%n",
+                    lift.getCurrentHeight()), false);
+            lift.resetEncoder();
+            return true;
+        });
+        SmartDashboard.putData(liftEncoderResetSendable);
 
         commandFactory = new CommandFactory2018(driveBase, intake, lift);
 
@@ -151,24 +165,64 @@ public class Robot extends TimedRobot {
 
         driveBase.drive(leftPower, rightPower);
 
+        boolean driverPrismHarvesting = false;
+        double grabberPower = 0;
+        double intakePower = 0;
         if (lift.getCurrentHeight() < MAX_LIFT_HEIGHT_FOR_INTAKE) {
-            intake.move(manipulator.getAxis(Axis.LEFT_Y));
-
-            // Left bumper spins counterclockwise
-            if (manipulator.getButton(Button.LEFT_BUMPER)) {
-                intake.timedSpin(-0.5, 0.1);
+            if (driverRight.getTrigger()) {
+                driverPrismHarvesting = true;
+            } else {
+                intakePower = grabberPower = manipulator.getAxis(Axis.LEFT_Y);
             }
 
-            // Right bumper spins clockwise
-            if (manipulator.getButton(Button.RIGHT_BUMPER)) {
-                intake.timedSpin(0.5, 0.1);
+            // Spin controls only permitted if lift is down and driver is not harvesting
+            if (!driverPrismHarvesting) {
+                // Left bumper spins counterclockwise
+                if (manipulator.getButton(Button.LEFT_BUMPER)) {
+                    intake.timedSpin(-0.5, 0.1);
+                }
+
+                // Right bumper spins clockwise
+                if (manipulator.getButton(Button.RIGHT_BUMPER)) {
+                    intake.timedSpin(0.5, 0.1);
+                }
             }
         } else {
-            // disable intake
-            intake.move(manipulator.getAxis(Axis.LEFT_Y), 0);
+            // disable intake when lift is up
+            intakePower = 0;
+            grabberPower = manipulator.getAxis(Axis.LEFT_Y);
         }
 
-        if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+        if (driverPrismHarvesting) {
+            grabberPower = 0.5;
+            intakePower = 0.5;
+        } else {
+            if (intakePower == 0) {
+                int dPadAngle = manipulator.getPOV();
+                switch (dPadAngle) {
+                    // D-pad is up
+                    case 0:
+                        grabberPower = -1;
+                        break;
+
+                    // D-pad is left
+                    case 270:
+                        grabberPower = -0.5;
+                        break;
+
+                    // D-pad is down
+                    case 180:
+                        grabberPower = -0.1;
+                        break;
+                }
+            }
+        }
+
+        intake.move(grabberPower, intakePower);
+
+        // Only allow bulldozing if the driver is not commanding a prism harvest and
+        // the intake is not being moved
+        if (!driverPrismHarvesting && intakePower == 0 && manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
             intake.bulldoze();
         }
 
@@ -177,7 +231,7 @@ public class Robot extends TimedRobot {
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {
             if (liftRaiseButton) {
-                lift.setLevel(lift.getCurrentLiftLevel().next());
+                lift.setDestinationLevel(lift.getDestinationLiftLevel().next());
             }
             liftRaiseButtonPressed = liftRaiseButton;
         }
@@ -185,26 +239,35 @@ public class Robot extends TimedRobot {
         boolean liftLowerButton = manipulator.getButton(Button.A);
         if (liftLowerButton != liftLowerButtonPressed) {
             if (liftLowerButton) {
-                lift.setLevel(lift.getCurrentLiftLevel().previous());
+                lift.setDestinationLevel(lift.getDestinationLiftLevel().previous());
             }
             liftLowerButtonPressed = liftLowerButton;
         }
 
-        if (manipulator.getButton(Button.X)) {
-            lift.resetEncoder();
+        boolean liftPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0.5;
+
+        if (!liftPIDManualModeTrigger && liftPIDManualModeTrigger != liftPIDManualModeEnabled) {
+            lift.setDestinationHeight(lift.getCurrentHeight());
         }
 
+        liftPIDManualModeEnabled = liftPIDManualModeTrigger;
 
-        if (!lift.pidController.isEnabled()) {
+        if (liftPIDManualModeEnabled) {
+            lift.disablePID();
+        } else {
+            lift.enablePID();
+        }
+
+        if (liftPIDManualModeEnabled) {
             // Right manipulator joystick down for lift up
             lift.move(manipulator.getAxis(Axis.RIGHT_Y));
         } else {
-            // manual lift control
+            // Use the manipulator right joystick Y to adjust the PID controller's setpoint
             double dt = this.getPeriod();
-            double liftNudgeCommand = -manipulator.getAxis(Axis.RIGHT_Y);
+            double liftNudgeCommand = manipulator.getAxis(Axis.RIGHT_Y);
             double changeInHeight = LIFT_NUDGE_SPEED * liftNudgeCommand * dt; // inches
             if (liftNudgeCommand != 0) {
-                lift.setHeight(lift.getCurrentHeight() + changeInHeight);
+                lift.setDestinationHeight(lift.getCurrentHeight() + changeInHeight);
             }
         }
 
@@ -218,6 +281,12 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testPeriodic() {}
+
+    @Override
+    public void robotPeriodic() {
+        liftEncoderResetSendable.update();
+    }
+
 
     double speedLimitFromLiftHeight(double height) {
         // Chosen by linear fit through (30 in, 1) and (70 in, 0.5)
