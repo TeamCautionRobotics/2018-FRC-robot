@@ -220,8 +220,9 @@ public class Robot extends TimedRobot {
 
         intake.move(grabberPower, intakePower);
 
-        // Only allow bulldozing if the driver is not commanding an prism harvest
-        if (!driverPrismHarvesting && manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+        // Only allow bulldozing if the driver is not commanding a prism harvest and
+        // the intake is not being moved
+        if (!driverPrismHarvesting && intakePower == 0 && manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
             intake.bulldoze();
         }
 
