@@ -30,8 +30,8 @@ public class FunctionRunnerSendable extends SendableBase implements Sendable {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-      builder.setSmartDashboardType("Command");
-      builder.addStringProperty(".name", this::getName, null);
-      builder.addBooleanProperty("running", ()->needsToRun, (value)->needsToRun=value);
+        builder.setSmartDashboardType("Command");
+        builder.addStringProperty(".name", this::getName, null);
+        builder.addBooleanProperty("running", () -> needsToRun, (value) -> needsToRun = value);
     }
 }
