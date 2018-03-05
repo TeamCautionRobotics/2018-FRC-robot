@@ -1,13 +1,16 @@
 package com.teamcautionrobotics.robot2018;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 
 public class Intake {
 
-    private VictorSP intake;
-    private VictorSP grabberLeft;
-    private VictorSP grabberRight;
+    private VictorSP grabber;
+    private VictorSP intakeLeft;
+    private VictorSP intakeRight;
+
+    private DigitalInput colorSensor;
 
     private Timer timer;
     private boolean timedSpin = false;
@@ -15,10 +18,13 @@ public class Intake {
 
     private double spinPower = 0;
 
-    public Intake(int grabberChannel, int intakeLeftChannel, int intakeRightChannel) {
-        intake = new VictorSP(grabberChannel);
-        grabberLeft = new VictorSP(intakeLeftChannel);
-        grabberRight = new VictorSP(intakeRightChannel);
+    public Intake(int grabberChannel, int intakeLeftChannel, int intakeRightChannel, int colorSensorChannel) {
+
+        grabber = new VictorSP(grabberChannel);
+        intakeLeft = new VictorSP(intakeLeftChannel);
+        intakeRight = new VictorSP(intakeRightChannel);
+
+        colorSensor = new DigitalInput(colorSensorChannel);
 
         timer = new Timer();
         timer.start();
@@ -30,10 +36,11 @@ public class Intake {
      * 
      * @param power positive for in, negative for out, range of [-1, 1]
      */
-    public void moveMotors(double intakePower, double grabberLeftPower, double grabberRightPower) {
-        intake.set(intakePower);
-        grabberLeft.set(grabberLeftPower);
-        grabberRight.set(grabberRightPower);
+    public void moveMotors(double grabberPower, double intakeLeftPower, double intakeRightPower) {
+        // stops grabber from spinning in if cubeInGrabber color sensor is triggered
+        grabber.set(grabberPower);
+        intakeLeft.set(intakeLeftPower);
+        intakeRight.set(intakeRightPower);
     }
 
     /**
@@ -80,7 +87,8 @@ public class Intake {
     }
 
     /**
-     * Do a timed spin. After the specified time, the spinPower reverts to zero. 
+     * Do a timed spin. After the specified time, the spinPower reverts to zero.
+     * 
      * @param spinPower The speed difference between the left and right sides. Negative to spin
      *        counterclockwise, positive to spin clockwise. range of [-1, 1]
      * @time How long from now the spin should apply for.
@@ -95,6 +103,7 @@ public class Intake {
 
     /**
      * Do a spin. This will stop any currently running timed spin and has no expiration.
+     * 
      * @param spinPower
      */
     public void spin(double spinPower) {
@@ -103,6 +112,10 @@ public class Intake {
     }
     
     public void bulldoze() {
-        move(intake.get(), -1.0);
+        move(grabber.get(), -1.0);
+    }
+
+    public boolean cubeIsInGrabber() {
+        return !colorSensor.get();
     }
 }

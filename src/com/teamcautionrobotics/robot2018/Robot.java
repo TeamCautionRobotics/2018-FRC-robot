@@ -67,8 +67,8 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        intake = new Intake(3, 4, 5);
-        lift = new Lift(2, 4, 5, 0.8, 0.1, 0.4);
+        intake = new Intake(3, 4, 5, 8);
+        lift = new Lift(2, 4, 5, 6, 7, 0.8, 0.1, 0.4);
 
         commandFactory = new CommandFactory2018(driveBase, intake, lift);
 
@@ -172,6 +172,8 @@ public class Robot extends TimedRobot {
             intake.bulldoze();
         }
 
+        SmartDashboard.putBoolean("Power prismⁿ™ in grabber", intake.cubeIsInGrabber());
+
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {
             if (liftRaiseButton) {
@@ -205,6 +207,10 @@ public class Robot extends TimedRobot {
                 lift.setHeight(lift.getCurrentHeight() + changeInHeight);
             }
         }
+
+        SmartDashboard.putBoolean("Stage one down", lift.stageOneIsDown());
+        SmartDashboard.putBoolean("Stage two down", lift.stageTwoIsDown());
+        SmartDashboard.putBoolean("Lift fully down", lift.stageOneIsDown() && lift.stageTwoIsDown());
     }
 
     /**
