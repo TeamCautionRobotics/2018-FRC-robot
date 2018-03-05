@@ -60,7 +60,7 @@ public class Lift {
 
     /**
      * Directly set the power of the motors. Probably best not to use this, but use
-     * {@link #setLevel(LiftLevel)} or {@link #setHeight(double)} instead.
+     * {@link #setDestinationLevel(LiftLevel)} or {@link #setDestinationHeight(double)} instead.
      * 
      * @param power positive is ascending, negative is descending, range of [-1, 1]
      */
@@ -69,12 +69,12 @@ public class Lift {
         liftMotor.set(power);
     }
 
-    public void setHeight(double height) {
+    public void setDestinationHeight(double height) {
         pidController.setSetpoint(height);
     }
 
-    public void setLevel(LiftLevel destinationLiftLevel) {
-        setHeight(destinationLiftLevel.height);
+    public void setDestinationLevel(LiftLevel destinationLiftLevel) {
+        setDestinationHeight(destinationLiftLevel.height);
     }
 
     public double getCurrentHeight() {

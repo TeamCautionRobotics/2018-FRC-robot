@@ -229,7 +229,7 @@ public class Robot extends TimedRobot {
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {
             if (liftRaiseButton) {
-                lift.setLevel(lift.getDestinationLiftLevel().next());
+                lift.setDestinationLevel(lift.getDestinationLiftLevel().next());
             }
             liftRaiseButtonPressed = liftRaiseButton;
         }
@@ -237,7 +237,7 @@ public class Robot extends TimedRobot {
         boolean liftLowerButton = manipulator.getButton(Button.A);
         if (liftLowerButton != liftLowerButtonPressed) {
             if (liftLowerButton) {
-                lift.setLevel(lift.getDestinationLiftLevel().previous());
+                lift.setDestinationLevel(lift.getDestinationLiftLevel().previous());
             }
             liftLowerButtonPressed = liftLowerButton;
         }
@@ -245,7 +245,7 @@ public class Robot extends TimedRobot {
         boolean liftPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0.5;
 
         if (!liftPIDManualModeTrigger && liftPIDManualModeTrigger != liftPIDManualModeEnabled) {
-            lift.setHeight(lift.getCurrentHeight());
+            lift.setDestinationHeight(lift.getCurrentHeight());
         }
 
         liftPIDManualModeEnabled = liftPIDManualModeTrigger;
@@ -265,7 +265,7 @@ public class Robot extends TimedRobot {
             double liftNudgeCommand = manipulator.getAxis(Axis.RIGHT_Y);
             double changeInHeight = LIFT_NUDGE_SPEED * liftNudgeCommand * dt; // inches
             if (liftNudgeCommand != 0) {
-                lift.setHeight(lift.getCurrentHeight() + changeInHeight);
+                lift.setDestinationHeight(lift.getCurrentHeight() + changeInHeight);
             }
         }
     }

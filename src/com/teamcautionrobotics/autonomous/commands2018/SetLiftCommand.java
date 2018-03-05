@@ -19,7 +19,7 @@ public class SetLiftCommand implements Command {
     @Override
     public boolean run() {
         if (!liftCommanded) {
-            lift.setHeight(height);
+            lift.setDestinationHeight(height);
             liftCommanded = true;
         }
 
