@@ -2,7 +2,7 @@ package com.teamcautionrobotics.robot2018;
 
 import com.teamcautionrobotics.autonomous.Command;
 import com.teamcautionrobotics.autonomous.Mission;
-import com.teamcautionrobotics.autonomous.commands2018.CommandFactory2018;
+import com.teamcautionrobotics.autonomous2018.commands.CommandFactory2018;
 import com.teamcautionrobotics.robot2018.AutoEnums.AutoObjective;
 import com.teamcautionrobotics.robot2018.AutoEnums.PlateSide;
 import com.teamcautionrobotics.robot2018.AutoEnums.StartingPosition;

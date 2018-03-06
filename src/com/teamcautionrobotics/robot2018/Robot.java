@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 import com.teamcautionrobotics.autonomous.Mission;
 import com.teamcautionrobotics.autonomous.MissionScriptMission;
 import com.teamcautionrobotics.autonomous.MissionSendable;
-import com.teamcautionrobotics.autonomous.commands2018.CommandFactory2018;
+import com.teamcautionrobotics.autonomous2018.commands.CommandFactory2018;
 import com.teamcautionrobotics.misc2018.EnhancedJoystick;
 import com.teamcautionrobotics.misc2018.FunctionRunnerSendable;
 import com.teamcautionrobotics.misc2018.Gamepad;
