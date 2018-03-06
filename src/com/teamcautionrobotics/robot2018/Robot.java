@@ -80,7 +80,6 @@ public class Robot extends TimedRobot {
                     "Resetting lift encoder from SmartDashboard. Encoder was at %f inches.%n",
                     lift.getCurrentHeight()), false);
             lift.resetEncoder();
-            return true;
         });
         SmartDashboard.putData(liftEncoderResetSendable);
 
