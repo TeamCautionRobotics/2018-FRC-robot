@@ -129,7 +129,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         fmsData = DriverStation.getInstance().getGameSpecificMessage();
-        System.out.println("dsg " + fmsData);
+        System.out.format("FMS Data for Plate Positions: '%s'%n", fmsData);
         if (fmsData.length() == 3) {
             if (fmsData.charAt(0) == 'L') {
                 switchPosition = PlateSide.LEFT;
