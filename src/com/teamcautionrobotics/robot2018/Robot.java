@@ -14,6 +14,7 @@ import com.teamcautionrobotics.autonomous.CommandFactory;
 import com.teamcautionrobotics.autonomous.Mission;
 import com.teamcautionrobotics.autonomous.MissionScriptMission;
 import com.teamcautionrobotics.autonomous.MissionSendable;
+import com.teamcautionrobotics.robot2018.AutoEnums.AutoMode;
 import com.teamcautionrobotics.robot2018.AutoEnums.AutoObjective;
 import com.teamcautionrobotics.robot2018.AutoEnums.PlateSide;
 import com.teamcautionrobotics.robot2018.AutoEnums.StartingPosition;
@@ -56,7 +57,7 @@ public class Robot extends TimedRobot {
     PlateSide switchPosition;
     PlateSide scalePosition;
 
-    SendableChooser<Mission> missionChooser;
+    SendableChooser<AutoMode> autoModeChooser;
     SendableChooser<StartingPosition> startingPositionChooser;
     SendableChooser<AutoObjective> autoObjectiveChooser;
     MissionSelector missionSelector;
@@ -73,11 +74,18 @@ public class Robot extends TimedRobot {
         intake = new Intake(2, 3, 4);
         climb = new Climb(5);
 
+
         commandFactory = new CommandFactory(driveBase);
+
+
+        missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
+                commandFactory);
+
 
         startingPositionChooser = new SendableChooser<>();
         StartingPosition defaultStartingPosition = StartingPosition.CENTER;
-        startingPositionChooser.addDefault(defaultStartingPosition.toString(), defaultStartingPosition);
+        startingPositionChooser.addDefault(defaultStartingPosition.toString(),
+                defaultStartingPosition);
         for (StartingPosition position : StartingPosition.values()) {
             if (position == defaultStartingPosition) {
                 continue;
@@ -97,22 +105,23 @@ public class Robot extends TimedRobot {
         }
         SmartDashboard.putData("Auto Objective Select", autoObjectiveChooser);
 
-        missionChooser = new SendableChooser<>();
 
-        missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
-                commandFactory);
-        missionChooser.addDefault("Do not use -- Mission Script", missionScriptMission);
-        SmartDashboard.putData("Autonomous Mode Select", missionChooser);
+        autoModeChooser = new SendableChooser<>();
+        AutoMode defaultMode = AutoMode.FMS_DATA;
+        autoModeChooser.addDefault(defaultMode.toString(), defaultMode);
+        for (AutoMode mode : AutoMode.values()) {
+            if (mode == defaultMode) {
+                continue;
+            }
+            autoModeChooser.addObject(mode.toString(), mode);
+        }
+        SmartDashboard.putData("Autonomous Mode Select", autoModeChooser);
 
-        missionSendable = new MissionSendable("Teleop Mission", missionChooser::getSelected);
+        // TODO(Schuyler): fix the missionSendable
+        missionSendable = new MissionSendable("Teleop Mission", () -> missionScriptMission);
         SmartDashboard.putData(missionSendable);
 
         missionSelector = new MissionSelector(commandFactory);
-    }
-
-    @Override
-    public void disabledPeriodic() {
-        SmartDashboard.putString("selected mission", missionChooser.getSelected().getName());
     }
 
     /**
@@ -128,33 +137,50 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        fmsData = DriverStation.getInstance().getGameSpecificMessage();
-        System.out.format("FMS Data for Plate Positions: '%s'%n", fmsData);
-        if (fmsData.length() == 3) {
-            if (fmsData.charAt(0) == 'L') {
-                switchPosition = PlateSide.LEFT;
-            } else if (fmsData.charAt(0) == 'R') {
-                switchPosition = PlateSide.RIGHT;
-            } else {
-                System.err.println("FMS switch char is neither 'L' nor 'R'");
-            }
-            if (fmsData.charAt(1) == 'L') {
-                scalePosition = PlateSide.LEFT;
-            } else if (fmsData.charAt(1) == 'R') {
-                scalePosition = PlateSide.RIGHT;
-            } else {
-                System.err.println("FMS scale char is neither 'L' nor 'R'");
-            }
-        } else {
-            System.err.println("FMS does not pass a three-char string for plate position.");
-        }
+        switch (autoModeChooser.getSelected()) {
+            case FMS_DATA:
+                fmsData = DriverStation.getInstance().getGameSpecificMessage();
+                System.out.format("FMS Data for Plate Positions: '%s'%n", fmsData);
+                if (fmsData.length() == 3) {
+                    if (fmsData.charAt(0) == 'L') {
+                        switchPosition = PlateSide.LEFT;
+                    } else if (fmsData.charAt(0) == 'R') {
+                        switchPosition = PlateSide.RIGHT;
+                    } else {
+                        System.err.println("FMS switch char is neither 'L' nor 'R'");
+                    }
+                    if (fmsData.charAt(1) == 'L') {
+                        scalePosition = PlateSide.LEFT;
+                    } else if (fmsData.charAt(1) == 'R') {
+                        scalePosition = PlateSide.RIGHT;
+                    } else {
+                        System.err.println("FMS scale char is neither 'L' nor 'R'");
+                    }
+                } else {
+                    System.err.println("FMS does not pass a three-char string for plate position.");
+                }
 
-        activeMission = missionSelector.selectMissionFromFieldData(switchPosition, scalePosition,
-                startingPositionChooser.getSelected(), autoObjectiveChooser.getSelected());
+                activeMission = missionSelector.selectMissionFromFieldData(switchPosition, scalePosition,
+                        startingPositionChooser.getSelected(), autoObjectiveChooser.getSelected());
+                break;
+
+            case DO_NOTHING:
+                activeMission = MissionSelector.DO_NOTHING_MISSION;
+                break;
+
+            case MISSION_SCRIPT:
+                activeMission = missionScriptMission;
+                break;
+        }
 
         if (activeMission != null) {
             activeMission.reset();
             System.out.println("Mission '" + activeMission.getName() + "' Started");
+        } else {
+            DriverStation.reportWarning(
+                    String.format("autonomous init: activeMission is null. Selected mode is %s",
+                            autoModeChooser.getSelected()),
+                    false);
         }
     }
 
@@ -176,9 +202,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        SmartDashboard.putString("selected mission", missionChooser.getSelected().getName());
 
-        if ((missionSendable.run() && !missionChooser.getSelected().enableControls)
+        // TODO(Schuyler): fix this
+//        SmartDashboard.putString("selected mission", autoModeChooser.getSelected().getName());
+
+        if ((missionSendable.run() /* && !autoModeChooser.getSelected().enableControls */)
                 || driveBase.pidController.isEnabled()) {
             return;
         }
