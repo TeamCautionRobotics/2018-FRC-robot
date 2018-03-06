@@ -76,17 +76,25 @@ public class Robot extends TimedRobot {
         commandFactory = new CommandFactory(driveBase);
 
         startingPositionChooser = new SendableChooser<>();
-        startingPositionChooser.addDefault("Center", StartingPosition.CENTER);
-        startingPositionChooser.addObject("Left", StartingPosition.LEFT);
-        startingPositionChooser.addObject("Right", StartingPosition.RIGHT);
+        StartingPosition defaultStartingPosition = StartingPosition.CENTER;
+        startingPositionChooser.addDefault(defaultStartingPosition.toString(), defaultStartingPosition);
+        for (StartingPosition position : StartingPosition.values()) {
+            if (position == defaultStartingPosition) {
+                continue;
+            }
+            startingPositionChooser.addObject(position.toString(), position);
+        }
         SmartDashboard.putData("Starting Position Select", startingPositionChooser);
 
         autoObjectiveChooser = new SendableChooser<>();
-        autoObjectiveChooser.addDefault("Switch", AutoObjective.SWITCH);
-        autoObjectiveChooser.addObject("Scale", AutoObjective.SCALE);
-        autoObjectiveChooser.addObject(AutoObjective.SWITCH_OR_SCALE.toString(), AutoObjective.SWITCH_OR_SCALE);
-        autoObjectiveChooser.addObject("Auto line", AutoObjective.AUTO_LINE);
-        autoObjectiveChooser.addObject("Do nothing", AutoObjective.DO_NOTHING);
+        AutoObjective defaultObjective = AutoObjective.SWITCH;
+        autoObjectiveChooser.addDefault(defaultObjective.toString(), defaultObjective);
+        for (AutoObjective objective : AutoObjective.values()) {
+            if (objective == defaultObjective) {
+                continue;
+            }
+            autoObjectiveChooser.addObject(objective.toString(), objective);
+        }
         SmartDashboard.putData("Auto Objective Select", autoObjectiveChooser);
 
         missionChooser = new SendableChooser<>();
