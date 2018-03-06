@@ -104,38 +104,16 @@ public class Robot extends TimedRobot {
 
 
         startingPositionChooser = new SendableChooser<>();
-        StartingPosition defaultStartingPosition = StartingPosition.CENTER;
-        startingPositionChooser.addDefault(defaultStartingPosition.toString(),
-                defaultStartingPosition);
-        for (StartingPosition position : StartingPosition.values()) {
-            if (position == defaultStartingPosition) {
-                continue;
-            }
-            startingPositionChooser.addObject(position.toString(), position);
-        }
+        addObjectsToChooser(startingPositionChooser, StartingPosition.CENTER,
+                StartingPosition.values());
         SmartDashboard.putData("Starting Position Select", startingPositionChooser);
 
         autoObjectiveChooser = new SendableChooser<>();
-        AutoObjective defaultObjective = AutoObjective.SWITCH;
-        autoObjectiveChooser.addDefault(defaultObjective.toString(), defaultObjective);
-        for (AutoObjective objective : AutoObjective.values()) {
-            if (objective == defaultObjective) {
-                continue;
-            }
-            autoObjectiveChooser.addObject(objective.toString(), objective);
-        }
+        addObjectsToChooser(autoObjectiveChooser, AutoObjective.SWITCH, AutoObjective.values());
         SmartDashboard.putData("Auto Objective Select", autoObjectiveChooser);
 
-
         autoModeChooser = new SendableChooser<>();
-        AutoMode defaultMode = AutoMode.FMS_DATA;
-        autoModeChooser.addDefault(defaultMode.toString(), defaultMode);
-        for (AutoMode mode : AutoMode.values()) {
-            if (mode == defaultMode) {
-                continue;
-            }
-            autoModeChooser.addObject(mode.toString(), mode);
-        }
+        addObjectsToChooser(autoModeChooser, AutoMode.FMS_DATA, AutoMode.values());
         SmartDashboard.putData("Autonomous Mode Select", autoModeChooser);
 
         // TODO(Schuyler): fix the missionSendable
@@ -371,5 +349,16 @@ public class Robot extends TimedRobot {
         SmartDashboard.putString("lift level", lift.getCurrentLiftLevel().toString());
         SmartDashboard.putNumber("lift distance", lift.getCurrentHeight());
         SmartDashboard.putNumber("lift speed", lift.liftEncoder.getRate());
+    }
+
+
+    static <V> void addObjectsToChooser(SendableChooser<V> chooser, V defaultChoice, V objects[]) {
+        chooser.addDefault(defaultChoice.toString(), defaultChoice);
+        for (V choice : objects) {
+            if (choice == defaultChoice) {
+                continue;
+            }
+            chooser.addObject(choice.toString(), choice);
+        }
     }
 }
