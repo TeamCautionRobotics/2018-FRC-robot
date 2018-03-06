@@ -101,7 +101,7 @@ public class Lift {
     public LiftLevel getDestinationLiftLevel() {
         return convertHeightToLiftLevel(getDestinationHeight());
     }
-    
+
     public boolean atDestination() {
         if (getDestinationHeight() <= getCurrentHeight() + 1
                 && getDestinationHeight() >= getCurrentHeight() - 1) {
@@ -124,11 +124,11 @@ public class Lift {
         }
         return convertedLiftLevel;
     }
-    
+
     public boolean stageOneIsDown() {
         return !stageOneDown.get();
     }
-    
+
     public boolean stageTwoIsDown() {
         return !stageTwoDown.get();
     }

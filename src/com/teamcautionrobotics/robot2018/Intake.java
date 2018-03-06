@@ -18,7 +18,8 @@ public class Intake {
 
     private double spinPower = 0;
 
-    public Intake(int grabberChannel, int intakeLeftChannel, int intakeRightChannel, int colorSensorChannel) {
+    public Intake(int grabberChannel, int intakeLeftChannel, int intakeRightChannel,
+            int colorSensorChannel) {
 
         grabber = new VictorSP(grabberChannel);
         intakeLeft = new VictorSP(intakeLeftChannel);
@@ -46,10 +47,11 @@ public class Intake {
     /**
      * Move the intake motors. This also applies the spin power and handles resetting the spin power
      * when the specified time has elapsed. The grabber motors will never move in the opposite
-     * direction as the inPower specifies (this could happen if a fast spin and slow inPower is
-     * requested).
-     * @param grabberPower overall speed of the entire intake (grabber and inner part). Positive for in,
-     *        negative for out. range of [-1, 1]
+     * direction as the inPower specifies (this could happen if a fast spin and slow inPower
+     * isrequested).
+     * 
+     * @param grabberPower overall speed of the entire intake (grabber and inner part). Positive for
+     *        in, negative for out. range of [-1, 1]
      */
     public void move(double grabberPower, double intakePower) {
         // Check if the spinDuration has elapsed
@@ -81,7 +83,7 @@ public class Intake {
         // TODO: maybe clean this up
         moveMotors(grabberPower * 0.5, leftPower, rightPower);
     }
-    
+
     public void move(double inPower) {
         move(inPower, inPower);
     }
@@ -110,7 +112,7 @@ public class Intake {
         timedSpin = false;
         this.spinPower = spinPower;
     }
-    
+
     public void bulldoze() {
         move(grabber.get(), -1.0);
     }

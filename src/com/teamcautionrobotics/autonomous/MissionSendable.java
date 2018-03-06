@@ -39,7 +39,8 @@ public class MissionSendable extends SendableBase implements Sendable {
             if (finished) {
                 running = false;
                 initialized = false;
-                System.out.format("Teleop mission '%s' Completed Successfully%n", selectedMission.getName());
+                System.out.format("Teleop mission '%s' Completed Successfully%n",
+                        selectedMission.getName());
             }
         } else if (!finished) {
             // Not running and not finished: were were cancelled
@@ -53,8 +54,8 @@ public class MissionSendable extends SendableBase implements Sendable {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-      builder.setSmartDashboardType("Command");
-      builder.addStringProperty(".name", this::getName, null);
-      builder.addBooleanProperty("running", ()->this.running, (value)->running=value);
+        builder.setSmartDashboardType("Command");
+        builder.addStringProperty(".name", this::getName, null);
+        builder.addBooleanProperty("running", () -> this.running, (value) -> running = value);
     }
 }

@@ -1,7 +1,6 @@
 /**
- * A Mission that will load a MissionScript file every time it is run.
- * The MissionScriptMission commands are set by the MissionScript file
- * and updated every time its reset function is called.
+ * A Mission that will load a MissionScript file every time it is run. The MissionScriptMission
+ * commands are set by the MissionScript file and updated every time its reset function is called.
  */
 package com.teamcautionrobotics.autonomous;
 
@@ -17,15 +16,16 @@ public class MissionScriptMission extends Mission {
 
     CommandFactory commandFactory;
 
-    public MissionScriptMission(String name, Path missionScriptFile,
-            CommandFactory commandFactory, boolean enableControls) {
+    public MissionScriptMission(String name, Path missionScriptFile, CommandFactory commandFactory,
+            boolean enableControls) {
         super(name, enableControls);
         this.missionScriptFile = missionScriptFile;
         this.commandFactory = commandFactory;
     }
 
 
-    public MissionScriptMission(String name, Path missionScriptFile, CommandFactory commandFactory) {
+    public MissionScriptMission(String name, Path missionScriptFile,
+            CommandFactory commandFactory) {
         this(name, missionScriptFile, commandFactory, false);
     }
 

@@ -46,7 +46,8 @@ public class MissionScript {
                                 String exceptionMessage = String.format(
                                         "Failed to parse parameter as boolean or double on line %d: \"%s\"%n",
                                         lineNumber, parameter);
-                                throw new ParseException(exceptionMessage + e.getMessage(), lineNumber);
+                                throw new ParseException(exceptionMessage + e.getMessage(),
+                                        lineNumber);
                             }
                         }
                         paramIndex++;
@@ -91,8 +92,8 @@ public class MissionScript {
                         lineNumber, lineWithoutComment);
             } else {
                 String exceptionMessage =
-                        String.format("Too many opening parentheses in line %d: \"%s\"",
-                                lineNumber, lineWithoutComment);
+                        String.format("Too many opening parentheses in line %d: \"%s\"", lineNumber,
+                                lineWithoutComment);
                 // Determining the position of the parenthesis is difficult, so we just use the line
                 // number
                 throw new ParseException(exceptionMessage, lineNumber);

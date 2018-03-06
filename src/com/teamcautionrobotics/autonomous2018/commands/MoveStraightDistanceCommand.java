@@ -16,7 +16,8 @@ public class MoveStraightDistanceCommand implements Command {
 
     private double heading;
 
-    public MoveStraightDistanceCommand(DriveBase driveBase, double speed, double distance, boolean stopAtEnd) {
+    public MoveStraightDistanceCommand(DriveBase driveBase, double speed, double distance,
+            boolean stopAtEnd) {
         this.driveBase = driveBase;
 
         this.speed = speed;

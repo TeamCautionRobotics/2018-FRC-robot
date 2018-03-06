@@ -4,7 +4,7 @@ import com.teamcautionrobotics.autonomous.Command;
 import com.teamcautionrobotics.robot2018.Lift;
 
 public class SetLiftCommand implements Command {
-    
+
     private Lift lift;
     private double height;
     private final boolean waitForLiftAtDestination;

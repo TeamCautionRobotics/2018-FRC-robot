@@ -151,8 +151,9 @@ public class Robot extends TimedRobot {
                     System.err.println("FMS does not pass a three-char string for plate position.");
                 }
 
-                activeMission = missionSelector.selectMissionFromFieldData(switchPosition, scalePosition,
-                        startingPositionChooser.getSelected(), autoObjectiveChooser.getSelected());
+                activeMission = missionSelector.selectMissionFromFieldData(switchPosition,
+                        scalePosition, startingPositionChooser.getSelected(),
+                        autoObjectiveChooser.getSelected());
                 break;
 
             case DO_NOTHING:
@@ -188,7 +189,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         // TODO(Schuyler): fix this
-//        SmartDashboard.putString("selected mission", autoModeChooser.getSelected().getName());
+        // SmartDashboard.putString("selected mission", autoModeChooser.getSelected().getName());
 
         if ((missionSendable.run() /* && !autoModeChooser.getSelected().enableControls */)
                 || driveBase.pidController.isEnabled()) {
@@ -263,7 +264,8 @@ public class Robot extends TimedRobot {
 
         // Only allow bulldozing if the driver is not commanding a prism harvest and
         // the intake is not being moved
-        if (!driverPrismHarvesting && intakePower == 0 && manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+        if (!driverPrismHarvesting && intakePower == 0
+                && manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
             intake.bulldoze();
         }
 
@@ -333,7 +335,8 @@ public class Robot extends TimedRobot {
     void putSensors() {
         SmartDashboard.putBoolean("Stage one down", lift.stageOneIsDown());
         SmartDashboard.putBoolean("Stage two down", lift.stageTwoIsDown());
-        SmartDashboard.putBoolean("Lift fully down", lift.stageOneIsDown() && lift.stageTwoIsDown());
+        SmartDashboard.putBoolean("Lift fully down",
+                lift.stageOneIsDown() && lift.stageTwoIsDown());
 
         SmartDashboard.putBoolean("Power prismⁿ™ in grabber", intake.cubeIsInGrabber());
     }

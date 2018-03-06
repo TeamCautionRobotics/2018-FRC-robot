@@ -20,7 +20,9 @@ public class AutoEnums {
 
     // Which task we want to complete in autonomous
     public enum AutoObjective {
-        SWITCH("switch"), SCALE("scale"), SWITCH_OR_SCALE("automatically select switch, scale, or auto line"), AUTO_LINE("auto line"), DO_NOTHING("do nothing");
+        SWITCH("switch"), SCALE("scale"),
+        SWITCH_OR_SCALE("automatically select switch, scale, or auto line"),
+        AUTO_LINE("auto line"), DO_NOTHING("do nothing");
 
         public final String name;
 
