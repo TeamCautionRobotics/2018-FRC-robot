@@ -208,8 +208,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        logEncoders();
-
         // TODO(Schuyler): fix this
 //        SmartDashboard.putString("selected mission", autoModeChooser.getSelected().getName());
 
@@ -290,7 +288,6 @@ public class Robot extends TimedRobot {
             intake.bulldoze();
         }
 
-        SmartDashboard.putBoolean("Power prismⁿ™ in grabber", intake.cubeIsInGrabber());
 
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {
@@ -334,15 +331,13 @@ public class Robot extends TimedRobot {
                 lift.setDestinationHeight(lift.getCurrentHeight() + changeInHeight);
             }
         }
-
-        SmartDashboard.putBoolean("Stage one down", lift.stageOneIsDown());
-        SmartDashboard.putBoolean("Stage two down", lift.stageTwoIsDown());
-        SmartDashboard.putBoolean("Lift fully down", lift.stageOneIsDown() && lift.stageTwoIsDown());
     }
 
     @Override
     public void robotPeriodic() {
         liftEncoderResetSendable.update();
+        putEncoders();
+        putSensors();
     }
 
 
@@ -356,7 +351,15 @@ public class Robot extends TimedRobot {
         return limit;
     }
 
-    void logEncoders() {
+    void putSensors() {
+        SmartDashboard.putBoolean("Stage one down", lift.stageOneIsDown());
+        SmartDashboard.putBoolean("Stage two down", lift.stageTwoIsDown());
+        SmartDashboard.putBoolean("Lift fully down", lift.stageOneIsDown() && lift.stageTwoIsDown());
+
+        SmartDashboard.putBoolean("Power prismⁿ™ in grabber", intake.cubeIsInGrabber());
+    }
+
+    void putEncoders() {
         SmartDashboard.putNumber("drive left distance", driveBase.getLeftDistance());
         SmartDashboard.putNumber("drive right distance", driveBase.getRightDistance());
 
