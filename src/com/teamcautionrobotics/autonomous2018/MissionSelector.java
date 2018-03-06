@@ -1,11 +1,11 @@
-package com.teamcautionrobotics.robot2018;
+package com.teamcautionrobotics.autonomous2018;
 
 import com.teamcautionrobotics.autonomous.Command;
 import com.teamcautionrobotics.autonomous.Mission;
+import com.teamcautionrobotics.autonomous2018.AutoEnums.AutoObjective;
+import com.teamcautionrobotics.autonomous2018.AutoEnums.PlateSide;
+import com.teamcautionrobotics.autonomous2018.AutoEnums.StartingPosition;
 import com.teamcautionrobotics.autonomous2018.commands.CommandFactory2018;
-import com.teamcautionrobotics.robot2018.AutoEnums.AutoObjective;
-import com.teamcautionrobotics.robot2018.AutoEnums.PlateSide;
-import com.teamcautionrobotics.robot2018.AutoEnums.StartingPosition;
 
 public class MissionSelector {
 

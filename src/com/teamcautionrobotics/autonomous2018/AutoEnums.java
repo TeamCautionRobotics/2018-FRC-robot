@@ -1,6 +1,6 @@
-package com.teamcautionrobotics.robot2018;
+package com.teamcautionrobotics.autonomous2018;
 
-class AutoEnums {
+public class AutoEnums {
     public enum AutoMode {
         FMS_DATA("Select best mission from FMS data, starting position, and objective"),
         DO_NOTHING("Do nothing"),
