@@ -26,6 +26,7 @@ import com.teamcautionrobotics.misc2018.Gamepad.Axis;
 import com.teamcautionrobotics.misc2018.Gamepad.Button;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -80,6 +81,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        PowerDistributionPanel pdp = new PowerDistributionPanel();
+        SmartDashboard.putData(pdp);
+
         driveBase = new DriveBase(0, 1, 0, 1, 2, 3);
 
         driverLeft = new EnhancedJoystick(0, 0.1);
