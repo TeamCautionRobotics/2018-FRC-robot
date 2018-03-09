@@ -77,11 +77,14 @@ public class MissionSelector {
         );
 
         rightMissionRightScale = new Mission("right mission scale",
-                commandFactory.moveStraightDistance(0.5, 260, true),
+                commandFactory.moveStraight(0.3, 0.5, false),
+                commandFactory.moveStraight(-0.5, 0.4, false),
+                commandFactory.moveStraightDistance(0.5, 294, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, -90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
+                commandFactory.setLift(LiftLevel.HIGH_SCALE),
+                commandFactory.turnInPlace(0.5, -80),
+                commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.deployCube()
         );
 
         leftMissionLeftSwitch = new Mission("left mission switch",
@@ -96,11 +99,14 @@ public class MissionSelector {
         );
 
         leftMissionLeftScale = new Mission("left mission scale",
-                commandFactory.moveStraightDistance(0.5, 260, true),
+                commandFactory.moveStraight(0.3, 0.5, false),
+                commandFactory.moveStraight(-0.5, 0.4, false),
+                commandFactory.moveStraightDistance(0.5, 294, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, 90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
+                commandFactory.setLift(LiftLevel.HIGH_SCALE),
+                commandFactory.turnInPlace(0.5, 80),
+                commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.deployCube()
         );
     }
 
