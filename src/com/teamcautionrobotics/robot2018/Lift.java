@@ -135,13 +135,15 @@ public class Lift {
 
     public void enablePID() {
         if (!pidController.isEnabled()) {
+            pidController.reset();
             pidController.enable();
         }
     }
 
     public void disablePID() {
         if (pidController.isEnabled()) {
-            pidController.disable();
+            // pidController.reset() also disables the PID controller
+            pidController.reset();
         }
     }
 
