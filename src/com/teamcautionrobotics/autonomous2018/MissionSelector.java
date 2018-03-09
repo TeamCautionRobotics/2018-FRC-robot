@@ -17,7 +17,7 @@ public class MissionSelector {
 
     public MissionSelector(CommandFactory2018 commandFactory) {
         driveForwardMission = new Mission("drive forward mission",
-                commandFactory.moveStraightDistance(0.5, 60, true),
+                commandFactory.moveStraightDistance(0.5, 80, true),
                 commandFactory.moveStraight(-0.1, 0.2, false));
 
         centerMissionRightSwitch = new Mission("center mission right switch",
