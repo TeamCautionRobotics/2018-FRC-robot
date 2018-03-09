@@ -6,6 +6,7 @@ import com.teamcautionrobotics.autonomous2018.AutoEnums.AutoObjective;
 import com.teamcautionrobotics.autonomous2018.AutoEnums.PlateSide;
 import com.teamcautionrobotics.autonomous2018.AutoEnums.StartingPosition;
 import com.teamcautionrobotics.autonomous2018.commands.CommandFactory2018;
+import com.teamcautionrobotics.robot2018.Lift.LiftLevel;
 
 public class MissionSelector {
 
@@ -26,9 +27,9 @@ public class MissionSelector {
                 commandFactory.moveStraightDistance(0.5, 140, true),
                 commandFactory.turnInPlace(0.3, 45),
                 commandFactory.moveStraightDistance(0.5, 20, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.3, 90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
+                commandFactory.setLift(LiftLevel.SWITCH),
+                commandFactory.turnInPlace(0.3, 90), commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.deployCube()
         );
 
         centerMissionLeftSwitch = new Mission("center mission left switch",
@@ -37,9 +38,9 @@ public class MissionSelector {
                 commandFactory.moveStraightDistance(0.5, 160, true),
                 commandFactory.turnInPlace(-0.3, 50),
                 commandFactory.moveStraightDistance(0.5, 30, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
+                commandFactory.setLift(LiftLevel.SWITCH),
+                commandFactory.turnInPlace(-0.3, 90), commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.deployCube()
         );
 
         centerMissionRightScale = new Mission("center mission right scale",
@@ -67,9 +68,10 @@ public class MissionSelector {
         rightMissionRightSwitch = new Mission("right mission switch",
                 commandFactory.moveStraightDistance(0.5, 130, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, -90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
+                commandFactory.setLift(LiftLevel.SWITCH),
+                commandFactory.turnInPlace(0.5, -90),
+                commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.deployCube()
         );
 
         rightMissionRightScale = new Mission("right mission scale",
@@ -83,9 +85,9 @@ public class MissionSelector {
         leftMissionLeftSwitch = new Mission("left mission switch",
                 commandFactory.moveStraightDistance(0.5, 130, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.5, 90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
+                commandFactory.setLift(LiftLevel.SWITCH),
+                commandFactory.turnInPlace(0.5, 90), commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.deployCube()
         );
 
         leftMissionLeftScale = new Mission("left mission scale",
