@@ -81,7 +81,7 @@ public class Intake {
         }
 
         // TODO: maybe clean this up
-        moveMotors(grabberPower * 0.5, leftPower, rightPower);
+        moveMotors(grabberPower, leftPower, rightPower);
     }
 
     public void move(double inPower) {

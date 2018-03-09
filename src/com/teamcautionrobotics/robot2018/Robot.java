@@ -211,18 +211,19 @@ public class Robot extends TimedRobot {
 
         driveBase.drive(leftPower, rightPower);
 
-        boolean driverPrismHarvesting = false;
+        boolean driverHarversterControl = false;
         double grabberPower = 0;
         double intakePower = 0;
         if (lift.getCurrentHeight() < MAX_LIFT_HEIGHT_FOR_INTAKE) {
-            if (driverRight.getTrigger()) {
-                driverPrismHarvesting = true;
+            if (driverLeft.getTrigger() || driverRight.getTrigger()) {
+                driverHarversterControl = true;
             } else {
-                intakePower = grabberPower = manipulator.getAxis(Axis.LEFT_Y);
+                intakePower = manipulator.getAxis(Axis.LEFT_Y);
+                grabberPower = 0.5 * manipulator.getAxis(Axis.LEFT_Y);
             }
 
             // Spin controls only permitted if lift is down and driver is not harvesting
-            if (!driverPrismHarvesting) {
+            if (!driverHarversterControl) {
                 // Left bumper spins counterclockwise
                 if (manipulator.getButton(Button.LEFT_BUMPER)) {
                     intake.timedSpin(-0.5, 0.1);
@@ -239,26 +240,32 @@ public class Robot extends TimedRobot {
             grabberPower = manipulator.getAxis(Axis.LEFT_Y);
         }
 
-        if (driverPrismHarvesting) {
-            grabberPower = 0.5;
-            intakePower = 0.5;
+        if (driverHarversterControl) {
+            if (driverLeft.getTrigger()) {
+                grabberPower = -0.4;
+                intakePower = -0.5;
+            }
+            if (driverRight.getTrigger()) {
+                grabberPower = 0.5;
+                intakePower = 0.5;
+            }
         } else {
             if (intakePower == 0) {
                 int dPadAngle = manipulator.getPOV();
                 switch (dPadAngle) {
                     // D-pad is up
                     case 0:
-                        grabberPower = -1;
+                        grabberPower = -0.5;
                         break;
 
                     // D-pad is left
                     case 270:
-                        grabberPower = -0.5;
+                        grabberPower = -0.375;
                         break;
 
                     // D-pad is down
                     case 180:
-                        grabberPower = -0.1;
+                        grabberPower = -0.25;
                         break;
                 }
             }
@@ -268,7 +275,7 @@ public class Robot extends TimedRobot {
 
         // Only allow bulldozing if the driver is not commanding a prism harvest and
         // the intake is not being moved
-        if (!driverPrismHarvesting && intakePower == 0
+        if (!driverHarversterControl && intakePower == 0
                 && manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
             intake.bulldoze();
         }
@@ -304,15 +311,19 @@ public class Robot extends TimedRobot {
             lift.enablePID();
         }
 
+        // Joystick down moves the lift up
+        double liftMoveCommand = manipulator.getAxis(Axis.RIGHT_Y);
+
+        SmartDashboard.putBoolean("Lift manual mode enabled", liftPIDManualModeEnabled);
+        SmartDashboard.putNumber("Lift Move Command (manip)", liftMoveCommand);
+
         if (liftPIDManualModeEnabled) {
-            // Right manipulator joystick down for lift up
-            lift.move(manipulator.getAxis(Axis.RIGHT_Y));
+            lift.move(liftMoveCommand);
         } else {
             // Use the manipulator right joystick Y to adjust the PID controller's setpoint
             double dt = this.getPeriod();
-            double liftNudgeCommand = manipulator.getAxis(Axis.RIGHT_Y);
-            double changeInHeight = LIFT_NUDGE_SPEED * liftNudgeCommand * dt; // inches
-            if (liftNudgeCommand != 0) {
+            double changeInHeight = LIFT_NUDGE_SPEED * liftMoveCommand * dt; // inches
+            if (liftMoveCommand != 0) {
                 lift.setDestinationHeight(lift.getCurrentHeight() + changeInHeight);
             }
         }
