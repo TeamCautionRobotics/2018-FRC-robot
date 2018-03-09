@@ -44,7 +44,7 @@ public class CommandFactory2018 extends CommandFactory {
     }
 
     public Command deployCube() {
-        return moveIntake(-1.0, 0.5);
+        return moveIntake(-0.3, 0.5);
     }
 
     public Command setLift(LiftLevel liftLevel) {
