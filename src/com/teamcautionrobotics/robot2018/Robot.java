@@ -158,6 +158,7 @@ public class Robot extends TimedRobot {
                 activeMission = missionSelector.selectMissionFromFieldData(switchPosition,
                         scalePosition, startingPositionChooser.getSelected(),
                         autoObjectiveChooser.getSelected());
+                System.out.format("FMS auto selected mission is %s", activeMission.getName());
                 break;
 
             case DO_NOTHING:
