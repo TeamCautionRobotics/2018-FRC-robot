@@ -22,24 +22,26 @@ public class MissionSelector {
                 commandFactory.moveStraight(-0.1, 0.2, false));
 
         centerMissionRightSwitch = new Mission("center mission right switch",
-                commandFactory.moveStraightDistance(0.5, 30, true),
-                commandFactory.turnInPlace(-0.3, 45),
-                commandFactory.moveStraightDistance(0.5, 140, true),
-                commandFactory.turnInPlace(0.3, 45),
-                commandFactory.moveStraightDistance(0.5, 20, true),
+                commandFactory.moveStraight(0.3, 0.5, false),
+                commandFactory.moveStraight(-0.5, 0.4, false),
+                commandFactory.moveStraightDistance(0.5, 28.5, true),
+                commandFactory.turnInPlace(0.3, 40),
                 commandFactory.setLift(LiftLevel.SWITCH),
-                commandFactory.turnInPlace(0.3, 90), commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.moveStraightDistance(0.5, 95, true),
+                commandFactory.turnInPlace(-0.3, 40),
+                commandFactory.moveStraightDistance(0.5, 18, true),
                 commandFactory.deployCube()
         );
 
         centerMissionLeftSwitch = new Mission("center mission left switch",
-                commandFactory.moveStraightDistance(0.5, 30, true),
-                commandFactory.turnInPlace(0.3, 60),
-                commandFactory.moveStraightDistance(0.5, 160, true),
-                commandFactory.turnInPlace(-0.3, 50),
-                commandFactory.moveStraightDistance(0.5, 30, true),
+                commandFactory.moveStraight(0.3, 0.5, false),
+                commandFactory.moveStraight(-0.5, 0.4, false),
+                commandFactory.moveStraightDistance(0.5, 28.5, true),
+                commandFactory.turnInPlace(-0.3, 40),
                 commandFactory.setLift(LiftLevel.SWITCH),
-                commandFactory.turnInPlace(-0.3, 90), commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.moveStraightDistance(0.5, 95, true),
+                commandFactory.turnInPlace(0.3, 40),
+                commandFactory.moveStraightDistance(0.5, 18, true),
                 commandFactory.deployCube()
         );
 
