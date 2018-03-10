@@ -19,6 +19,7 @@ public class SetLiftCommand implements Command {
     @Override
     public boolean run() {
         if (!liftCommanded) {
+            lift.enablePID();
             lift.setDestinationHeight(height);
             liftCommanded = true;
         }
