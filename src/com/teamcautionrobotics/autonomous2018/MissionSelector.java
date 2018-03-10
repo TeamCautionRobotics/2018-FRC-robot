@@ -121,7 +121,7 @@ public class MissionSelector {
                 if (switchSide == PlateSide.LEFT) {
                     return centerMissionLeftSwitch;
                 } else if (switchSide == PlateSide.RIGHT) {
-                    return rightMissionRightSwitch;
+                    return centerMissionRightSwitch;
                 }
             } else if (startingPosition == StartingPosition.LEFT) {
                 if (switchSide == PlateSide.LEFT) {
