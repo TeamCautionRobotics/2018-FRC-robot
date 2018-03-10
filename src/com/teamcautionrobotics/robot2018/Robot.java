@@ -158,7 +158,7 @@ public class Robot extends TimedRobot {
                 activeMission = missionSelector.selectMissionFromFieldData(switchPosition,
                         scalePosition, startingPositionChooser.getSelected(),
                         autoObjectiveChooser.getSelected());
-                System.out.format("FMS auto selected mission is %s", activeMission.getName());
+                System.out.format("FMS auto selected mission is %s%n", activeMission.getName());
                 break;
 
             case DO_NOTHING:
@@ -298,7 +298,7 @@ public class Robot extends TimedRobot {
             liftLowerButtonPressed = liftLowerButton;
         }
 
-        boolean liftPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0.5;
+        boolean liftPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) < 0.5;
 
         if (!liftPIDManualModeTrigger && liftPIDManualModeTrigger != liftPIDManualModeEnabled) {
             lift.setDestinationHeight(lift.getCurrentHeight());
