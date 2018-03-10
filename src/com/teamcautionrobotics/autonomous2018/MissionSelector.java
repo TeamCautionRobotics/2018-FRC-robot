@@ -70,11 +70,12 @@ public class MissionSelector {
         rightMissionRightSwitch = new Mission("right mission switch",
                 commandFactory.moveStraight(0.3, 0.5, false),
                 commandFactory.moveStraight(-0.5, 0.4, false),
+                commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 145, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
-                commandFactory.setLift(LiftLevel.SWITCH),
                 commandFactory.turnInPlace(0.5, -80),
                 commandFactory.moveStraight(0.5, 0.35, false),
+                commandFactory.setLift(LiftLevel.SWITCH, true),
                 commandFactory.deployCube()
         );
 
@@ -92,11 +93,12 @@ public class MissionSelector {
         leftMissionLeftSwitch = new Mission("left mission switch",
                 commandFactory.moveStraight(0.3, 0.5, false),
                 commandFactory.moveStraight(-0.5, 0.4, false),
+                commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 145, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
-                commandFactory.setLift(LiftLevel.SWITCH),
                 commandFactory.turnInPlace(0.5, 80),
                 commandFactory.moveStraight(0.5, 0.35, false),
+                commandFactory.setLift(LiftLevel.SWITCH, true),
                 commandFactory.deployCube()
         );
 
