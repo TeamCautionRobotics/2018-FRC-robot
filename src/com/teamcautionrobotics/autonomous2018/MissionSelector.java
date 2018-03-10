@@ -27,7 +27,7 @@ public class MissionSelector {
                 commandFactory.moveStraightDistance(0.5, 28.5, true),
                 commandFactory.turnInPlace(0.3, 40),
                 commandFactory.setLift(LiftLevel.SWITCH),
-                commandFactory.moveStraightDistance(0.5, 95, true),
+                commandFactory.moveStraightDistance(0.5, 68, true),
                 commandFactory.turnInPlace(-0.3, 40),
                 commandFactory.moveStraightDistance(0.5, 18, true),
                 commandFactory.deployCube()
@@ -39,7 +39,7 @@ public class MissionSelector {
                 commandFactory.moveStraightDistance(0.5, 28.5, true),
                 commandFactory.turnInPlace(-0.3, 40),
                 commandFactory.setLift(LiftLevel.SWITCH),
-                commandFactory.moveStraightDistance(0.5, 95, true),
+                commandFactory.moveStraightDistance(0.5, 122, true),
                 commandFactory.turnInPlace(0.3, 40),
                 commandFactory.moveStraightDistance(0.5, 18, true),
                 commandFactory.deployCube()
