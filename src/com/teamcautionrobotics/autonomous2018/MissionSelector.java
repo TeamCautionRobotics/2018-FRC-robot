@@ -24,24 +24,26 @@ public class MissionSelector {
         centerMissionRightSwitch = new Mission("center mission right switch",
                 commandFactory.moveStraight(0.3, 0.5, false),
                 commandFactory.moveStraight(-0.5, 0.4, false),
-                commandFactory.moveStraightDistance(0.5, 28.5, true),
+                commandFactory.moveStraightDistance(0.5, 20, true),
                 commandFactory.turnInPlace(0.3, 40),
                 commandFactory.setLift(LiftLevel.SWITCH),
-                commandFactory.moveStraightDistance(0.5, 68, true),
-                commandFactory.turnInPlace(-0.3, 40),
-                commandFactory.moveStraightDistance(0.5, 18, true),
+                commandFactory.moveStraightDistance(0.5, 55, true),
+                commandFactory.turnInPlace(-0.3, 30),
+                commandFactory.moveStraight(0.5, 0.2, false),
+                commandFactory.delay(0.5),
                 commandFactory.deployCube()
         );
 
         centerMissionLeftSwitch = new Mission("center mission left switch",
                 commandFactory.moveStraight(0.3, 0.5, false),
                 commandFactory.moveStraight(-0.5, 0.4, false),
-                commandFactory.moveStraightDistance(0.5, 28.5, true),
-                commandFactory.turnInPlace(-0.3, 40),
+                commandFactory.moveStraightDistance(0.5, 20, true),
+                commandFactory.turnInPlace(-0.3, 50),
                 commandFactory.setLift(LiftLevel.SWITCH),
-                commandFactory.moveStraightDistance(0.5, 122, true),
-                commandFactory.turnInPlace(0.3, 40),
-                commandFactory.moveStraightDistance(0.5, 18, true),
+                commandFactory.moveStraightDistance(0.5, 80, true),
+                commandFactory.turnInPlace(0.3, 42),
+                commandFactory.moveStraight(0.7, 0.2, false),
+                commandFactory.delay(0.5),
                 commandFactory.deployCube()
         );
 
