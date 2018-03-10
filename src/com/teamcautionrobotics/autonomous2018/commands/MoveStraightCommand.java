@@ -50,7 +50,7 @@ public class MoveStraightCommand implements Command {
                 complete = true;
             } else {
                 double angle = heading - driveBase.getGyroAngle();
-                System.out.println("Angle: " + angle + "  Heading: " + heading);
+//                System.out.println("Angle: " + angle + "  Heading: " + heading);
                 driveBase.drive(speed, speed - angle * 0.03);
             }
         }
