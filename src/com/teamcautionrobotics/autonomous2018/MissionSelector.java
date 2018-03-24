@@ -1,5 +1,8 @@
 package com.teamcautionrobotics.autonomous2018;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.teamcautionrobotics.autonomous.Command;
 import com.teamcautionrobotics.autonomous.Mission;
 import com.teamcautionrobotics.autonomous2018.AutoEnums.AutoObjective;
@@ -15,37 +18,42 @@ public class MissionSelector {
             rightMissionRightScale, leftMissionLeftSwitch, leftMissionLeftScale;
     public static final Mission DO_NOTHING_MISSION = new Mission("do nothing mission");
 
+    private final CommandFactory2018 commandFactory;
+
+    private final double EXPECTED_ENCODER_TEST_DISTANCE = 6.0;
 
     public MissionSelector(CommandFactory2018 commandFactory) {
+        this.commandFactory = commandFactory;
+
         driveForwardMission = new Mission("drive forward mission",
-                commandFactory.moveStraightDistance(0.5, 100, true),
-                commandFactory.moveStraight(-0.1, 0.2, false));
+                addMissionPrefix(
+                        commandFactory.moveStraightDistance(0.5, 100, true),
+                        commandFactory.moveStraight(-0.1, 0.2, false)
+                ));
 
         centerMissionRightSwitch = new Mission("center mission right switch",
-                commandFactory.moveStraight(0.3, 0.5, false),
-                commandFactory.moveStraight(-0.5, 0.4, false),
-                commandFactory.moveStraightDistance(0.5, 20, true),
-                commandFactory.turnInPlace(0.3, 40),
-                commandFactory.setLift(LiftLevel.SWITCH),
-                commandFactory.moveStraightDistance(0.5, 55, true),
-                commandFactory.turnInPlace(-0.3, 30),
-                commandFactory.moveStraight(0.5, 0.2, false),
-                commandFactory.delay(0.5),
-                commandFactory.deployCube()
-        );
+                addMissionPrefix(
+                    commandFactory.moveStraightDistance(0.5, 20, true),
+                    commandFactory.turnInPlace(0.3, 40),
+                    commandFactory.setLift(LiftLevel.SWITCH),
+                    commandFactory.moveStraightDistance(0.5, 55, true),
+                    commandFactory.turnInPlace(-0.3, 30),
+                    commandFactory.moveStraight(0.5, 0.2, false),
+                    commandFactory.delay(0.5),
+                    commandFactory.deployCube()
+                ));
 
         centerMissionLeftSwitch = new Mission("center mission left switch",
-                commandFactory.moveStraight(0.3, 0.5, false),
-                commandFactory.moveStraight(-0.5, 0.4, false),
-                commandFactory.moveStraightDistance(0.5, 20, true),
-                commandFactory.turnInPlace(-0.3, 50),
-                commandFactory.setLift(LiftLevel.SWITCH),
-                commandFactory.moveStraightDistance(0.5, 80, true),
-                commandFactory.turnInPlace(0.3, 42),
-                commandFactory.moveStraight(0.7, 0.2, false),
-                commandFactory.delay(0.5),
-                commandFactory.deployCube()
-        );
+                addMissionPrefix(
+                    commandFactory.moveStraightDistance(0.5, 20, true),
+                    commandFactory.turnInPlace(-0.3, 50),
+                    commandFactory.setLift(LiftLevel.SWITCH),
+                    commandFactory.moveStraightDistance(0.5, 80, true),
+                    commandFactory.turnInPlace(0.3, 42),
+                    commandFactory.moveStraight(0.7, 0.2, false),
+                    commandFactory.delay(0.5),
+                    commandFactory.deployCube()
+                ));
 
         centerMissionRightScale = new Mission("center mission right scale",
                 commandFactory.moveStraightDistance(0.5, 30, true),
@@ -70,8 +78,7 @@ public class MissionSelector {
         );
 
         rightMissionRightSwitch = new Mission("right mission switch",
-                commandFactory.moveStraight(0.3, 0.5, false),
-                commandFactory.moveStraight(-0.5, 0.4, false),
+                addMissionPrefix(
                 commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 145, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
@@ -79,41 +86,50 @@ public class MissionSelector {
                 commandFactory.moveStraight(0.5, 0.35, false),
                 commandFactory.setLift(LiftLevel.SWITCH, true),
                 commandFactory.deployCube()
-        );
+                ));
 
         rightMissionRightScale = new Mission("right mission scale",
-                commandFactory.moveStraight(0.3, 0.5, false),
-                commandFactory.moveStraight(-0.5, 0.4, false),
-                commandFactory.moveStraightDistance(0.5, 294, true),
-                commandFactory.moveStraight(-0.1, 0.2, false),
-                commandFactory.setLift(LiftLevel.HIGH_SCALE),
-                commandFactory.turnInPlace(0.5, -80),
-                commandFactory.moveStraight(0.5, 0.3, false),
-                commandFactory.deployCube()
-        );
-
+                addMissionPrefix(
+                    commandFactory.moveStraightDistance(0.5, 294, true),
+                    commandFactory.moveStraight(-0.1, 0.2, false),
+                    commandFactory.setLift(LiftLevel.HIGH_SCALE),
+                    commandFactory.turnInPlace(0.5, -80),
+                    commandFactory.moveStraight(0.5, 0.3, false),
+                    commandFactory.deployCube()
+                ));
         leftMissionLeftSwitch = new Mission("left mission switch",
-                commandFactory.moveStraight(0.3, 0.5, false),
-                commandFactory.moveStraight(-0.5, 0.4, false),
-                commandFactory.delay(0.5),
-                commandFactory.moveStraightDistance(0.5, 145, true),
-                commandFactory.moveStraight(-0.1, 0.2, false),
-                commandFactory.turnInPlace(0.5, 80),
-                commandFactory.moveStraight(0.5, 0.35, false),
-                commandFactory.setLift(LiftLevel.SWITCH, true),
-                commandFactory.deployCube()
-        );
+                addMissionPrefix(
+                    commandFactory.delay(0.5),
+                    commandFactory.moveStraightDistance(0.5, 145, true),
+                    commandFactory.moveStraight(-0.1, 0.2, false),
+                    commandFactory.turnInPlace(0.5, 80),
+                    commandFactory.moveStraight(0.5, 0.35, false),
+                    commandFactory.setLift(LiftLevel.SWITCH, true),
+                    commandFactory.deployCube()
+                ));
 
         leftMissionLeftScale = new Mission("left mission scale",
+                addMissionPrefix(
+                    commandFactory.moveStraightDistance(0.5, 294, true),
+                    commandFactory.moveStraight(-0.1, 0.2, false),
+                    commandFactory.setLift(LiftLevel.HIGH_SCALE),
+                    commandFactory.turnInPlace(0.5, 80),
+                    commandFactory.moveStraight(0.5, 0.3, false),
+                    commandFactory.deployCube()
+                ));
+    }
+
+    private Command[] addMissionPrefix(Command... commands) {
+        ArrayList<Command> autoCommands = new ArrayList<>();
+
+        // Commands we want to run at the beginning of all of the autonomous missions
+        autoCommands.addAll(Arrays.asList(commandFactory.resetEncoders(),
                 commandFactory.moveStraight(0.3, 0.5, false),
-                commandFactory.moveStraight(-0.5, 0.4, false),
-                commandFactory.moveStraightDistance(0.5, 294, true),
-                commandFactory.moveStraight(-0.1, 0.2, false),
-                commandFactory.setLift(LiftLevel.HIGH_SCALE),
-                commandFactory.turnInPlace(0.5, 80),
-                commandFactory.moveStraight(0.5, 0.3, false),
-                commandFactory.deployCube()
-        );
+                commandFactory.checkDriveEncoders(EXPECTED_ENCODER_TEST_DISTANCE),
+                commandFactory.moveStraight(-0.5, 0.4, false)));
+
+        autoCommands.addAll(Arrays.asList(commands));
+        return (Command[]) autoCommands.toArray();
     }
 
     public Mission selectMissionFromFieldData(PlateSide switchSide, PlateSide scaleSide,

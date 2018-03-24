@@ -63,6 +63,10 @@ public class CommandFactory2018 extends CommandFactory {
         return new SetLiftCommand(lift, height, waitForLift);
     }
 
+    public Command checkDriveEncoders(double expectedDistance) {
+        return new CheckDriveEncodersCommand(driveBase, expectedDistance);
+    }
+
     public Command resetEncoders() {
         return new ResetEncoders(driveBase);
     }
