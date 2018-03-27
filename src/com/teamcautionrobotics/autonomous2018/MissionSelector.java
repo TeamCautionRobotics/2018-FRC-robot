@@ -25,14 +25,12 @@ public class MissionSelector {
     public MissionSelector(CommandFactory2018 commandFactory) {
         this.commandFactory = commandFactory;
 
-        driveForwardMission = new Mission("drive forward mission",
-                addMissionPrefix(
+        driveForwardMission = makeMissionWithPrefix("drive forward mission",
                         commandFactory.moveStraightDistance(0.5, 100, true),
                         commandFactory.moveStraight(-0.1, 0.2, false)
-                ));
+                );
 
-        centerMissionRightSwitch = new Mission("center mission right switch",
-                addMissionPrefix(
+        centerMissionRightSwitch = makeMissionWithPrefix("center mission right switch",
                     commandFactory.moveStraightDistance(0.5, 20, true),
                     commandFactory.turnInPlace(0.3, 40),
                     commandFactory.setLift(LiftLevel.SWITCH),
@@ -41,10 +39,9 @@ public class MissionSelector {
                     commandFactory.moveStraight(0.5, 0.2, false),
                     commandFactory.delay(0.5),
                     commandFactory.deployCube()
-                ));
+                );
 
-        centerMissionLeftSwitch = new Mission("center mission left switch",
-                addMissionPrefix(
+        centerMissionLeftSwitch = makeMissionWithPrefix("center mission left switch",
                     commandFactory.moveStraightDistance(0.5, 20, true),
                     commandFactory.turnInPlace(-0.3, 50),
                     commandFactory.setLift(LiftLevel.SWITCH),
@@ -53,9 +50,9 @@ public class MissionSelector {
                     commandFactory.moveStraight(0.7, 0.2, false),
                     commandFactory.delay(0.5),
                     commandFactory.deployCube()
-                ));
+                );
 
-        centerMissionRightScale = new Mission("center mission right scale",
+        centerMissionRightScale = makeMissionWithPrefix("center mission right scale",
                 commandFactory.moveStraightDistance(0.5, 30, true),
                 commandFactory.turnInPlace(-0.3, 45),
                 commandFactory.moveStraightDistance(0.5, 140, true),
@@ -66,7 +63,7 @@ public class MissionSelector {
         // DEPLOY THE CUBE!!!!!!!
         );
 
-        centerMissionLeftScale = new Mission("center mission left scale",
+        centerMissionLeftScale = makeMissionWithPrefix("center mission left scale",
                 commandFactory.moveStraightDistance(0.5, 30, true),
                 commandFactory.turnInPlace(0.3, 60),
                 commandFactory.moveStraightDistance(0.5, 160, true),
@@ -77,8 +74,7 @@ public class MissionSelector {
         // DEPLOY THE CUBE!!!!!!!
         );
 
-        rightMissionRightSwitch = new Mission("right mission switch",
-                addMissionPrefix(
+        rightMissionRightSwitch = makeMissionWithPrefix("right mission switch",
                 commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 145, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
@@ -86,19 +82,17 @@ public class MissionSelector {
                 commandFactory.moveStraight(0.5, 0.35, false),
                 commandFactory.setLift(LiftLevel.SWITCH, true),
                 commandFactory.deployCube()
-                ));
+                );
 
-        rightMissionRightScale = new Mission("right mission scale",
-                addMissionPrefix(
+        rightMissionRightScale = makeMissionWithPrefix("right mission scale",
                     commandFactory.moveStraightDistance(0.5, 294, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
                     commandFactory.setLift(LiftLevel.HIGH_SCALE),
                     commandFactory.turnInPlace(0.5, -80),
                     commandFactory.moveStraight(0.5, 0.3, false),
                     commandFactory.deployCube()
-                ));
-        leftMissionLeftSwitch = new Mission("left mission switch",
-                addMissionPrefix(
+                );
+        leftMissionLeftSwitch = makeMissionWithPrefix("left mission switch",
                     commandFactory.delay(0.5),
                     commandFactory.moveStraightDistance(0.5, 145, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
@@ -106,30 +100,30 @@ public class MissionSelector {
                     commandFactory.moveStraight(0.5, 0.35, false),
                     commandFactory.setLift(LiftLevel.SWITCH, true),
                     commandFactory.deployCube()
-                ));
+                );
 
-        leftMissionLeftScale = new Mission("left mission scale",
-                addMissionPrefix(
+        leftMissionLeftScale = makeMissionWithPrefix("left mission scale",
                     commandFactory.moveStraightDistance(0.5, 294, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
                     commandFactory.setLift(LiftLevel.HIGH_SCALE),
                     commandFactory.turnInPlace(0.5, 80),
                     commandFactory.moveStraight(0.5, 0.3, false),
                     commandFactory.deployCube()
-                ));
+                );
     }
 
-    private Command[] addMissionPrefix(Command... commands) {
+    private Mission makeMissionWithPrefix(String name, Command... commands) {
         ArrayList<Command> autoCommands = new ArrayList<>();
 
         // Commands we want to run at the beginning of all of the autonomous missions
         autoCommands.addAll(Arrays.asList(commandFactory.resetEncoders(),
                 commandFactory.moveStraight(0.3, 0.5, false),
                 commandFactory.checkDriveEncoders(EXPECTED_ENCODER_TEST_DISTANCE),
-                commandFactory.moveStraight(-0.5, 0.4, false)));
+                commandFactory.moveStraight(-0.5, 0.4, false)
+            ));
 
         autoCommands.addAll(Arrays.asList(commands));
-        return (Command[]) autoCommands.toArray();
+        return new Mission(name, autoCommands);
     }
 
     public Mission selectMissionFromFieldData(PlateSide switchSide, PlateSide scaleSide,
