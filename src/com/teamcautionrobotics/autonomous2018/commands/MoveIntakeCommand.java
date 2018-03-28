@@ -42,7 +42,7 @@ public class MoveIntakeCommand implements Command {
     public boolean run() {
         if (needsToStart && lift.atDestination()) {
             timer.reset();
-                timer.start();
+            timer.start();
             intake.move(power);
             needsToStart = false;
         }
