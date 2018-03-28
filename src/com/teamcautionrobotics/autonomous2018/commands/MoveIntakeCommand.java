@@ -40,9 +40,10 @@ public class MoveIntakeCommand implements Command {
 
     @Override
     public boolean run() {
-        if (needsToStart) {
+        if (needsToStart && lift.atDestination()) {
             timer.reset();
             timer.start();
+            intake.move(power);
             needsToStart = false;
         }
 
@@ -51,10 +52,6 @@ public class MoveIntakeCommand implements Command {
                 intake.move(0);
                 timer.stop();
                 complete = true;
-            } else {
-                if (lift.atDestination()) {
-                    intake.move(power);
-                }
             }
         }
         return complete;
