@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import com.teamcautionrobotics.autonomous.commands.CommandFactory;
 
@@ -45,6 +46,7 @@ public class MissionScriptMission extends Mission {
         if (parsedMission != null) {
             commands = parsedMission.getCommands();
         } else {
+            commands = new ArrayList<>();
             System.err.println("MissionScriptMission: MissionScript parser returned null Mission!");
         }
 
