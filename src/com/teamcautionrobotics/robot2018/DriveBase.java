@@ -21,6 +21,8 @@ public class DriveBase {
 
     private ADXRS450_Gyro gyro;
 
+    private boolean useLeftEncoder = false;
+
     private double heading;
     public double courseHeading;
 
@@ -72,12 +74,30 @@ public class DriveBase {
         rightEncoder.reset();
     }
 
+    public boolean usingLeftEncoder() {
+        return useLeftEncoder;
+    }
+
+    public void setUseLeftEncoder(boolean useLeftEncoder) {
+        this.useLeftEncoder = useLeftEncoder;
+    }
+
     public double getDistance() {
-        return getRightDistance();
+        if (useLeftEncoder) {
+            return getLeftDistance();
+        } else {
+            // default to right encoder
+            return getRightDistance();
+        }
     }
 
     public double getSpeed() {
-        return getRightSpeed();
+        if (useLeftEncoder) {
+            return getLeftSpeed();
+        } else {
+            // default to right encoder
+            return getRightSpeed();
+        }
     }
 
     public double getRightDistance() {

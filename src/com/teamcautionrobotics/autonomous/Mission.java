@@ -2,6 +2,7 @@ package com.teamcautionrobotics.autonomous;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Mission {
 
@@ -12,10 +13,18 @@ public class Mission {
     private String name;
     public final boolean enableControls;
 
-    public Mission(String name, boolean enableControls, Command... commands) {
+    public Mission(String name, boolean enableControls, List<Command> commands) {
         this.name = name;
         this.enableControls = enableControls;
-        this.commands.addAll(Arrays.asList(commands));
+        this.commands.addAll(commands);
+    }
+
+    public Mission(String name, boolean enableControls, Command... commands) {
+        this(name, enableControls, Arrays.asList(commands));
+    }
+
+    public Mission(String name, List<Command> commands) {
+        this(name, false, commands);
     }
 
     public Mission(String name, Command... commands) {
