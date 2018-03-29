@@ -38,6 +38,8 @@ public class MissionScriptMission extends Mission {
                     Files.readAllLines(missionScriptFile), commandFactory);
         } catch (ParseException | IOException e) {
             e.printStackTrace();
+            parsedMission = null;
+            System.err.println("MissionScriptMission: MissionScript parser unable to parse!");
         }
 
         if (parsedMission != null) {
