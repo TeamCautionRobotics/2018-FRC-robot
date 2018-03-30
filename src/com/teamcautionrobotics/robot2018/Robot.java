@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
     EnhancedJoystick driverRight;
     Gamepad manipulator;
 
-    Intake intake;
+    Harvester harvester;
     Lift lift;
 
     boolean liftRaiseButtonPressed = false;
@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        intake = new Intake(3, 4, 5, 8);
+        harvester = new Harvester(3, 4, 5, 8);
         lift = new Lift(2, 4, 5, 6, 7, 0.8, 0.1, 0.4);
 
         liftEncoderResetSendable = new FunctionRunnerSendable("Reset lift encoder", () -> {
@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
         });
         SmartDashboard.putData(liftEncoderResetSendable);
 
-        commandFactory = new CommandFactory2018(driveBase, intake, lift);
+        commandFactory = new CommandFactory2018(driveBase, harvester, lift);
 
         missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
                 commandFactory);
@@ -227,12 +227,12 @@ public class Robot extends TimedRobot {
             if (!driverHarversterControl) {
                 // Left bumper spins counterclockwise
                 if (manipulator.getButton(Button.LEFT_BUMPER)) {
-                    intake.timedSpin(-0.5, 0.1);
+                    harvester.timedSpin(-0.5, 0.1);
                 }
 
                 // Right bumper spins clockwise
                 if (manipulator.getButton(Button.RIGHT_BUMPER)) {
-                    intake.timedSpin(0.5, 0.1);
+                    harvester.timedSpin(0.5, 0.1);
                 }
             }
         } else {
@@ -272,13 +272,13 @@ public class Robot extends TimedRobot {
             }
         }
 
-        intake.move(grabberPower, intakePower);
+        harvester.move(grabberPower, intakePower);
 
         // Only allow bulldozing if the driver is not commanding a prism harvest and
         // the intake is not being moved
         if (!driverHarversterControl && intakePower == 0
                 && manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
-            intake.bulldoze();
+            harvester.bulldoze();
         }
 
 
@@ -354,7 +354,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Lift fully down",
                 lift.stageOneIsDown() && lift.stageTwoIsDown());
 
-        SmartDashboard.putBoolean("Power prismⁿ™ in grabber", intake.cubeIsInGrabber());
+        SmartDashboard.putBoolean("Power prismⁿ™ in grabber", harvester.cubeIsInGrabber());
     }
 
     void putEncoders() {

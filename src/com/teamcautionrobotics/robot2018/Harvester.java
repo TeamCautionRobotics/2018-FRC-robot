@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 
-public class Intake {
+public class Harvester {
 
     private VictorSP grabber;
     private VictorSP intakeLeft;
@@ -18,7 +18,7 @@ public class Intake {
 
     private double spinPower = 0;
 
-    public Intake(int grabberChannel, int intakeLeftChannel, int intakeRightChannel,
+    public Harvester(int grabberChannel, int intakeLeftChannel, int intakeRightChannel,
             int colorSensorChannel) {
 
         grabber = new VictorSP(grabberChannel);
