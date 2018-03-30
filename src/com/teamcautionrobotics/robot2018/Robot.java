@@ -27,7 +27,6 @@ import com.teamcautionrobotics.misc2018.Gamepad.Button;
 import com.teamcautionrobotics.robot2018.Harvester.HarvesterAngle;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick.ButtonType;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;

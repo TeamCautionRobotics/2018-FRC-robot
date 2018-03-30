@@ -1,7 +1,6 @@
 package com.teamcautionrobotics.robot2018;
 
 import com.teamcautionrobotics.misc2018.AbstractPIDSource;
-import com.teamcautionrobotics.robot2018.Lift.LiftPIDSource;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -14,6 +13,8 @@ public class Harvester {
 
     public enum HarvesterAngle {
         UP(90), AIMED(45), DOWN(0);
+        
+        private static HarvesterAngle[] values = values();
 
         public final double angle;
 
@@ -134,6 +135,26 @@ public class Harvester {
     public void setDestinationAngle(HarvesterAngle harvesterAngle) {
         setDestinationAngle(harvesterAngle.angle);
     }
+    
+    public double getCurrentAngle() {
+        return angularOptimizerEncoder.getDistance();
+    }
+    
+    public HarvesterAngle getCurrentHarvesterAngle() {
+        return convertAngleToHarvesterAngle(getCurrentAngle());
+    }
+    
+    public double getDestinationAngle() {
+        return pidController.getSetpoint();
+    }
+    
+    public HarvesterAngle getDestinationHarvesterAngle() {
+        return convertAngleToHarvesterAngle(getDestinationAngle());
+    }
+
+    public boolean atDestinationAngle() {
+        return Math.abs(getDestinationAngle() - getCurrentAngle()) <= 1;
+    }
 
     /**
      * Do a timed spin. After the specified time, the spinPower reverts to zero.
@@ -162,6 +183,22 @@ public class Harvester {
 
     public void bulldoze() {
         move(grabber.get(), -1.0);
+    }
+    
+    public static HarvesterAngle convertAngleToHarvesterAngle(double angle) {
+        HarvesterAngle convertedHarvesterAngle = HarvesterAngle.values[0];
+        for (HarvesterAngle harvesterAngle : HarvesterAngle.values) {
+            //22.5 is a magic number
+            double midpoint = harvesterAngle.angle + 22.5;
+            convertedHarvesterAngle = harvesterAngle;
+            // OHHHHH WE'RE HALFWAY THERE! WHOAWHOA then move on to the next LiftLevel and try
+            // again; if not, break out of the loop and return the current liftPosition the for loop
+            // is on
+            if (angle < midpoint) {
+                break;
+            }
+        }
+        return convertedHarvesterAngle;
     }
 
     public boolean cubeIsInGrabber() {
