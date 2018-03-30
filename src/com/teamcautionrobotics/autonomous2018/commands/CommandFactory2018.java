@@ -4,6 +4,7 @@ import com.teamcautionrobotics.autonomous.Command;
 import com.teamcautionrobotics.autonomous.commands.CommandFactory;
 import com.teamcautionrobotics.robot2018.DriveBase;
 import com.teamcautionrobotics.robot2018.Harvester;
+import com.teamcautionrobotics.robot2018.Harvester.HarvesterAngle;
 import com.teamcautionrobotics.robot2018.Lift;
 import com.teamcautionrobotics.robot2018.Lift.LiftLevel;
 
@@ -42,9 +43,21 @@ public class CommandFactory2018 extends CommandFactory {
     public Command moveIntake(double power, double time) {
         return new MoveIntakeCommand(harvester, lift, power, time);
     }
-    
+
     public Command rotateHarvester(double angle, boolean waitForRotation) {
         return new RotateHarvesterCommand(harvester, angle, waitForRotation);
+    }
+
+    public Command rotateHarvester(double angle) {
+        return rotateHarvester(angle, true);
+    }
+
+    public Command rotateHarvester(HarvesterAngle harvesterAngle, boolean waitForRotation) {
+        return rotateHarvester(harvesterAngle.angle, waitForRotation);
+    }
+
+    public Command rotateHarvester(HarvesterAngle harvesterAngle) {
+        return rotateHarvester(harvesterAngle.angle);
     }
 
     public Command deployCube() {
