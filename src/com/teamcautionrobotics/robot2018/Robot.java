@@ -212,19 +212,19 @@ public class Robot extends TimedRobot {
 
         driveBase.drive(leftPower, rightPower);
 
-        boolean driverHarversterControl = false;
+        boolean driverHarvesterControl = false;
         double grabberPower = 0;
         double intakePower = 0;
         if (true && lift.getCurrentHeight() < MAX_LIFT_HEIGHT_FOR_INTAKE) {
             if (driverLeft.getTrigger() || driverRight.getTrigger()) {
-                driverHarversterControl = true;
+                driverHarvesterControl = true;
             } else {
                 intakePower = manipulator.getAxis(Axis.LEFT_Y);
                 grabberPower = 0.5 * manipulator.getAxis(Axis.LEFT_Y);
             }
 
             // Spin controls only permitted if lift is down and driver is not harvesting
-            if (!driverHarversterControl) {
+            if (!driverHarvesterControl) {
                 // Left bumper spins counterclockwise
                 if (manipulator.getButton(Button.LEFT_BUMPER)) {
                     harvester.timedSpin(-0.5, 0.1);
@@ -241,7 +241,7 @@ public class Robot extends TimedRobot {
             grabberPower = manipulator.getAxis(Axis.LEFT_Y);
         }
 
-        if (driverHarversterControl) {
+        if (driverHarvesterControl) {
             if (driverLeft.getTrigger()) {
                 grabberPower = -0.4;
                 intakePower = -0.5;
@@ -276,7 +276,7 @@ public class Robot extends TimedRobot {
 
         // Only allow bulldozing if the driver is not commanding a prism harvest and
         // the intake is not being moved
-        if (!driverHarversterControl && intakePower == 0
+        if (!driverHarvesterControl && intakePower == 0
                 && manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
             harvester.bulldoze();
         }
