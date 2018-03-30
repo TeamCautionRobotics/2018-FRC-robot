@@ -24,8 +24,10 @@ import com.teamcautionrobotics.misc2018.FunctionRunnerSendable;
 import com.teamcautionrobotics.misc2018.Gamepad;
 import com.teamcautionrobotics.misc2018.Gamepad.Axis;
 import com.teamcautionrobotics.misc2018.Gamepad.Button;
+import com.teamcautionrobotics.robot2018.Harvester.HarvesterAngle;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick.ButtonType;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -90,7 +92,8 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        harvester = new Harvester(3, 4, 5, 8);
+        // TODO: Find out angular optimizer port, encoder ports, and PID values
+        harvester = new Harvester(3, 4, 5, 6, 8, 9, 8, 1, 1, 1);
         lift = new Lift(2, 4, 5, 6, 7, 0.8, 0.1, 0.4);
 
         liftEncoderResetSendable = new FunctionRunnerSendable("Reset lift encoder", () -> {
@@ -281,6 +284,17 @@ public class Robot extends TimedRobot {
             harvester.bulldoze();
         }
 
+        // TODO: Insert button values
+        boolean puttingHarvesterDown = false;
+        if (driverLeft.getRawButton(0)) {
+            harvester.setDestinationAngle(HarvesterAngle.DOWN);
+        } else if (manipulator.getButton(Button.A)) {
+            harvester.setDestinationAngle(HarvesterAngle.AIMED);
+        } else {
+            harvester.setDestinationAngle(HarvesterAngle.UP);
+        }
+
+        harvester.enablePID();
 
         boolean liftRaiseButton = manipulator.getButton(Button.Y);
         if (liftRaiseButton != liftRaiseButtonPressed) {

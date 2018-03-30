@@ -1,16 +1,36 @@
 package com.teamcautionrobotics.robot2018;
 
+import com.teamcautionrobotics.misc2018.AbstractPIDSource;
+import com.teamcautionrobotics.robot2018.Lift.LiftPIDSource;
+
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 
 public class Harvester {
 
+    public enum HarvesterAngle {
+        UP(90), AIMED(45), DOWN(0);
+
+        public final double angle;
+
+        private HarvesterAngle(double angle) {
+            this.angle = angle;
+        }
+    }
+
     private VictorSP grabber;
     private VictorSP intakeLeft;
     private VictorSP intakeRight;
+    private VictorSP angularOptimizer;
 
+    private Encoder angularOptimizerEncoder;
     private DigitalInput colorSensor;
+
+    private PIDController pidController;
 
     private Timer timer;
     private boolean timedSpin = false;
@@ -19,16 +39,31 @@ public class Harvester {
     private double spinPower = 0;
 
     public Harvester(int grabberChannel, int intakeLeftChannel, int intakeRightChannel,
-            int colorSensorChannel) {
+            int angularOptimizerChannel, int angularOptimizerEncoderChannelA,
+            int angularOptimizerEncoderChannelB, int colorSensorChannel, double Kp, double Ki,
+            double Kd) {
 
         grabber = new VictorSP(grabberChannel);
         intakeLeft = new VictorSP(intakeLeftChannel);
         intakeRight = new VictorSP(intakeRightChannel);
+        angularOptimizer = new VictorSP(angularOptimizerChannel);
 
         colorSensor = new DigitalInput(colorSensorChannel);
 
         timer = new Timer();
         timer.start();
+
+        angularOptimizerEncoder =
+                new Encoder(angularOptimizerEncoderChannelA, angularOptimizerEncoderChannelB);
+        angularOptimizerEncoder.setDistancePerPulse(360 / 1024);
+
+        pidController = new PIDController(Kp, Ki, Kd, 0,
+                new AngularOptimizerPIDSource(PIDSourceType.kDisplacement),
+                this::moveAngularOptimizer);
+        pidController.setOutputRange(-1, 1);
+        // TODO: get from lift levels or other better non magic place for number
+        pidController.setInputRange(0, 90);
+        pidController.setAbsoluteTolerance(3);
     }
 
     /**
@@ -88,6 +123,18 @@ public class Harvester {
         move(inPower, inPower);
     }
 
+    public void moveAngularOptimizer(double angularPower) {
+        angularOptimizer.set(angularPower);
+    }
+
+    public void setDestinationAngle(double angle) {
+        pidController.setSetpoint(angle);
+    }
+
+    public void setDestinationAngle(HarvesterAngle harvesterAngle) {
+        setDestinationAngle(harvesterAngle.angle);
+    }
+
     /**
      * Do a timed spin. After the specified time, the spinPower reverts to zero.
      * 
@@ -119,5 +166,42 @@ public class Harvester {
 
     public boolean cubeIsInGrabber() {
         return !colorSensor.get();
+    }
+
+    public void enablePID() {
+        if (!pidController.isEnabled()) {
+            pidController.reset();
+            pidController.enable();
+        }
+    }
+
+    public void disablePID() {
+        if (pidController.isEnabled()) {
+            // pidController.reset() also disables the PID controller
+            pidController.reset();
+        }
+    }
+
+    public void resetEncoder() {
+        angularOptimizerEncoder.reset();
+    }
+
+    class AngularOptimizerPIDSource extends AbstractPIDSource {
+
+        public AngularOptimizerPIDSource(PIDSourceType sourceType) {
+            super(sourceType);
+        }
+
+        @Override
+        public double pidGet() {
+            switch (type) {
+                case kDisplacement:
+                    return angularOptimizerEncoder.getDistance();
+                case kRate:
+                    return angularOptimizerEncoder.getRate();
+                default:
+                    return 0.0;
+            }
+        }
     }
 }
