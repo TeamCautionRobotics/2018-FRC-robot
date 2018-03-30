@@ -215,7 +215,7 @@ public class Robot extends TimedRobot {
         boolean driverHarvesterControl = false;
         double grabberPower = 0;
         double intakePower = 0;
-        if (true && lift.getCurrentHeight() < MAX_LIFT_HEIGHT_FOR_INTAKE) {
+        if (true || lift.getCurrentHeight() < MAX_LIFT_HEIGHT_FOR_INTAKE) {
             if (driverLeft.getTrigger() || driverRight.getTrigger()) {
                 driverHarvesterControl = true;
             } else {
