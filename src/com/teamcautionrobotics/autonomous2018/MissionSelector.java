@@ -9,6 +9,7 @@ import com.teamcautionrobotics.autonomous2018.AutoEnums.AutoObjective;
 import com.teamcautionrobotics.autonomous2018.AutoEnums.PlateSide;
 import com.teamcautionrobotics.autonomous2018.AutoEnums.StartingPosition;
 import com.teamcautionrobotics.autonomous2018.commands.CommandFactory2018;
+import com.teamcautionrobotics.robot2018.Harvester.HarvesterAngle;
 import com.teamcautionrobotics.robot2018.Lift.LiftLevel;
 
 public class MissionSelector {
@@ -38,6 +39,7 @@ public class MissionSelector {
                     commandFactory.turnInPlace(-0.3, 30),
                     commandFactory.moveStraight(0.5, 0.2, false),
                     commandFactory.delay(0.5),
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED, true),
                     commandFactory.deployCube()
                 );
 
@@ -49,6 +51,7 @@ public class MissionSelector {
                     commandFactory.turnInPlace(0.3, 42),
                     commandFactory.moveStraight(0.7, 0.2, false),
                     commandFactory.delay(0.5),
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.deployCube()
                 );
 
@@ -58,9 +61,11 @@ public class MissionSelector {
                 commandFactory.moveStraightDistance(0.5, 140, true),
                 commandFactory.turnInPlace(0.3, 50),
                 commandFactory.moveStraightDistance(0.5, 195, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.3, 90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
+                commandFactory.setLift(LiftLevel.HIGH_SCALE),
+                commandFactory.turnInPlace(0.3, 90),
+                commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                commandFactory.deployCube()
         );
 
         centerMissionLeftScale = makeMissionWithPrefix("center mission left scale",
@@ -69,9 +74,11 @@ public class MissionSelector {
                 commandFactory.moveStraightDistance(0.5, 160, true),
                 commandFactory.turnInPlace(-0.3, 50),
                 commandFactory.moveStraightDistance(0.5, 185, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 85), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
+                commandFactory.setLift(LiftLevel.HIGH_SCALE),
+                commandFactory.turnInPlace(-0.3, 85),
+                commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                commandFactory.deployCube()
         );
 
         rightMissionRightSwitch = makeMissionWithPrefix("right mission switch",
@@ -81,6 +88,7 @@ public class MissionSelector {
                 commandFactory.turnInPlace(0.5, -80),
                 commandFactory.moveStraight(0.5, 0.35, false),
                 commandFactory.setLift(LiftLevel.SWITCH, true),
+                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                 commandFactory.deployCube()
                 );
 
@@ -90,6 +98,7 @@ public class MissionSelector {
                     commandFactory.setLift(LiftLevel.HIGH_SCALE),
                     commandFactory.turnInPlace(0.5, -80),
                     commandFactory.moveStraight(0.5, 0.3, false),
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.deployCube()
                 );
         leftMissionLeftSwitch = makeMissionWithPrefix("left mission switch",
@@ -99,6 +108,7 @@ public class MissionSelector {
                     commandFactory.turnInPlace(0.5, 80),
                     commandFactory.moveStraight(0.5, 0.35, false),
                     commandFactory.setLift(LiftLevel.SWITCH, true),
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.deployCube()
                 );
 
@@ -108,6 +118,7 @@ public class MissionSelector {
                     commandFactory.setLift(LiftLevel.HIGH_SCALE),
                     commandFactory.turnInPlace(0.5, 80),
                     commandFactory.moveStraight(0.5, 0.3, false),
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.deployCube()
                 );
     }
