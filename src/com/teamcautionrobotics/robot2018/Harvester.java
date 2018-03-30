@@ -13,7 +13,7 @@ public class Harvester {
 
     public enum HarvesterAngle {
         UP(90), AIMED(45), DOWN(0);
-        
+
         private static HarvesterAngle[] values = values();
 
         public final double angle;
@@ -135,19 +135,19 @@ public class Harvester {
     public void setDestinationAngle(HarvesterAngle harvesterAngle) {
         setDestinationAngle(harvesterAngle.angle);
     }
-    
+
     public double getCurrentAngle() {
         return angularOptimizerEncoder.getDistance();
     }
-    
+
     public HarvesterAngle getCurrentHarvesterAngle() {
         return convertAngleToHarvesterAngle(getCurrentAngle());
     }
-    
+
     public double getDestinationAngle() {
         return pidController.getSetpoint();
     }
-    
+
     public HarvesterAngle getDestinationHarvesterAngle() {
         return convertAngleToHarvesterAngle(getDestinationAngle());
     }
@@ -184,11 +184,11 @@ public class Harvester {
     public void bulldoze() {
         move(grabber.get(), -1.0);
     }
-    
+
     public static HarvesterAngle convertAngleToHarvesterAngle(double angle) {
         HarvesterAngle convertedHarvesterAngle = HarvesterAngle.values[0];
         for (HarvesterAngle harvesterAngle : HarvesterAngle.values) {
-            //22.5 is a magic number
+            // 22.5 is a magic number
             double midpoint = harvesterAngle.angle + 22.5;
             convertedHarvesterAngle = harvesterAngle;
             // OHHHHH WE'RE HALFWAY THERE! WHOAWHOA then move on to the next LiftLevel and try
