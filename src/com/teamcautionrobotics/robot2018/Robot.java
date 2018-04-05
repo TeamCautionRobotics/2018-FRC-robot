@@ -58,7 +58,6 @@ public class Robot extends TimedRobot {
 
     // Based on eyeball averaging max lift speed
     static final double LIFT_NUDGE_SPEED = 30; // Units are inches per second
-    static final double MAX_LIFT_HEIGHT_FOR_INTAKE = 2.2; // Inches lift height
 
     CommandFactory2018 commandFactory;
     MissionScriptMission missionScriptMission;
@@ -91,8 +90,10 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        // TODO: Find out angular optimizer port, encoder ports, and PID values
-        harvester = new Harvester(3, 4, 5, 6, 8, 9, 8, 1, 1, 1);
+        /* TODO: Find out angular optimizer port, encoder ports, and PID values
+         * Double check other port values as well
+         */
+        harvester = new Harvester(3, 4, 8, 9, 8, 1, 1, 1);
         lift = new Lift(2, 4, 5, 6, 7, 0.8, 0.1, 0.4);
 
         liftEncoderResetSendable = new FunctionRunnerSendable("Reset lift encoder", () -> {
@@ -216,44 +217,33 @@ public class Robot extends TimedRobot {
 
         boolean driverHarvesterControl = false;
         double grabberPower = 0;
-        double intakePower = 0;
-        if (true || lift.getCurrentHeight() < MAX_LIFT_HEIGHT_FOR_INTAKE) {
-            if (driverLeft.getTrigger() || driverRight.getTrigger()) {
-                driverHarvesterControl = true;
-            } else {
-                intakePower = manipulator.getAxis(Axis.LEFT_Y);
-                grabberPower = 0.5 * manipulator.getAxis(Axis.LEFT_Y);
-            }
-
-            // Spin controls only permitted if lift is down and driver is not harvesting
-            if (!driverHarvesterControl) {
-                // Left bumper spins counterclockwise
-                if (manipulator.getButton(Button.LEFT_BUMPER)) {
-                    harvester.timedSpin(-0.5, 0.1);
-                }
-
-                // Right bumper spins clockwise
-                if (manipulator.getButton(Button.RIGHT_BUMPER)) {
-                    harvester.timedSpin(0.5, 0.1);
-                }
-            }
+        if (driverLeft.getTrigger() || driverRight.getTrigger()) {
+            driverHarvesterControl = true;
         } else {
-            // disable intake when lift is up
-            intakePower = 0;
-            grabberPower = manipulator.getAxis(Axis.LEFT_Y);
+            grabberPower = 0.5 * manipulator.getAxis(Axis.LEFT_Y);
+        }
+
+        // Spin controls only permitted if lift is down and driver is not harvesting
+        if (!driverHarvesterControl) {
+            // Left bumper spins counterclockwise
+            if (manipulator.getButton(Button.LEFT_BUMPER)) {
+                harvester.timedSpin(-0.5, 0.1);
+            }
+
+            // Right bumper spins clockwise
+            if (manipulator.getButton(Button.RIGHT_BUMPER)) {
+                harvester.timedSpin(0.5, 0.1);
+            }
         }
 
         if (driverHarvesterControl) {
             if (driverLeft.getTrigger()) {
-                grabberPower = -0.4;
-                intakePower = -0.5;
+                grabberPower = -0.5;
             }
             if (driverRight.getTrigger()) {
                 grabberPower = 0.5;
-                intakePower = 0.5;
             }
         } else {
-            if (intakePower == 0) {
                 int dPadAngle = manipulator.getPOV();
                 switch (dPadAngle) {
                     // D-pad is up
@@ -271,17 +261,9 @@ public class Robot extends TimedRobot {
                         grabberPower = -0.25;
                         break;
                 }
-            }
         }
 
-        harvester.move(grabberPower, intakePower);
-
-        // Only allow bulldozing if the driver is not commanding a prism harvest and
-        // the intake is not being moved
-        if (!driverHarvesterControl && intakePower == 0
-                && manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
-            harvester.bulldoze();
-        }
+        harvester.move(grabberPower);
 
         // TODO: Insert button values
         boolean puttingHarvesterDown = false;
