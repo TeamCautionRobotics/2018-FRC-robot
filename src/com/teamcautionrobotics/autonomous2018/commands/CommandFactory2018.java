@@ -5,15 +5,15 @@ import com.teamcautionrobotics.autonomous.commands.CommandFactory;
 import com.teamcautionrobotics.robot2018.DriveBase;
 import com.teamcautionrobotics.robot2018.Harvester;
 import com.teamcautionrobotics.robot2018.Harvester.HarvesterAngle;
-import com.teamcautionrobotics.robot2018.Lift;
-import com.teamcautionrobotics.robot2018.Lift.LiftLevel;
+import com.teamcautionrobotics.robot2018.Elevator;
+import com.teamcautionrobotics.robot2018.Elevator.ElevatorLevel;
 
 public class CommandFactory2018 extends CommandFactory {
     private DriveBase driveBase;
     private Harvester harvester;
-    private Lift lift;
+    private Elevator lift;
 
-    public CommandFactory2018(DriveBase driveBase, Harvester harvester, Lift lift) {
+    public CommandFactory2018(DriveBase driveBase, Harvester harvester, Elevator lift) {
         this.driveBase = driveBase;
         this.harvester = harvester;
         this.lift = lift;
@@ -64,7 +64,7 @@ public class CommandFactory2018 extends CommandFactory {
         return moveIntake(-0.3, 0.5);
     }
 
-    public Command setLift(LiftLevel liftLevel) {
+    public Command setLift(ElevatorLevel liftLevel) {
         return setLift(liftLevel.height);
     }
 
@@ -72,7 +72,7 @@ public class CommandFactory2018 extends CommandFactory {
         return setLift(height, false);
     }
 
-    public Command setLift(LiftLevel liftLevel, boolean waitForLift) {
+    public Command setLift(ElevatorLevel liftLevel, boolean waitForLift) {
         return setLift(liftLevel.height, waitForLift);
     }
 

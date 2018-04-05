@@ -47,7 +47,7 @@ public class Harvester {
                 new AngularOptimizerPIDSource(PIDSourceType.kDisplacement),
                 this::moveAngularOptimizer);
         pidController.setOutputRange(-1, 1);
-        // TODO: get from lift levels or other better non magic place for number
+        // TODO: get from elevator levels or other better non magic place for number
         pidController.setInputRange(0, 90);
         pidController.setAbsoluteTolerance(3);
     }

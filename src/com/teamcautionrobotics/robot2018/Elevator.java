@@ -9,20 +9,20 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Lift {
+public class Elevator {
 
-    public enum LiftLevel {
+    public enum ElevatorLevel {
         GROUND(0), SWITCH(28), LOW_SCALE(56), HIGH_SCALE(62);
 
-        private static LiftLevel[] values = values();
+        private static ElevatorLevel[] values = values();
 
         public final double height;
 
-        private LiftLevel(double height) {
+        private ElevatorLevel(double height) {
             this.height = height;
         }
 
-        public LiftLevel next() {
+        public ElevatorLevel next() {
             if (this.ordinal() == values.length - 1) {
                 return this;
             } else {
@@ -30,7 +30,7 @@ public class Lift {
             }
         }
 
-        public LiftLevel previous() {
+        public ElevatorLevel previous() {
             if (this.ordinal() == 0) {
                 return this;
             } else {
@@ -39,67 +39,67 @@ public class Lift {
         }
     }
 
-    private VictorSP liftMotor;
+    private VictorSP elevatorMotor;
     private DigitalInput stageOneDown;
     private DigitalInput stageTwoDown;
-    public Encoder liftEncoder;
+    public Encoder elevatorEncoder;
     public PIDController pidController;
 
-    public Lift(int motorPort, int encoderChannelA, int encoderChannelB, int stageOneDownPort,
+    public Elevator(int motorPort, int encoderChannelA, int encoderChannelB, int stageOneDownPort,
             int stageTwoDownPort, double Kp, double Ki, double Kd) {
-        liftMotor = new VictorSP(motorPort);
-        liftMotor.setInverted(true);
+        elevatorMotor = new VictorSP(motorPort);
+        elevatorMotor.setInverted(true);
         stageOneDown = new DigitalInput(stageOneDownPort);
         stageTwoDown = new DigitalInput(stageTwoDownPort);
-        liftEncoder = new Encoder(encoderChannelA, encoderChannelB);
+        elevatorEncoder = new Encoder(encoderChannelA, encoderChannelB);
 
         // Winch drum diameter is 1.25 inches
-        liftEncoder.setDistancePerPulse((1.25 * Math.PI) / 1024);
+        elevatorEncoder.setDistancePerPulse((1.25 * Math.PI) / 1024);
 
         pidController = new PIDController(Kp, Ki, Kd, 0,
-                new LiftPIDSource(PIDSourceType.kDisplacement), this::move);
+                new ElevatorPIDSource(PIDSourceType.kDisplacement), this::move);
         pidController.setOutputRange(-1, 1);
-        // TODO: get from lift levels or other better non magic place for number
+        // TODO: get from elevator levels or other better non magic place for number
         pidController.setInputRange(0, 62);
         pidController.setAbsoluteTolerance(3);
     }
 
     /**
      * Directly set the power of the motors. Probably best not to use this, but use
-     * {@link #setDestinationLevel(LiftLevel)} or {@link #setDestinationHeight(double)} instead.
+     * {@link #setDestinationLevel(ElevatorLevel)} or {@link #setDestinationHeight(double)} instead.
      * 
      * @param power positive is ascending, negative is descending, range of [-1, 1]
      */
     public void move(double power) {
-        SmartDashboard.putNumber("lift power", power);
+        SmartDashboard.putNumber("elevator power", power);
         if (stageOneIsDown() && stageTwoIsDown()) {
             resetEncoder();
         }
-        liftMotor.set(power);
+        elevatorMotor.set(power);
     }
 
     public void setDestinationHeight(double height) {
         pidController.setSetpoint(height);
     }
 
-    public void setDestinationLevel(LiftLevel destinationLiftLevel) {
-        setDestinationHeight(destinationLiftLevel.height);
+    public void setDestinationLevel(ElevatorLevel destinationElevatorLevel) {
+        setDestinationHeight(destinationElevatorLevel.height);
     }
 
     public double getCurrentHeight() {
-        return liftEncoder.getDistance();
+        return elevatorEncoder.getDistance();
     }
 
-    public LiftLevel getCurrentLiftLevel() {
-        return convertHeightToLiftLevel(getCurrentHeight());
+    public ElevatorLevel getCurrentElevatorLevel() {
+        return convertHeightToElevatorLevel(getCurrentHeight());
     }
 
     public double getDestinationHeight() {
         return pidController.getSetpoint();
     }
 
-    public LiftLevel getDestinationLiftLevel() {
-        return convertHeightToLiftLevel(getDestinationHeight());
+    public ElevatorLevel getDestinationElevatorLevel() {
+        return convertHeightToElevatorLevel(getDestinationHeight());
     }
 
     public boolean atDestination() {
@@ -110,19 +110,19 @@ public class Lift {
         return false;
     }
 
-    public static LiftLevel convertHeightToLiftLevel(double height) {
-        LiftLevel convertedLiftLevel = LiftLevel.values()[0];
-        for (LiftLevel liftLevel : LiftLevel.values) {
-            double midpoint = (liftLevel.height + liftLevel.next().height) / 2;
-            convertedLiftLevel = liftLevel;
-            // OHHHHH WE'RE HALFWAY THERE! WHOAWHOA then move on to the next LiftLevel and try
-            // again; if not, break out of the loop and return the current liftPosition the for loop
+    public static ElevatorLevel convertHeightToElevatorLevel(double height) {
+        ElevatorLevel convertedElevatorLevel = ElevatorLevel.values()[0];
+        for (ElevatorLevel elevatorLevel : ElevatorLevel.values) {
+            double midpoint = (elevatorLevel.height + elevatorLevel.next().height) / 2;
+            convertedElevatorLevel = elevatorLevel;
+            // OHHHHH WE'RE HALFWAY THERE! WHOAWHOA then move on to the next ElevatorLevel and try
+            // again; if not, break out of the loop and return the current ElevatorLevel the for loop
             // is on
             if (height < midpoint) {
                 break;
             }
         }
-        return convertedLiftLevel;
+        return convertedElevatorLevel;
     }
 
     public boolean stageOneIsDown() {
@@ -148,12 +148,12 @@ public class Lift {
     }
 
     public void resetEncoder() {
-        liftEncoder.reset();
+        elevatorEncoder.reset();
     }
 
-    class LiftPIDSource extends AbstractPIDSource {
+    class ElevatorPIDSource extends AbstractPIDSource {
 
-        public LiftPIDSource(PIDSourceType sourceType) {
+        public ElevatorPIDSource(PIDSourceType sourceType) {
             super(sourceType);
         }
 
@@ -163,7 +163,7 @@ public class Lift {
                 case kDisplacement:
                     return getCurrentHeight();
                 case kRate:
-                    return liftEncoder.getRate();
+                    return elevatorEncoder.getRate();
                 default:
                     return 0.0;
             }

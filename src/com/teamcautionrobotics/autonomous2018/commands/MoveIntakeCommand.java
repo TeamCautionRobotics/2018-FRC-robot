@@ -2,14 +2,14 @@ package com.teamcautionrobotics.autonomous2018.commands;
 
 import com.teamcautionrobotics.autonomous.Command;
 import com.teamcautionrobotics.robot2018.Harvester;
-import com.teamcautionrobotics.robot2018.Lift;
+import com.teamcautionrobotics.robot2018.Elevator;
 
 import edu.wpi.first.wpilibj.Timer;
 
 public class MoveIntakeCommand implements Command {
 
     private Harvester harvester;
-    private Lift lift;
+    private Elevator lift;
 
     private Timer timer;
 
@@ -29,7 +29,7 @@ public class MoveIntakeCommand implements Command {
      * @param time Number of seconds for which to run the harvester
      * @see {@link Harvester#move(double)}
      */
-    public MoveIntakeCommand(Harvester harvester, Lift lift, double power, double time) {
+    public MoveIntakeCommand(Harvester harvester, Elevator lift, double power, double time) {
         this.harvester = harvester;
         this.power = power;
         this.lift = lift;
