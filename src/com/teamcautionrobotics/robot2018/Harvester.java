@@ -101,8 +101,8 @@ public class Harvester {
             // 22.5 is a magic number
             double midpoint = harvesterAngle.angle + 22.5;
             convertedHarvesterAngle = harvesterAngle;
-            // OHHHHH WE'RE HALFWAY THERE! WHOAWHOA then move on to the next LiftLevel and try
-            // again; if not, break out of the loop and return the current liftPosition the for loop
+            // OHHHHH WE'RE HALFWAY THERE! WHOAWHOA then move on to the next HarvesterAngle and try
+            // again; if not, break out of the loop and return the current harvesterAngle the for loop
             // is on
             if (angle < midpoint) {
                 break;
