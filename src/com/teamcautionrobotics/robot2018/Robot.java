@@ -252,8 +252,7 @@ public class Robot extends TimedRobot {
 
         harvester.move(grabberPower);
 
-        // TODO: Insert button values
-        if (driverLeft.getRawButton(0)) {
+        if (driverLeft.getRawButton(2)) {
             harvester.setDestinationAngle(HarvesterAngle.DOWN);
         } else if (manipulator.getButton(Button.A)) {
             harvester.setDestinationAngle(HarvesterAngle.AIMED);
