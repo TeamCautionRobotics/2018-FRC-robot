@@ -13,8 +13,6 @@ public class Harvester {
     public enum HarvesterAngle {
         UP(90), AIMED(45), DOWN(0);
 
-        private static HarvesterAngle[] values = values();
-
         public final double angle;
 
         private HarvesterAngle(double angle) {
@@ -96,13 +94,14 @@ public class Harvester {
     }
 
     public static HarvesterAngle convertAngleToHarvesterAngle(double angle) {
-        HarvesterAngle convertedHarvesterAngle = HarvesterAngle.values[0];
-        for (HarvesterAngle harvesterAngle : HarvesterAngle.values) {
+        HarvesterAngle convertedHarvesterAngle = HarvesterAngle.values()[0];
+        for (HarvesterAngle harvesterAngle : HarvesterAngle.values()) {
             // 22.5 is a magic number
             double midpoint = harvesterAngle.angle + 22.5;
             convertedHarvesterAngle = harvesterAngle;
             // OHHHHH WE'RE HALFWAY THERE! WHOAWHOA then move on to the next HarvesterAngle and try
-            // again; if not, break out of the loop and return the current harvesterAngle the for loop
+            // again; if not, break out of the loop and return the current harvesterAngle the for
+            // loop
             // is on
             if (angle < midpoint) {
                 break;
