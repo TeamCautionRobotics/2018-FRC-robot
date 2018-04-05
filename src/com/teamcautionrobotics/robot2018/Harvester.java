@@ -31,12 +31,6 @@ public class Harvester {
 
     private PIDController pidController;
 
-    private Timer timer;
-    private boolean timedSpin = false;
-    private double spinDuration = 0;
-
-    private double spinPower = 0;
-
     public Harvester(int grabberChannel, int angularOptimizerChannel,
             int angularOptimizerEncoderChannelA, int angularOptimizerEncoderChannelB,
             int colorSensorChannel, double Kp, double Ki, double Kd) {
@@ -45,9 +39,6 @@ public class Harvester {
         angularOptimizer = new VictorSP(angularOptimizerChannel);
 
         colorSensor = new DigitalInput(colorSensorChannel);
-
-        timer = new Timer();
-        timer.start();
 
         angularOptimizerEncoder =
                 new Encoder(angularOptimizerEncoderChannelA, angularOptimizerEncoderChannelB);
@@ -68,40 +59,9 @@ public class Harvester {
      * 
      * @param power positive for in, negative for out, range of [-1, 1]
      */
-    public void moveGrabber(double grabberPower) {
+    public void move(double power) {
         // stops grabber from spinning in if cubeInGrabber color sensor is triggered
-        grabber.set(grabberPower);
-    }
-
-    /**
-     * Move the harvester motors. This also applies the spin power and handles resetting the spin
-     * power when the specified time has elapsed. The grabber motors will never move in the opposite
-     * direction as the inPower specifies (this could happen if a fast spin and slow inPower is
-     * requested).
-     * 
-     * @param grabberPower overall speed of grabber. Positive for in, negative for out. range of
-     *        [-1, 1]
-     */
-    public void move(double grabberPower) {
-        // Check if the spinDuration has elapsed
-        if (timedSpin && timer.get() > spinDuration) {
-            this.spinPower = 0;
-            timedSpin = false;
-        }
-
-        double leftPower, rightPower;
-        if (true) {
-            // Grabber rollers can spin reverse of the grabber
-            leftPower = grabberPower - this.spinPower;
-            rightPower = grabberPower + this.spinPower;
-        } else {
-            // Grabber rollers can not spin reverse of the grabber
-            leftPower = spinPower < 0 ? 0 : grabberPower;
-            rightPower = spinPower > 0 ? 0 : grabberPower;
-        }
-
-        // TODO: maybe clean this up
-        moveGrabber(grabberPower);
+        grabber.set(cubeIsInGrabber() ? Math.max(power, 0) : power);
     }
 
     public void moveAngularOptimizer(double angularPower) {
@@ -134,31 +94,6 @@ public class Harvester {
 
     public boolean atDestinationAngle() {
         return Math.abs(getDestinationAngle() - getCurrentAngle()) <= 1;
-    }
-
-    /**
-     * Do a timed spin. After the specified time, the spinPower reverts to zero.
-     * 
-     * @param spinPower The speed difference between the left and right sides. Negative to spin
-     *        counterclockwise, positive to spin clockwise. range of [-1, 1]
-     * @time How long from now the spin should apply for.
-     */
-    public void timedSpin(double spinPower, double time) {
-        timer.reset();
-        this.spinPower = spinPower;
-
-        timedSpin = true;
-        spinDuration = time;
-    }
-
-    /**
-     * Do a spin. This will stop any currently running timed spin and has no expiration.
-     * 
-     * @param spinPower
-     */
-    public void spin(double spinPower) {
-        timedSpin = false;
-        this.spinPower = spinPower;
     }
 
     public static HarvesterAngle convertAngleToHarvesterAngle(double angle) {

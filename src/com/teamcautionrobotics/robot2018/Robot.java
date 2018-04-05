@@ -223,19 +223,6 @@ public class Robot extends TimedRobot {
             grabberPower = 0.5 * manipulator.getAxis(Axis.LEFT_Y);
         }
 
-        // Spin controls only permitted if lift is down and driver is not harvesting
-        if (!driverHarvesterControl) {
-            // Left bumper spins counterclockwise
-            if (manipulator.getButton(Button.LEFT_BUMPER)) {
-                harvester.timedSpin(-0.5, 0.1);
-            }
-
-            // Right bumper spins clockwise
-            if (manipulator.getButton(Button.RIGHT_BUMPER)) {
-                harvester.timedSpin(0.5, 0.1);
-            }
-        }
-
         if (driverHarvesterControl) {
             if (driverLeft.getTrigger()) {
                 grabberPower = -0.5;
@@ -266,7 +253,6 @@ public class Robot extends TimedRobot {
         harvester.move(grabberPower);
 
         // TODO: Insert button values
-        boolean puttingHarvesterDown = false;
         if (driverLeft.getRawButton(0)) {
             harvester.setDestinationAngle(HarvesterAngle.DOWN);
         } else if (manipulator.getButton(Button.A)) {
