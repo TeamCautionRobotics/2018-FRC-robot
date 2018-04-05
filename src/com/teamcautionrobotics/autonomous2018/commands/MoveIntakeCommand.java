@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class MoveIntakeCommand implements Command {
 
     private Harvester harvester;
-    private Elevator lift;
+    private Elevator elevator;
 
     private Timer timer;
 
@@ -20,19 +20,19 @@ public class MoveIntakeCommand implements Command {
     private boolean complete;
 
     /**
-     * Run the harvester for a period of time. Waits for the lift to be at its destination before
+     * Run the harvester for a period of time. Waits for the elevator to be at its destination before
      * running the harvester.
      * 
      * @param harvester
-     * @param lift
+     * @param elevator
      * @param power The power at which to run the harvester
      * @param time Number of seconds for which to run the harvester
      * @see {@link Harvester#move(double)}
      */
-    public MoveIntakeCommand(Harvester harvester, Elevator lift, double power, double time) {
+    public MoveIntakeCommand(Harvester harvester, Elevator elevator, double power, double time) {
         this.harvester = harvester;
         this.power = power;
-        this.lift = lift;
+        this.elevator = elevator;
         this.time = time;
         timer = new Timer();
         reset();
@@ -40,7 +40,7 @@ public class MoveIntakeCommand implements Command {
 
     @Override
     public boolean run() {
-        if (needsToStart && lift.atDestination()) {
+        if (needsToStart && elevator.atDestination()) {
             timer.reset();
             timer.start();
             harvester.move(power);

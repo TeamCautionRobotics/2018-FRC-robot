@@ -11,12 +11,12 @@ import com.teamcautionrobotics.robot2018.Elevator.ElevatorLevel;
 public class CommandFactory2018 extends CommandFactory {
     private DriveBase driveBase;
     private Harvester harvester;
-    private Elevator lift;
+    private Elevator elevator;
 
-    public CommandFactory2018(DriveBase driveBase, Harvester harvester, Elevator lift) {
+    public CommandFactory2018(DriveBase driveBase, Harvester harvester, Elevator elevator) {
         this.driveBase = driveBase;
         this.harvester = harvester;
-        this.lift = lift;
+        this.elevator = elevator;
     }
 
 
@@ -41,7 +41,7 @@ public class CommandFactory2018 extends CommandFactory {
     }
 
     public Command moveIntake(double power, double time) {
-        return new MoveIntakeCommand(harvester, lift, power, time);
+        return new MoveIntakeCommand(harvester, elevator, power, time);
     }
 
     public Command rotateHarvester(double angle, boolean waitForRotation) {
@@ -64,20 +64,20 @@ public class CommandFactory2018 extends CommandFactory {
         return moveIntake(-0.3, 0.5);
     }
 
-    public Command setLift(ElevatorLevel liftLevel) {
-        return setLift(liftLevel.height);
+    public Command setElevator(ElevatorLevel elevatorLevel) {
+        return setElevator(elevatorLevel.height);
     }
 
-    public Command setLift(double height) {
-        return setLift(height, false);
+    public Command setElevator(double height) {
+        return setElevator(height, false);
     }
 
-    public Command setLift(ElevatorLevel liftLevel, boolean waitForLift) {
-        return setLift(liftLevel.height, waitForLift);
+    public Command setElevator(ElevatorLevel elevatorLevel, boolean waitForElevator) {
+        return setElevator(elevatorLevel.height, waitForElevator);
     }
 
-    public Command setLift(double height, boolean waitForLift) {
-        return new SetLiftCommand(lift, height, waitForLift);
+    public Command setElevator(double height, boolean waitForElevator) {
+        return new SetElevatorCommand(elevator, height, waitForElevator);
     }
 
     public Command checkDriveEncoders(double expectedDistance) {
