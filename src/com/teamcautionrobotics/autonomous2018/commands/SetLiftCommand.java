@@ -34,7 +34,6 @@ public class SetLiftCommand implements Command {
     @Override
     public void reset() {
         liftCommanded = false;
-        lift.disablePID();
     }
 
 }

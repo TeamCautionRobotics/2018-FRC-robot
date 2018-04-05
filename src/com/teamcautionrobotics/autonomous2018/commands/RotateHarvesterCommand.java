@@ -44,7 +44,6 @@ public class RotateHarvesterCommand implements Command {
     @Override
     public void reset() {
         rotationCommanded = false;
-        harvester.disablePID();
     }
 
 }
