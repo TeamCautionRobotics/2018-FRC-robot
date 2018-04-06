@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Elevator {
 
     public enum ElevatorLevel {
-        GROUND(0), SWITCH(28), LOW_SCALE(56), HIGH_SCALE(62);
+        GROUND(0), SWITCH(13), LOW_SCALE(35), HIGH_SCALE(57);
 
         private static ElevatorLevel[] values = values();
 
