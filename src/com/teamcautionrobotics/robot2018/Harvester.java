@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Harvester {
 
     public enum HarvesterAngle {
-        UP(0), AIMED(-45), DOWN(-75);
+        UP(0), AIMED(-45), DOWN(-85);
 
         public final double angle;
 
