@@ -32,6 +32,8 @@ public class MissionSelector {
                 );
 
         centerMissionRightSwitch = new Mission("center mission right switch",
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                    commandFactory.delay(0.5), 
                     commandFactory.moveStraightDistance(0.5, 20, true),
                     commandFactory.turnInPlace(0.3, 40),
                     commandFactory.setElevator(ElevatorLevel.SWITCH),
@@ -39,11 +41,12 @@ public class MissionSelector {
                     commandFactory.turnInPlace(-0.3, 30),
                     commandFactory.moveStraight(0.5, 0.2, false),
                     commandFactory.delay(0.5),
-                    commandFactory.rotateHarvester(HarvesterAngle.AIMED, true),
                     commandFactory.deployCube()
                 );
 
         centerMissionLeftSwitch = new Mission("center mission left switch",
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                    commandFactory.delay(0.5), 
                     commandFactory.moveStraightDistance(0.5, 20, true),
                     commandFactory.turnInPlace(-0.3, 50),
                     commandFactory.setElevator(ElevatorLevel.SWITCH),
@@ -51,11 +54,12 @@ public class MissionSelector {
                     commandFactory.turnInPlace(0.3, 42),
                     commandFactory.moveStraight(0.7, 0.2, false),
                     commandFactory.delay(0.5),
-                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.deployCube()
                 );
 
         centerMissionRightScale = new Mission("center mission right scale",
+                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 30, true),
                 commandFactory.turnInPlace(-0.3, 45),
                 commandFactory.moveStraightDistance(0.5, 140, true),
@@ -64,11 +68,12 @@ public class MissionSelector {
                 commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
                 commandFactory.turnInPlace(0.3, 90),
                 commandFactory.moveStraight(0.5, 0.3, false),
-                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                 commandFactory.deployCube()
         );
 
         centerMissionLeftScale = new Mission("center mission left scale",
+                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 30, true),
                 commandFactory.turnInPlace(0.3, 60),
                 commandFactory.moveStraightDistance(0.5, 160, true),
@@ -77,48 +82,50 @@ public class MissionSelector {
                 commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
                 commandFactory.turnInPlace(-0.3, 85),
                 commandFactory.moveStraight(0.5, 0.3, false),
-                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                 commandFactory.deployCube()
         );
 
         rightMissionRightSwitch = new Mission("right mission switch",
+                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                 commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 145, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
                 commandFactory.turnInPlace(0.5, -80),
                 commandFactory.moveStraight(0.5, 0.35, false),
                 commandFactory.setElevator(ElevatorLevel.SWITCH, true),
-                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                 commandFactory.deployCube()
                 );
 
         rightMissionRightScale = new Mission("right mission scale",
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                    commandFactory.delay(0.5), 
                     commandFactory.moveStraightDistance(0.5, 294, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
                     commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
                     commandFactory.turnInPlace(0.5, -80),
                     commandFactory.moveStraight(0.5, 0.3, false),
-                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.deployCube()
                 );
         leftMissionLeftSwitch = new Mission("left mission switch",
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                    commandFactory.delay(0.5),
                     commandFactory.delay(0.5),
                     commandFactory.moveStraightDistance(0.5, 145, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
                     commandFactory.turnInPlace(0.5, 80),
                     commandFactory.moveStraight(0.5, 0.35, false),
                     commandFactory.setElevator(ElevatorLevel.SWITCH, true),
-                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.deployCube()
                 );
 
         leftMissionLeftScale = new Mission("left mission scale",
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                    commandFactory.delay(0.5), 
                     commandFactory.moveStraightDistance(0.5, 294, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
                     commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
                     commandFactory.turnInPlace(0.5, 80),
                     commandFactory.moveStraight(0.5, 0.3, false),
-                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.deployCube()
                 );
     }
