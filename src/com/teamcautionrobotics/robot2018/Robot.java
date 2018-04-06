@@ -74,6 +74,7 @@ public class Robot extends TimedRobot {
     Mission activeMission;
 
     private FunctionRunnerSendable elevatorEncoderResetSendable;
+    private FunctionRunnerSendable harvesterEncoderResetSendable;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -93,7 +94,7 @@ public class Robot extends TimedRobot {
         /* TODO: Find out angular optimizer port, encoder ports, and PID values
          * Double check other port values as well
          */
-        harvester = new Harvester(3, 4, 8, 9, 8, 1, 1, 1);
+        harvester = new Harvester(3, 4, 8, 9, 0.02, 0.001, 0.03);
         elevator = new Elevator(2, 4, 5, 6, 7, 0.8, 0.1, 0.4);
 
         elevatorEncoderResetSendable = new FunctionRunnerSendable("Reset elevator encoder", () -> {
@@ -103,6 +104,14 @@ public class Robot extends TimedRobot {
             elevator.resetEncoder();
         });
         SmartDashboard.putData(elevatorEncoderResetSendable);
+
+        harvesterEncoderResetSendable = new FunctionRunnerSendable("Reset harvester encoder", () -> {
+            DriverStation.reportWarning(String.format(
+                    "Reset harvester encoder from SmartDashboard. Encoder was at %f inches.%n",
+                    harvester.getCurrentAngle()), false);
+            harvester.resetEncoder();
+        });
+        SmartDashboard.putData(harvesterEncoderResetSendable);
 
         commandFactory = new CommandFactory2018(driveBase, harvester, elevator);
 
@@ -129,6 +138,7 @@ public class Robot extends TimedRobot {
 
 
         SmartDashboard.putData("elevator PID", elevator.pidController);
+        SmartDashboard.putData("Angulator PID", harvester.pidController);
 
         missionSelector = new MissionSelector(commandFactory);
     }
@@ -252,12 +262,12 @@ public class Robot extends TimedRobot {
 
         harvester.move(grabberPower);
 
-        if (driverLeft.getRawButton(2)) {
+        if (driverLeft.getRawButton(3)) {
             harvester.setDestinationAngle(HarvesterAngle.DOWN);
-        } else if (manipulator.getButton(Button.A)) {
-            harvester.setDestinationAngle(HarvesterAngle.AIMED);
+        } else if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+            harvester.setDestinationAngle(HarvesterAngle.DOWN);
         } else {
-            harvester.setDestinationAngle(HarvesterAngle.UP);
+            harvester.setDestinationAngle(HarvesterAngle.AIMED);
         }
 
         harvester.enablePID();
@@ -313,6 +323,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         elevatorEncoderResetSendable.update();
+        harvesterEncoderResetSendable.update();
         putEncoders();
         putSensors();
     }
@@ -333,8 +344,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Stage two down", elevator.stageTwoIsDown());
         SmartDashboard.putBoolean("Elevator fully down",
                 elevator.stageOneIsDown() && elevator.stageTwoIsDown());
-
-        SmartDashboard.putBoolean("Power prismⁿ™ in grabber", harvester.cubeIsInGrabber());
     }
 
     void putEncoders() {
@@ -348,6 +357,11 @@ public class Robot extends TimedRobot {
         SmartDashboard.putString("elevator level", elevator.getCurrentElevatorLevel().toString());
         SmartDashboard.putNumber("elevator distance", elevator.getCurrentHeight());
         SmartDashboard.putNumber("elevator speed", elevator.elevatorEncoder.getRate());
+
+        SmartDashboard.putNumber("Angulator angle", harvester.getCurrentAngle());
+        SmartDashboard.putNumber("Angulator setpoint", harvester.getDestinationAngle());
+        SmartDashboard.putString("Angulator level",
+                Harvester.convertAngleToHarvesterAngle(harvester.getCurrentAngle()).toString());
     }
 
 
