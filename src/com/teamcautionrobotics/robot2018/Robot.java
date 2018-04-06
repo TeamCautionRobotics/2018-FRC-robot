@@ -226,7 +226,7 @@ public class Robot extends TimedRobot {
         driveBase.drive(leftPower, rightPower);
 
         boolean driverHarvesterControl = false;
-        double grabberPower = 0;
+        double grabberPower = -0.08;
         if (driverLeft.getTrigger() || driverRight.getTrigger()) {
             driverHarvesterControl = true;
         } else {
@@ -262,15 +262,18 @@ public class Robot extends TimedRobot {
 
         harvester.move(grabberPower);
 
-        if (driverLeft.getRawButton(3)) {
-            harvester.setDestinationAngle(HarvesterAngle.DOWN);
-        } else if (manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
-            harvester.setDestinationAngle(HarvesterAngle.DOWN);
+        if (driverLeft.getRawButton(3) || manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+            if (elevator.getCurrentHeight() <= 2.0) {
+                harvester.disablePID();
+            } else {
+                harvester.enablePID();
+                harvester.setDestinationAngle(HarvesterAngle.DOWN);
+            }
         } else {
+            harvester.enablePID();
             harvester.setDestinationAngle(HarvesterAngle.AIMED);
         }
 
-        harvester.enablePID();
 
         boolean elevatorRaiseButton = manipulator.getButton(Button.Y);
         if (elevatorRaiseButton != elevatorRaiseButtonPressed) {
