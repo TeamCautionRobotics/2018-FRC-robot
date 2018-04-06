@@ -49,7 +49,7 @@ public class CommandFactory2018 extends CommandFactory {
     }
 
     public Command rotateHarvester(double angle) {
-        return rotateHarvester(angle, true);
+        return rotateHarvester(angle, false);
     }
 
     public Command rotateHarvester(HarvesterAngle harvesterAngle, boolean waitForRotation) {
