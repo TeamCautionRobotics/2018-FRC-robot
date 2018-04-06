@@ -226,7 +226,7 @@ public class Robot extends TimedRobot {
         driveBase.drive(leftPower, rightPower);
 
         boolean driverHarvesterControl = false;
-        double grabberPower = -0.08;
+        double grabberPower = 0;
         if (driverLeft.getTrigger() || driverRight.getTrigger()) {
             driverHarvesterControl = true;
         } else {
@@ -260,7 +260,7 @@ public class Robot extends TimedRobot {
                 }
         }
 
-        harvester.move(grabberPower);
+        harvester.move(grabberPower != 0 ? grabberPower : 0.08);
 
         if (driverLeft.getRawButton(3) || manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
             if (elevator.getCurrentHeight() <= 2.0) {
