@@ -26,12 +26,12 @@ public class MissionSelector {
     public MissionSelector(CommandFactory2018 commandFactory) {
         this.commandFactory = commandFactory;
 
-        driveForwardMission = makeMissionWithPrefix("drive forward mission",
+        driveForwardMission = new Mission("drive forward mission",
                         commandFactory.moveStraightDistance(0.5, 100, true),
                         commandFactory.moveStraight(-0.1, 0.2, false)
                 );
 
-        centerMissionRightSwitch = makeMissionWithPrefix("center mission right switch",
+        centerMissionRightSwitch = new Mission("center mission right switch",
                     commandFactory.moveStraightDistance(0.5, 20, true),
                     commandFactory.turnInPlace(0.3, 40),
                     commandFactory.setElevator(ElevatorLevel.SWITCH),
@@ -43,7 +43,7 @@ public class MissionSelector {
                     commandFactory.deployCube()
                 );
 
-        centerMissionLeftSwitch = makeMissionWithPrefix("center mission left switch",
+        centerMissionLeftSwitch = new Mission("center mission left switch",
                     commandFactory.moveStraightDistance(0.5, 20, true),
                     commandFactory.turnInPlace(-0.3, 50),
                     commandFactory.setElevator(ElevatorLevel.SWITCH),
@@ -55,7 +55,7 @@ public class MissionSelector {
                     commandFactory.deployCube()
                 );
 
-        centerMissionRightScale = makeMissionWithPrefix("center mission right scale",
+        centerMissionRightScale = new Mission("center mission right scale",
                 commandFactory.moveStraightDistance(0.5, 30, true),
                 commandFactory.turnInPlace(-0.3, 45),
                 commandFactory.moveStraightDistance(0.5, 140, true),
@@ -68,7 +68,7 @@ public class MissionSelector {
                 commandFactory.deployCube()
         );
 
-        centerMissionLeftScale = makeMissionWithPrefix("center mission left scale",
+        centerMissionLeftScale = new Mission("center mission left scale",
                 commandFactory.moveStraightDistance(0.5, 30, true),
                 commandFactory.turnInPlace(0.3, 60),
                 commandFactory.moveStraightDistance(0.5, 160, true),
@@ -81,7 +81,7 @@ public class MissionSelector {
                 commandFactory.deployCube()
         );
 
-        rightMissionRightSwitch = makeMissionWithPrefix("right mission switch",
+        rightMissionRightSwitch = new Mission("right mission switch",
                 commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 145, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
@@ -92,7 +92,7 @@ public class MissionSelector {
                 commandFactory.deployCube()
                 );
 
-        rightMissionRightScale = makeMissionWithPrefix("right mission scale",
+        rightMissionRightScale = new Mission("right mission scale",
                     commandFactory.moveStraightDistance(0.5, 294, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
                     commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
@@ -101,7 +101,7 @@ public class MissionSelector {
                     commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.deployCube()
                 );
-        leftMissionLeftSwitch = makeMissionWithPrefix("left mission switch",
+        leftMissionLeftSwitch = new Mission("left mission switch",
                     commandFactory.delay(0.5),
                     commandFactory.moveStraightDistance(0.5, 145, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
@@ -112,7 +112,7 @@ public class MissionSelector {
                     commandFactory.deployCube()
                 );
 
-        leftMissionLeftScale = makeMissionWithPrefix("left mission scale",
+        leftMissionLeftScale = new Mission("left mission scale",
                     commandFactory.moveStraightDistance(0.5, 294, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
                     commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
