@@ -34,15 +34,15 @@ public class MissionSelector {
 
         centerMissionRightSwitch = new Mission("center mission right switch",
                     commandFactory.setIntakeMotor(0.08),
-                    commandFactory.moveIntake(0.08, 0.5),
                     commandFactory.rotateHarvester(HarvesterAngle.AIMED),
-                    commandFactory.delay(0.5), 
+                    commandFactory.delay(0.5),
                     commandFactory.moveStraightDistance(0.5, 20, true),
                     commandFactory.turnInPlace(0.3, 40),
                     commandFactory.setElevator(ElevatorLevel.SWITCH),
-                    commandFactory.moveStraightDistance(0.5, 55, true),
-                    commandFactory.turnInPlace(-0.3, 30),
-                    commandFactory.moveStraight(0.5, 0.2, false),
+                    commandFactory.moveStraightDistance(0.5, 37, true),
+                    commandFactory.turnInPlace(-0.4, 40),
+                    commandFactory.moveStraight(0.6, 0.4, false),
+                    commandFactory.setDriveMotors(0.2),
                     commandFactory.delay(0.5),
                     commandFactory.deployCube()
                 );
@@ -56,7 +56,8 @@ public class MissionSelector {
                     commandFactory.setElevator(ElevatorLevel.SWITCH),
                     commandFactory.moveStraightDistance(0.5, 80, true),
                     commandFactory.turnInPlace(0.3, 42),
-                    commandFactory.moveStraight(0.7, 0.2, false),
+                    commandFactory.moveStraight(0.6, 0.4, false),
+                    commandFactory.setDriveMotors(0.2),
                     commandFactory.delay(0.5),
                     commandFactory.deployCube()
                 );

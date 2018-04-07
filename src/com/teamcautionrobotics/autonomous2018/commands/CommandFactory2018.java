@@ -2,6 +2,7 @@ package com.teamcautionrobotics.autonomous2018.commands;
 
 import com.teamcautionrobotics.autonomous.Command;
 import com.teamcautionrobotics.autonomous.commands.CommandFactory;
+import com.teamcautionrobotics.autonomous2018.SetDriveMotorsCommand;
 import com.teamcautionrobotics.robot2018.DriveBase;
 import com.teamcautionrobotics.robot2018.Harvester;
 import com.teamcautionrobotics.robot2018.Harvester.HarvesterAngle;
@@ -19,6 +20,10 @@ public class CommandFactory2018 extends CommandFactory {
         this.elevator = elevator;
     }
 
+
+    public Command setDriveMotors(double power) {
+        return new SetDriveMotorsCommand(driveBase, power);
+    }
 
     public Command moveStraight(double speed, double time, boolean keepHeading) {
         return new MoveStraightCommand(driveBase, speed, time, keepHeading);
