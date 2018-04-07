@@ -43,6 +43,10 @@ public class CommandFactory2018 extends CommandFactory {
     public Command moveIntake(double power, double time) {
         return new MoveIntakeCommand(harvester, elevator, power, time);
     }
+    
+    public Command setIntakeMotor(double power) {
+    	return new SetIntakeMotorCommand(harvester, power);
+    }
 
     public Command rotateHarvester(double angle, boolean waitForRotation) {
         return new RotateHarvesterCommand(harvester, angle, waitForRotation);

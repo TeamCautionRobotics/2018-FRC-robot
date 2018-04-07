@@ -27,11 +27,14 @@ public class MissionSelector {
         this.commandFactory = commandFactory;
 
         driveForwardMission = new Mission("drive forward mission",
-                        commandFactory.moveStraightDistance(0.5, 100, true),
-                        commandFactory.moveStraight(-0.1, 0.2, false)
+                commandFactory.setIntakeMotor(0.08),
+                commandFactory.moveStraightDistance(0.5, 100, true),
+                commandFactory.moveStraight(-0.1, 0.2, false)
                 );
 
         centerMissionRightSwitch = new Mission("center mission right switch",
+                    commandFactory.setIntakeMotor(0.08),
+                    commandFactory.moveIntake(0.08, 0.5),
                     commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.delay(0.5), 
                     commandFactory.moveStraightDistance(0.5, 20, true),
@@ -45,6 +48,7 @@ public class MissionSelector {
                 );
 
         centerMissionLeftSwitch = new Mission("center mission left switch",
+                    commandFactory.setIntakeMotor(0.08),
                     commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.delay(0.5), 
                     commandFactory.moveStraightDistance(0.5, 20, true),
@@ -58,6 +62,7 @@ public class MissionSelector {
                 );
 
         centerMissionRightScale = new Mission("center mission right scale",
+                commandFactory.setIntakeMotor(0.08),
                 commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                 commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 30, true),
@@ -72,6 +77,7 @@ public class MissionSelector {
         );
 
         centerMissionLeftScale = new Mission("center mission left scale",
+                commandFactory.setIntakeMotor(0.08),
                 commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                 commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 30, true),
@@ -86,6 +92,7 @@ public class MissionSelector {
         );
 
         rightMissionRightSwitch = new Mission("right mission switch",
+                commandFactory.setIntakeMotor(0.08),
                 commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                 commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 145, true),
@@ -107,6 +114,7 @@ public class MissionSelector {
                     commandFactory.deployCube()
                 );
         leftMissionLeftSwitch = new Mission("left mission switch",
+                    commandFactory.setIntakeMotor(0.08),
                     commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.delay(0.5),
                     commandFactory.delay(0.5),
@@ -119,6 +127,7 @@ public class MissionSelector {
                 );
 
         leftMissionLeftScale = new Mission("left mission scale",
+                    commandFactory.setIntakeMotor(0.08),
                     commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.delay(0.5), 
                     commandFactory.moveStraightDistance(0.5, 294, true),
