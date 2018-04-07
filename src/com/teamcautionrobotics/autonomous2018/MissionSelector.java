@@ -43,7 +43,7 @@ public class MissionSelector {
                     commandFactory.turnInPlace(-0.4, 40),
                     commandFactory.moveStraight(0.6, 0.4, false),
                     commandFactory.setDriveMotors(0.2),
-                    commandFactory.delay(0.5),
+                    commandFactory.delay(1.0),
                     commandFactory.deployCube()
                 );
 
@@ -58,7 +58,7 @@ public class MissionSelector {
                     commandFactory.turnInPlace(0.3, 42),
                     commandFactory.moveStraight(0.6, 0.4, false),
                     commandFactory.setDriveMotors(0.2),
-                    commandFactory.delay(0.5),
+                    commandFactory.delay(1.0),
                     commandFactory.deployCube()
                 );
 
