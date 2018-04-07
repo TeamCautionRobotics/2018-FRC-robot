@@ -107,7 +107,7 @@ public class Robot extends TimedRobot {
 
         harvesterEncoderResetSendable = new FunctionRunnerSendable("Reset harvester encoder", () -> {
             DriverStation.reportWarning(String.format(
-                    "Reset harvester encoder from SmartDashboard. Encoder was at %f inches.%n",
+                    "Reset harvester encoder from SmartDashboard. Encoder was at %f degrees.%n",
                     harvester.getCurrentAngle()), false);
             harvester.resetEncoder();
         });
