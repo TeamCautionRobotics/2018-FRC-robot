@@ -24,6 +24,7 @@ import com.teamcautionrobotics.misc2018.FunctionRunnerSendable;
 import com.teamcautionrobotics.misc2018.Gamepad;
 import com.teamcautionrobotics.misc2018.Gamepad.Axis;
 import com.teamcautionrobotics.misc2018.Gamepad.Button;
+import com.teamcautionrobotics.robot2018.Harvester.HarvesterAngle;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -48,16 +49,15 @@ public class Robot extends TimedRobot {
     EnhancedJoystick driverRight;
     Gamepad manipulator;
 
-    Intake intake;
-    Lift lift;
+    Harvester harvester;
+    Elevator elevator;
 
-    boolean liftRaiseButtonPressed = false;
-    boolean liftLowerButtonPressed = false;
-    boolean liftPIDManualModeEnabled = false;
+    boolean elevatorRaiseButtonPressed = false;
+    boolean elevatorLowerButtonPressed = false;
+    boolean elevatorPIDManualModeEnabled = false;
 
-    // Based on eyeball averaging max lift speed
-    static final double LIFT_NUDGE_SPEED = 30; // Units are inches per second
-    static final double MAX_LIFT_HEIGHT_FOR_INTAKE = 2.2; // Inches lift height
+    // Based on eyeball averaging max elevator speed
+    static final double ELEVATOR_NUDGE_SPEED = 30; // Units are inches per second
 
     CommandFactory2018 commandFactory;
     MissionScriptMission missionScriptMission;
@@ -73,7 +73,8 @@ public class Robot extends TimedRobot {
     MissionSelector missionSelector;
     Mission activeMission;
 
-    private FunctionRunnerSendable liftEncoderResetSendable;
+    private FunctionRunnerSendable elevatorEncoderResetSendable;
+    private FunctionRunnerSendable harvesterEncoderResetSendable;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -90,18 +91,29 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        intake = new Intake(3, 4, 5, 8);
-        lift = new Lift(2, 4, 5, 6, 7, 0.8, 0.1, 0.4);
+        /* TODO: Find out angular optimizer port, encoder ports, and PID values
+         * Double check other port values as well
+         */
+        harvester = new Harvester(3, 4, 8, 9, 0.02, 0.001, 0.03);
+        elevator = new Elevator(2, 4, 5, 6, 7, 0.8, 0.1, 0.4);
 
-        liftEncoderResetSendable = new FunctionRunnerSendable("Reset lift encoder", () -> {
+        elevatorEncoderResetSendable = new FunctionRunnerSendable("Reset elevator encoder", () -> {
             DriverStation.reportWarning(String.format(
-                    "Resetting lift encoder from SmartDashboard. Encoder was at %f inches.%n",
-                    lift.getCurrentHeight()), false);
-            lift.resetEncoder();
+                    "Resetting elevator encoder from SmartDashboard. Encoder was at %f inches.%n",
+                    elevator.getCurrentHeight()), false);
+            elevator.resetEncoder();
         });
-        SmartDashboard.putData(liftEncoderResetSendable);
+        SmartDashboard.putData(elevatorEncoderResetSendable);
 
-        commandFactory = new CommandFactory2018(driveBase, intake, lift);
+        harvesterEncoderResetSendable = new FunctionRunnerSendable("Reset harvester encoder", () -> {
+            DriverStation.reportWarning(String.format(
+                    "Reset harvester encoder from SmartDashboard. Encoder was at %f degrees.%n",
+                    harvester.getCurrentAngle()), false);
+            harvester.resetEncoder();
+        });
+        SmartDashboard.putData(harvesterEncoderResetSendable);
+
+        commandFactory = new CommandFactory2018(driveBase, harvester, elevator);
 
         missionScriptMission = new MissionScriptMission("Mission Script Mission", missionScriptPath,
                 commandFactory);
@@ -125,7 +137,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(missionSendable);
 
 
-        SmartDashboard.putData("lift PID", lift.pidController);
+        SmartDashboard.putData("elevator PID", elevator.pidController);
+        SmartDashboard.putData("Angulator PID", harvester.pidController);
 
         missionSelector = new MissionSelector(commandFactory);
     }
@@ -206,52 +219,28 @@ public class Robot extends TimedRobot {
         double leftPower = forwardCommand + turnCommand;
         double rightPower = forwardCommand - turnCommand;
 
-        double speedLimit = speedLimitFromLiftHeight(lift.getCurrentHeight());
+        double speedLimit = speedLimitFromElevatorHeight(elevator.getCurrentHeight());
         leftPower *= speedLimit;
         rightPower *= speedLimit;
 
         driveBase.drive(leftPower, rightPower);
 
-        boolean driverHarversterControl = false;
+        boolean driverHarvesterControl = false;
         double grabberPower = 0;
-        double intakePower = 0;
-        if (true && lift.getCurrentHeight() < MAX_LIFT_HEIGHT_FOR_INTAKE) {
-            if (driverLeft.getTrigger() || driverRight.getTrigger()) {
-                driverHarversterControl = true;
-            } else {
-                intakePower = manipulator.getAxis(Axis.LEFT_Y);
-                grabberPower = 0.5 * manipulator.getAxis(Axis.LEFT_Y);
-            }
-
-            // Spin controls only permitted if lift is down and driver is not harvesting
-            if (!driverHarversterControl) {
-                // Left bumper spins counterclockwise
-                if (manipulator.getButton(Button.LEFT_BUMPER)) {
-                    intake.timedSpin(-0.5, 0.1);
-                }
-
-                // Right bumper spins clockwise
-                if (manipulator.getButton(Button.RIGHT_BUMPER)) {
-                    intake.timedSpin(0.5, 0.1);
-                }
-            }
+        if (driverLeft.getTrigger() || driverRight.getTrigger()) {
+            driverHarvesterControl = true;
         } else {
-            // disable intake when lift is up
-            intakePower = 0;
-            grabberPower = manipulator.getAxis(Axis.LEFT_Y);
+            grabberPower = 0.5 * manipulator.getAxis(Axis.LEFT_Y);
         }
 
-        if (driverHarversterControl) {
+        if (driverHarvesterControl) {
             if (driverLeft.getTrigger()) {
-                grabberPower = -0.4;
-                intakePower = -0.5;
+                grabberPower = -0.5;
             }
             if (driverRight.getTrigger()) {
                 grabberPower = 0.5;
-                intakePower = 0.5;
             }
         } else {
-            if (intakePower == 0) {
                 int dPadAngle = manipulator.getPOV();
                 switch (dPadAngle) {
                     // D-pad is up
@@ -269,76 +258,81 @@ public class Robot extends TimedRobot {
                         grabberPower = -0.25;
                         break;
                 }
+        }
+
+        harvester.move(grabberPower != 0 ? grabberPower : 0.08);
+
+        if (driverRight.getRawButton(3) || manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+            if (elevator.getCurrentHeight() <= 2.0) {
+                harvester.disablePID();
+            } else {
+                harvester.enablePID();
+                harvester.setDestinationAngle(HarvesterAngle.DOWN);
             }
-        }
-
-        intake.move(grabberPower, intakePower);
-
-        // Only allow bulldozing if the driver is not commanding a prism harvest and
-        // the intake is not being moved
-        if (!driverHarversterControl && intakePower == 0
-                && manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
-            intake.bulldoze();
-        }
-
-
-        boolean liftRaiseButton = manipulator.getButton(Button.Y);
-        if (liftRaiseButton != liftRaiseButtonPressed) {
-            if (liftRaiseButton) {
-                lift.setDestinationLevel(lift.getDestinationLiftLevel().next());
-            }
-            liftRaiseButtonPressed = liftRaiseButton;
-        }
-
-        boolean liftLowerButton = manipulator.getButton(Button.A);
-        if (liftLowerButton != liftLowerButtonPressed) {
-            if (liftLowerButton) {
-                lift.setDestinationLevel(lift.getDestinationLiftLevel().previous());
-            }
-            liftLowerButtonPressed = liftLowerButton;
-        }
-
-        boolean liftPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) < 0.5;
-
-        if (!liftPIDManualModeTrigger && liftPIDManualModeTrigger != liftPIDManualModeEnabled) {
-            lift.setDestinationHeight(lift.getCurrentHeight());
-        }
-
-        liftPIDManualModeEnabled = liftPIDManualModeTrigger;
-
-        if (liftPIDManualModeEnabled) {
-            lift.disablePID();
         } else {
-            lift.enablePID();
+            harvester.enablePID();
+            harvester.setDestinationAngle(HarvesterAngle.AIMED);
         }
 
-        // Joystick down moves the lift up
-        double liftMoveCommand = manipulator.getAxis(Axis.RIGHT_Y);
 
-        SmartDashboard.putBoolean("Lift manual mode enabled", liftPIDManualModeEnabled);
-        SmartDashboard.putNumber("Lift Move Command (manip)", liftMoveCommand);
+        boolean elevatorRaiseButton = manipulator.getButton(Button.Y);
+        if (elevatorRaiseButton != elevatorRaiseButtonPressed) {
+            if (elevatorRaiseButton) {
+                elevator.setDestinationLevel(elevator.getDestinationElevatorLevel().next());
+            }
+            elevatorRaiseButtonPressed = elevatorRaiseButton;
+        }
 
-        if (liftPIDManualModeEnabled) {
-            lift.move(liftMoveCommand);
+        boolean elevatorLowerButton = manipulator.getButton(Button.A);
+        if (elevatorLowerButton != elevatorLowerButtonPressed) {
+            if (elevatorLowerButton) {
+                elevator.setDestinationLevel(elevator.getDestinationElevatorLevel().previous());
+            }
+            elevatorLowerButtonPressed = elevatorLowerButton;
+        }
+
+        boolean elevatorPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) < 0.5;
+
+        if (!elevatorPIDManualModeTrigger && elevatorPIDManualModeTrigger != elevatorPIDManualModeEnabled) {
+            elevator.setDestinationHeight(elevator.getCurrentHeight());
+        }
+
+        elevatorPIDManualModeEnabled = elevatorPIDManualModeTrigger;
+
+        if (elevatorPIDManualModeEnabled) {
+            elevator.disablePID();
+        } else {
+            elevator.enablePID();
+        }
+
+        // Joystick down moves the elevator up
+        double elevatorMoveCommand = manipulator.getAxis(Axis.RIGHT_Y);
+
+        SmartDashboard.putBoolean("Elevator manual mode enabled", elevatorPIDManualModeEnabled);
+        SmartDashboard.putNumber("Elevator Move Command (manip)", elevatorMoveCommand);
+
+        if (elevatorPIDManualModeEnabled) {
+            elevator.move(elevatorMoveCommand);
         } else {
             // Use the manipulator right joystick Y to adjust the PID controller's setpoint
             double dt = this.getPeriod();
-            double changeInHeight = LIFT_NUDGE_SPEED * liftMoveCommand * dt; // inches
-            if (liftMoveCommand != 0) {
-                lift.setDestinationHeight(lift.getCurrentHeight() + changeInHeight);
+            double changeInHeight = ELEVATOR_NUDGE_SPEED * elevatorMoveCommand * dt; // inches
+            if (elevatorMoveCommand != 0) {
+                elevator.setDestinationHeight(elevator.getCurrentHeight() + changeInHeight);
             }
         }
     }
 
     @Override
     public void robotPeriodic() {
-        liftEncoderResetSendable.update();
+        elevatorEncoderResetSendable.update();
+        harvesterEncoderResetSendable.update();
         putEncoders();
         putSensors();
     }
 
 
-    double speedLimitFromLiftHeight(double height) {
+    double speedLimitFromElevatorHeight(double height) {
         // Chosen by linear fit through (30 in, 1) and (70 in, 0.5)
         double limit = height * -0.0125 + 1.375;
 
@@ -349,12 +343,10 @@ public class Robot extends TimedRobot {
     }
 
     void putSensors() {
-        SmartDashboard.putBoolean("Stage one down", lift.stageOneIsDown());
-        SmartDashboard.putBoolean("Stage two down", lift.stageTwoIsDown());
-        SmartDashboard.putBoolean("Lift fully down",
-                lift.stageOneIsDown() && lift.stageTwoIsDown());
-
-        SmartDashboard.putBoolean("Power prismⁿ™ in grabber", intake.cubeIsInGrabber());
+        SmartDashboard.putBoolean("Stage one down", elevator.stageOneIsDown());
+        SmartDashboard.putBoolean("Stage two down", elevator.stageTwoIsDown());
+        SmartDashboard.putBoolean("Elevator fully down",
+                elevator.stageOneIsDown() && elevator.stageTwoIsDown());
     }
 
     void putEncoders() {
@@ -364,10 +356,15 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("drive left speed", driveBase.getLeftSpeed());
         SmartDashboard.putNumber("drive right speed", driveBase.getRightSpeed());
 
-        SmartDashboard.putString("desired lift level", lift.getDestinationLiftLevel().toString());
-        SmartDashboard.putString("lift level", lift.getCurrentLiftLevel().toString());
-        SmartDashboard.putNumber("lift distance", lift.getCurrentHeight());
-        SmartDashboard.putNumber("lift speed", lift.liftEncoder.getRate());
+        SmartDashboard.putString("desired elevator level", elevator.getDestinationElevatorLevel().toString());
+        SmartDashboard.putString("elevator level", elevator.getCurrentElevatorLevel().toString());
+        SmartDashboard.putNumber("elevator distance", elevator.getCurrentHeight());
+        SmartDashboard.putNumber("elevator speed", elevator.elevatorEncoder.getRate());
+
+        SmartDashboard.putNumber("Angulator angle", harvester.getCurrentAngle());
+        SmartDashboard.putNumber("Angulator setpoint", harvester.getDestinationAngle());
+        SmartDashboard.putString("Angulator level",
+                Harvester.convertAngleToHarvesterAngle(harvester.getCurrentAngle()).toString());
     }
 
 

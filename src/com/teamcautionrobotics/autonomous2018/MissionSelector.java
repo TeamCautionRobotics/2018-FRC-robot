@@ -9,7 +9,8 @@ import com.teamcautionrobotics.autonomous2018.AutoEnums.AutoObjective;
 import com.teamcautionrobotics.autonomous2018.AutoEnums.PlateSide;
 import com.teamcautionrobotics.autonomous2018.AutoEnums.StartingPosition;
 import com.teamcautionrobotics.autonomous2018.commands.CommandFactory2018;
-import com.teamcautionrobotics.robot2018.Lift.LiftLevel;
+import com.teamcautionrobotics.robot2018.Harvester.HarvesterAngle;
+import com.teamcautionrobotics.robot2018.Elevator.ElevatorLevel;
 
 public class MissionSelector {
 
@@ -25,87 +26,114 @@ public class MissionSelector {
     public MissionSelector(CommandFactory2018 commandFactory) {
         this.commandFactory = commandFactory;
 
-        driveForwardMission = makeMissionWithPrefix("drive forward mission",
-                        commandFactory.moveStraightDistance(0.5, 100, true),
-                        commandFactory.moveStraight(-0.1, 0.2, false)
+        driveForwardMission = new Mission("drive forward mission",
+                commandFactory.setIntakeMotor(0.08),
+                commandFactory.moveStraightDistance(0.5, 100, true),
+                commandFactory.moveStraight(-0.1, 0.2, false)
                 );
 
-        centerMissionRightSwitch = makeMissionWithPrefix("center mission right switch",
+        centerMissionRightSwitch = new Mission("center mission right switch",
+                    commandFactory.setIntakeMotor(0.08),
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                    commandFactory.delay(0.5),
                     commandFactory.moveStraightDistance(0.5, 20, true),
                     commandFactory.turnInPlace(0.3, 40),
-                    commandFactory.setLift(LiftLevel.SWITCH),
-                    commandFactory.moveStraightDistance(0.5, 55, true),
-                    commandFactory.turnInPlace(-0.3, 30),
-                    commandFactory.moveStraight(0.5, 0.2, false),
-                    commandFactory.delay(0.5),
+                    commandFactory.setElevator(ElevatorLevel.SWITCH),
+                    commandFactory.moveStraightDistance(0.5, 37, true),
+                    commandFactory.turnInPlace(-0.4, 40),
+                    commandFactory.moveStraight(0.6, 0.4, false),
+                    commandFactory.setDriveMotors(0.2),
+                    commandFactory.delay(1.0),
                     commandFactory.deployCube()
                 );
 
-        centerMissionLeftSwitch = makeMissionWithPrefix("center mission left switch",
+        centerMissionLeftSwitch = new Mission("center mission left switch",
+                    commandFactory.setIntakeMotor(0.08),
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                    commandFactory.delay(0.5), 
                     commandFactory.moveStraightDistance(0.5, 20, true),
                     commandFactory.turnInPlace(-0.3, 50),
-                    commandFactory.setLift(LiftLevel.SWITCH),
+                    commandFactory.setElevator(ElevatorLevel.SWITCH),
                     commandFactory.moveStraightDistance(0.5, 80, true),
                     commandFactory.turnInPlace(0.3, 42),
-                    commandFactory.moveStraight(0.7, 0.2, false),
-                    commandFactory.delay(0.5),
+                    commandFactory.moveStraight(0.6, 0.4, false),
+                    commandFactory.setDriveMotors(0.2),
+                    commandFactory.delay(1.0),
                     commandFactory.deployCube()
                 );
 
-        centerMissionRightScale = makeMissionWithPrefix("center mission right scale",
+        centerMissionRightScale = new Mission("center mission right scale",
+                commandFactory.setIntakeMotor(0.08),
+                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 30, true),
                 commandFactory.turnInPlace(-0.3, 45),
                 commandFactory.moveStraightDistance(0.5, 140, true),
                 commandFactory.turnInPlace(0.3, 50),
                 commandFactory.moveStraightDistance(0.5, 195, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(0.3, 90), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
+                commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
+                commandFactory.turnInPlace(0.3, 90),
+                commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.deployCube()
         );
 
-        centerMissionLeftScale = makeMissionWithPrefix("center mission left scale",
+        centerMissionLeftScale = new Mission("center mission left scale",
+                commandFactory.setIntakeMotor(0.08),
+                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 30, true),
                 commandFactory.turnInPlace(0.3, 60),
                 commandFactory.moveStraightDistance(0.5, 160, true),
                 commandFactory.turnInPlace(-0.3, 50),
                 commandFactory.moveStraightDistance(0.5, 185, true),
-                // LIFT THE CUBE!!!!!!!
-                commandFactory.turnInPlace(-0.3, 85), commandFactory.moveStraight(0.5, 0.3, false)
-        // DEPLOY THE CUBE!!!!!!!
+                commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
+                commandFactory.turnInPlace(-0.3, 85),
+                commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.deployCube()
         );
 
-        rightMissionRightSwitch = makeMissionWithPrefix("right mission switch",
+        rightMissionRightSwitch = new Mission("right mission switch",
+                commandFactory.setIntakeMotor(0.08),
+                commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                 commandFactory.delay(0.5),
                 commandFactory.moveStraightDistance(0.5, 145, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
                 commandFactory.turnInPlace(0.5, -80),
                 commandFactory.moveStraight(0.5, 0.35, false),
-                commandFactory.setLift(LiftLevel.SWITCH, true),
+                commandFactory.setElevator(ElevatorLevel.SWITCH, true),
                 commandFactory.deployCube()
                 );
 
-        rightMissionRightScale = makeMissionWithPrefix("right mission scale",
+        rightMissionRightScale = new Mission("right mission scale",
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                    commandFactory.delay(0.5), 
                     commandFactory.moveStraightDistance(0.5, 294, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
-                    commandFactory.setLift(LiftLevel.HIGH_SCALE),
+                    commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
                     commandFactory.turnInPlace(0.5, -80),
                     commandFactory.moveStraight(0.5, 0.3, false),
                     commandFactory.deployCube()
                 );
-        leftMissionLeftSwitch = makeMissionWithPrefix("left mission switch",
+        leftMissionLeftSwitch = new Mission("left mission switch",
+                    commandFactory.setIntakeMotor(0.08),
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                    commandFactory.delay(0.5),
                     commandFactory.delay(0.5),
                     commandFactory.moveStraightDistance(0.5, 145, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
                     commandFactory.turnInPlace(0.5, 80),
                     commandFactory.moveStraight(0.5, 0.35, false),
-                    commandFactory.setLift(LiftLevel.SWITCH, true),
+                    commandFactory.setElevator(ElevatorLevel.SWITCH, true),
                     commandFactory.deployCube()
                 );
 
-        leftMissionLeftScale = makeMissionWithPrefix("left mission scale",
+        leftMissionLeftScale = new Mission("left mission scale",
+                    commandFactory.setIntakeMotor(0.08),
+                    commandFactory.rotateHarvester(HarvesterAngle.AIMED),
+                    commandFactory.delay(0.5), 
                     commandFactory.moveStraightDistance(0.5, 294, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
-                    commandFactory.setLift(LiftLevel.HIGH_SCALE),
+                    commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
                     commandFactory.turnInPlace(0.5, 80),
                     commandFactory.moveStraight(0.5, 0.3, false),
                     commandFactory.deployCube()

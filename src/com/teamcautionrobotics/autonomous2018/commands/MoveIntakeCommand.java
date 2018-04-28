@@ -1,15 +1,15 @@
 package com.teamcautionrobotics.autonomous2018.commands;
 
 import com.teamcautionrobotics.autonomous.Command;
-import com.teamcautionrobotics.robot2018.Intake;
-import com.teamcautionrobotics.robot2018.Lift;
+import com.teamcautionrobotics.robot2018.Harvester;
+import com.teamcautionrobotics.robot2018.Elevator;
 
 import edu.wpi.first.wpilibj.Timer;
 
 public class MoveIntakeCommand implements Command {
 
-    private Intake intake;
-    private Lift lift;
+    private Harvester harvester;
+    private Elevator elevator;
 
     private Timer timer;
 
@@ -20,19 +20,19 @@ public class MoveIntakeCommand implements Command {
     private boolean complete;
 
     /**
-     * Run the intake for a period of time. Waits for the lift to be at its destination before
-     * running the intake.
+     * Run the harvester for a period of time. Waits for the elevator to be at its destination before
+     * running the harvester.
      * 
-     * @param intake
-     * @param lift
-     * @param power The power at which to run the intake
-     * @param time Number of seconds for which to run the intake
-     * @see {@link Intake#move(double)}
+     * @param harvester
+     * @param elevator
+     * @param power The power at which to run the harvester
+     * @param time Number of seconds for which to run the harvester
+     * @see {@link Harvester#move(double)}
      */
-    public MoveIntakeCommand(Intake intake, Lift lift, double power, double time) {
-        this.intake = intake;
+    public MoveIntakeCommand(Harvester harvester, Elevator elevator, double power, double time) {
+        this.harvester = harvester;
         this.power = power;
-        this.lift = lift;
+        this.elevator = elevator;
         this.time = time;
         timer = new Timer();
         reset();
@@ -40,16 +40,16 @@ public class MoveIntakeCommand implements Command {
 
     @Override
     public boolean run() {
-        if (needsToStart && lift.atDestination()) {
+        if (needsToStart && elevator.atDestination()) {
             timer.reset();
             timer.start();
-            intake.move(power);
+            harvester.move(power);
             needsToStart = false;
         }
 
         if (!complete) {
             if (timer.get() >= time) {
-                intake.move(0);
+                harvester.move(0);
                 timer.stop();
                 complete = true;
             }
