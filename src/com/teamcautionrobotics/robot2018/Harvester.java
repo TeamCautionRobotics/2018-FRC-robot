@@ -49,9 +49,7 @@ public class Harvester {
     }
 
     /**
-     * Set the grabber motor power directly. {@link #move(double)}, {@link #spin(double, double)},
-     * or {@link #timedSpin} should probably be used instead.
-     * 
+     * Set the grabber motor power directly.
      * @param power positive for in, negative for out, range of [-1, 1]
      */
     public void move(double power) {
