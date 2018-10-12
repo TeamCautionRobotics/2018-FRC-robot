@@ -105,9 +105,9 @@ public class Robot extends TimedRobot {
         });
         SmartDashboard.putData(elevatorEncoderResetSendable);
 
-        harvesterEncoderResetSendable = new FunctionRunnerSendable("Reset harvester encoder", () -> {
+        harvesterEncoderResetSendable = new FunctionRunnerSendable("Reset angulator encoder", () -> {
             DriverStation.reportWarning(String.format(
-                    "Reset harvester encoder from SmartDashboard. Encoder was at %f degrees.%n",
+                    "Reset angulator encoder from SmartDashboard. Encoder was at %f degrees.%n",
                     harvester.getCurrentAngle()), false);
             harvester.resetEncoder();
         });
