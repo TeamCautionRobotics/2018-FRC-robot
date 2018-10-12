@@ -99,7 +99,7 @@ public class Harvester {
             // OHHHHH WE'RE HALFWAY THERE! WHOAWHOA then move on to the next HarvesterAngle and try
             // again; if not, break out of the loop and return the current harvesterAngle the for
             // loop
-            // is on
+            // is on and a pear
             if (angle < midpoint) {
                 break;
             }

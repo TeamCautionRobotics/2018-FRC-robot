@@ -324,6 +324,12 @@ public class Robot extends TimedRobot {
     }
 
     @Override
+    public void testPeriodic() {
+        SmartDashboard.putNumber("manipulator input values", manipulator.getAxis(Axis.RIGHT_Y));
+        harvester.moveAngularOptimizer(manipulator.getAxis(Axis.RIGHT_Y));
+    }
+
+    @Override
     public void robotPeriodic() {
         elevatorEncoderResetSendable.update();
         harvesterEncoderResetSendable.update();
