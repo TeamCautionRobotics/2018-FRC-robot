@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        /* TODO: Find out angular optimizer port, encoder ports, and PID values
+        /* TODO: Find out angulator port, encoder ports, and PID values
          * Double check other port values as well
          */
         harvester = new Harvester(3, 4, 8, 9, 0.02, 0.001, 0.03);
@@ -326,7 +326,7 @@ public class Robot extends TimedRobot {
     @Override
     public void testPeriodic() {
         SmartDashboard.putNumber("manipulator input values", manipulator.getAxis(Axis.RIGHT_Y));
-        harvester.moveAngularOptimizer(manipulator.getAxis(Axis.RIGHT_Y));
+        harvester.moveAngulator(manipulator.getAxis(Axis.RIGHT_Y));
     }
 
     @Override

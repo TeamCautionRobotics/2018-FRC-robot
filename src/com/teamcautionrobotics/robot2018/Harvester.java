@@ -21,27 +21,27 @@ public class Harvester {
     }
 
     private VictorSP grabber;
-    public VictorSP angularOptimizer;
+    public VictorSP angulator;
 
-    private Encoder angularOptimizerEncoder;
+    private Encoder angulatorEncoder;
 
     public PIDController pidController;
 
-    public Harvester(int grabberChannel, int angularOptimizerChannel,
-            int angularOptimizerEncoderChannelA, int angularOptimizerEncoderChannelB, double Kp,
+    public Harvester(int grabberChannel, int angulatorChannel,
+            int angulatorEncoderChannelA, int angulatorEncoderChannelB, double Kp,
             double Ki, double Kd) {
         grabber = new VictorSP(grabberChannel);
-        angularOptimizer = new VictorSP(angularOptimizerChannel);
-//        angularOptimizer.setInverted(true);
+        angulator = new VictorSP(angulatorChannel);
+//        angulator.setInverted(true);
 
-        angularOptimizerEncoder =
-                new Encoder(angularOptimizerEncoderChannelB, angularOptimizerEncoderChannelA);
+        angulatorEncoder =
+                new Encoder(angulatorEncoderChannelB, angulatorEncoderChannelA);
         // The sources of these constants           degrees  pulses/rot  additional reduction
-        angularOptimizerEncoder.setDistancePerPulse((360.0 / 1024.0) * (12.0 / 28.0));
+        angulatorEncoder.setDistancePerPulse((360.0 / 1024.0) * (12.0 / 28.0));
 
         pidController = new PIDController(Kp, Ki, Kd, 0,
-                new AngularOptimizerPIDSource(PIDSourceType.kDisplacement),
-                this::moveAngularOptimizer);
+                new AngulatorPIDSource(PIDSourceType.kDisplacement),
+                this::moveAngulator);
         pidController.setOutputRange(-1, 1);
         // TODO: Set to correct values
         pidController.setInputRange(-105, 10);
@@ -57,8 +57,8 @@ public class Harvester {
         grabber.set(power);
     }
 
-    public void moveAngularOptimizer(double angularPower) {
-        angularOptimizer.set(angularPower);
+    public void moveAngulator(double angularPower) {
+        angulator.set(angularPower);
         SmartDashboard.putNumber("Angulator power", angularPower);
     }
 
@@ -71,7 +71,7 @@ public class Harvester {
     }
 
     public double getCurrentAngle() {
-        return angularOptimizerEncoder.getDistance();
+        return angulatorEncoder.getDistance();
     }
 
     public HarvesterAngle getCurrentHarvesterAngle() {
@@ -122,12 +122,12 @@ public class Harvester {
     }
 
     public void resetEncoder() {
-        angularOptimizerEncoder.reset();
+        angulatorEncoder.reset();
     }
 
-    class AngularOptimizerPIDSource extends AbstractPIDSource {
+    class AngulatorPIDSource extends AbstractPIDSource {
 
-        public AngularOptimizerPIDSource(PIDSourceType sourceType) {
+        public AngulatorPIDSource(PIDSourceType sourceType) {
             super(sourceType);
         }
 
@@ -135,9 +135,9 @@ public class Harvester {
         public double pidGet() {
             switch (type) {
                 case kDisplacement:
-                    return angularOptimizerEncoder.getDistance();
+                    return angulatorEncoder.getDistance();
                 case kRate:
-                    return angularOptimizerEncoder.getRate();
+                    return angulatorEncoder.getRate();
                 default:
                     return 0.0;
             }
