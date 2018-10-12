@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        /* TODO: Find out angular optimizer port, encoder ports, and PID values
+        /* TODO: Find out angulator port, encoder ports, and PID values
          * Double check other port values as well
          */
         harvester = new Harvester(3, 4, 8, 9, 0.02, 0.001, 0.03);
@@ -105,9 +105,9 @@ public class Robot extends TimedRobot {
         });
         SmartDashboard.putData(elevatorEncoderResetSendable);
 
-        harvesterEncoderResetSendable = new FunctionRunnerSendable("Reset harvester encoder", () -> {
+        harvesterEncoderResetSendable = new FunctionRunnerSendable("Reset angulator encoder", () -> {
             DriverStation.reportWarning(String.format(
-                    "Reset harvester encoder from SmartDashboard. Encoder was at %f degrees.%n",
+                    "Reset angulator encoder from SmartDashboard. Encoder was at %f degrees.%n",
                     harvester.getCurrentAngle()), false);
             harvester.resetEncoder();
         });
@@ -262,7 +262,8 @@ public class Robot extends TimedRobot {
 
         harvester.move(grabberPower != 0 ? grabberPower : 0.08);
 
-        if (driverRight.getRawButton(3) || manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+        if (driverRight.getRawButton(3) || driverRight.getRawButton(2)
+                || manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
             if (elevator.getCurrentHeight() <= 2.0) {
                 harvester.disablePID();
             } else {
@@ -291,7 +292,8 @@ public class Robot extends TimedRobot {
             elevatorLowerButtonPressed = elevatorLowerButton;
         }
 
-        boolean elevatorPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) < 0.5;
+        // true when the elevator should operate in manual mode (PID disabled)
+        boolean elevatorPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0.5;
 
         if (!elevatorPIDManualModeTrigger && elevatorPIDManualModeTrigger != elevatorPIDManualModeEnabled) {
             elevator.setDestinationHeight(elevator.getCurrentHeight());
@@ -321,6 +323,12 @@ public class Robot extends TimedRobot {
                 elevator.setDestinationHeight(elevator.getCurrentHeight() + changeInHeight);
             }
         }
+    }
+
+    @Override
+    public void testPeriodic() {
+        SmartDashboard.putNumber("manipulator input values", manipulator.getAxis(Axis.RIGHT_Y));
+        harvester.moveAngulator(manipulator.getAxis(Axis.RIGHT_Y));
     }
 
     @Override
