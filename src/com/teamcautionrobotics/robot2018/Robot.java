@@ -262,7 +262,8 @@ public class Robot extends TimedRobot {
 
         harvester.move(grabberPower != 0 ? grabberPower : 0.08);
 
-        if (driverRight.getRawButton(3) || manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+        if (driverRight.getRawButton(3) || driverRight.getRawButton(2)
+                || manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
             if (elevator.getCurrentHeight() <= 2.0) {
                 harvester.disablePID();
             } else {
@@ -291,7 +292,8 @@ public class Robot extends TimedRobot {
             elevatorLowerButtonPressed = elevatorLowerButton;
         }
 
-        boolean elevatorPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) < 0.5;
+        // true when the elevator should operate in manual mode (PID disabled)
+        boolean elevatorPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0.5;
 
         if (!elevatorPIDManualModeTrigger && elevatorPIDManualModeTrigger != elevatorPIDManualModeEnabled) {
             elevator.setDestinationHeight(elevator.getCurrentHeight());
