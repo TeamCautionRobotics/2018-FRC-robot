@@ -292,7 +292,8 @@ public class Robot extends TimedRobot {
             elevatorLowerButtonPressed = elevatorLowerButton;
         }
 
-        boolean elevatorPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) < 0.5;
+        // true when the elevator should operate in manual mode (PID disabled)
+        boolean elevatorPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0.5;
 
         if (!elevatorPIDManualModeTrigger && elevatorPIDManualModeTrigger != elevatorPIDManualModeEnabled) {
             elevator.setDestinationHeight(elevator.getCurrentHeight());
