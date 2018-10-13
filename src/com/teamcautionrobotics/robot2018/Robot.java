@@ -338,6 +338,12 @@ public class Robot extends TimedRobot {
         }
     }
 
+    @Override
+    public void disabledInit() {
+        // Disable the harvester PID controller when the robot is disabled to prevent integral
+        // windup. This also resets the PID controller, clearing the integral term.
+        harvester.disablePID();
+    }
 
     @Override
     public void robotPeriodic() {
