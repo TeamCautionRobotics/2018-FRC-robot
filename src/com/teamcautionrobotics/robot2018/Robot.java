@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
         /* TODO: Find out angulator port, encoder ports, and PID values
          * Double check other port values as well
          */
-        harvester = new Harvester(3, 4, 8, 9, 0.005, 0.001, 0.03);
+        harvester = new Harvester(3, 4, 8, 9, 0.01, 0.001, 0.03);
         elevator = new Elevator(2, 4, 5, 6, 7, 0.8, 0.1, 0.4);
 
         elevatorEncoderResetSendable = new FunctionRunnerSendable("Reset elevator encoder", () -> {
