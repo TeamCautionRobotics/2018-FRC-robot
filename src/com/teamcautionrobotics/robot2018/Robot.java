@@ -75,6 +75,7 @@ public class Robot extends TimedRobot {
 
     private FunctionRunnerSendable elevatorEncoderResetSendable;
     private FunctionRunnerSendable harvesterEncoderResetSendable;
+    private FunctionRunnerSendable angulatorPidResetSendable;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -112,6 +113,18 @@ public class Robot extends TimedRobot {
             harvester.resetEncoder();
         });
         SmartDashboard.putData(harvesterEncoderResetSendable);
+
+        angulatorPidResetSendable = new FunctionRunnerSendable("Reset angulator PID", () -> {
+            boolean pidWasEnabled = harvester.pidController.isEnabled();
+            DriverStation.reportWarning(String.format(
+                    "Reset angulator PID from SmartDashboard. PID controller enabled was %b.%n",
+                    pidWasEnabled), false);
+            harvester.pidController.reset();
+            if (pidWasEnabled) {
+                harvester.enablePID();
+            }
+        });
+        SmartDashboard.putData(angulatorPidResetSendable);
 
         commandFactory = new CommandFactory2018(driveBase, harvester, elevator);
 
