@@ -37,11 +37,11 @@ public class MissionSelector {
                     commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.delay(0.5),
                     commandFactory.moveStraightDistance(0.5, 20, true),
-                    commandFactory.turnInPlace(0.3, 40),
+                    commandFactory.turnInPlace(0.8, 40),
                     commandFactory.setElevator(ElevatorLevel.SWITCH),
                     commandFactory.moveStraightDistance(0.5, 37, true),
                     commandFactory.turnInPlace(-0.4, 40),
-                    commandFactory.moveStraight(0.6, 0.4, false),
+                    commandFactory.moveStraight(0.8, 0.6, false),
                     commandFactory.setDriveMotors(0.2),
                     commandFactory.delay(1.0),
                     commandFactory.deployCube()
@@ -52,7 +52,7 @@ public class MissionSelector {
                     commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.delay(0.5), 
                     commandFactory.moveStraightDistance(0.5, 20, true),
-                    commandFactory.turnInPlace(-0.3, 50),
+                    commandFactory.turnInPlace(-0.8, 50),
                     commandFactory.setElevator(ElevatorLevel.SWITCH),
                     commandFactory.moveStraightDistance(0.5, 80, true),
                     commandFactory.turnInPlace(0.3, 42),
@@ -99,8 +99,8 @@ public class MissionSelector {
                 commandFactory.moveStraightDistance(0.5, 145, true),
                 commandFactory.moveStraight(-0.1, 0.2, false),
                 commandFactory.turnInPlace(0.5, -80),
-                commandFactory.moveStraight(0.5, 0.35, false),
                 commandFactory.setElevator(ElevatorLevel.SWITCH, true),
+                commandFactory.moveStraight(0.6, 0.5, false),
                 commandFactory.deployCube()
                 );
 
@@ -135,7 +135,7 @@ public class MissionSelector {
                     commandFactory.moveStraight(-0.1, 0.2, false),
                     commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
                     commandFactory.turnInPlace(0.5, 80),
-                    commandFactory.moveStraight(0.5, 0.3, false),
+                    commandFactory.moveStraight(0.8, 0.5, false),
                     commandFactory.deployCube()
                 );
     }
