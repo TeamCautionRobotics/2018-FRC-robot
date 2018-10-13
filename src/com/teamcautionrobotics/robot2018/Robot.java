@@ -75,6 +75,7 @@ public class Robot extends TimedRobot {
 
     private FunctionRunnerSendable elevatorEncoderResetSendable;
     private FunctionRunnerSendable harvesterEncoderResetSendable;
+    private FunctionRunnerSendable angulatorPidResetSendable;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -91,10 +92,10 @@ public class Robot extends TimedRobot {
         driverRight = new EnhancedJoystick(1, 0.1);
         manipulator = new Gamepad(2);
 
-        /* TODO: Find out angular optimizer port, encoder ports, and PID values
+        /* TODO: Find out angulator port, encoder ports, and PID values
          * Double check other port values as well
          */
-        harvester = new Harvester(3, 4, 8, 9, 0.02, 0.001, 0.03);
+        harvester = new Harvester(3, 4, 8, 9, 0.01, 0.001, 0.03);
         elevator = new Elevator(2, 4, 5, 6, 7, 0.8, 0.1, 0.4);
 
         elevatorEncoderResetSendable = new FunctionRunnerSendable("Reset elevator encoder", () -> {
@@ -105,13 +106,25 @@ public class Robot extends TimedRobot {
         });
         SmartDashboard.putData(elevatorEncoderResetSendable);
 
-        harvesterEncoderResetSendable = new FunctionRunnerSendable("Reset harvester encoder", () -> {
+        harvesterEncoderResetSendable = new FunctionRunnerSendable("Reset angulator encoder", () -> {
             DriverStation.reportWarning(String.format(
-                    "Reset harvester encoder from SmartDashboard. Encoder was at %f degrees.%n",
+                    "Reset angulator encoder from SmartDashboard. Encoder was at %f degrees.%n",
                     harvester.getCurrentAngle()), false);
             harvester.resetEncoder();
         });
         SmartDashboard.putData(harvesterEncoderResetSendable);
+
+        angulatorPidResetSendable = new FunctionRunnerSendable("Reset angulator PID", () -> {
+            boolean pidWasEnabled = harvester.pidController.isEnabled();
+            DriverStation.reportWarning(String.format(
+                    "Reset angulator PID from SmartDashboard. PID controller enabled was %b.%n",
+                    pidWasEnabled), false);
+            harvester.pidController.reset();
+            if (pidWasEnabled) {
+                harvester.enablePID();
+            }
+        });
+        SmartDashboard.putData(angulatorPidResetSendable);
 
         commandFactory = new CommandFactory2018(driveBase, harvester, elevator);
 
@@ -262,7 +275,10 @@ public class Robot extends TimedRobot {
 
         harvester.move(grabberPower != 0 ? grabberPower : 0.08);
 
-        if (driverRight.getRawButton(3) || manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+        // When true, use the angulator motor to move the angultor up, then reset the encoder.
+        boolean angulatorEncoderRealign = manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5;
+
+        if (!angulatorEncoderRealign && (driverRight.getRawButton(3) || driverRight.getRawButton(2))) {
             if (elevator.getCurrentHeight() <= 2.0) {
                 harvester.disablePID();
             } else {
@@ -274,6 +290,11 @@ public class Robot extends TimedRobot {
             harvester.setDestinationAngle(HarvesterAngle.AIMED);
         }
 
+        if (angulatorEncoderRealign) {
+            harvester.disablePID();
+            harvester.angulator.set(0.3);
+            harvester.resetEncoder();
+        }
 
         boolean elevatorRaiseButton = manipulator.getButton(Button.Y);
         if (elevatorRaiseButton != elevatorRaiseButtonPressed) {
@@ -291,7 +312,8 @@ public class Robot extends TimedRobot {
             elevatorLowerButtonPressed = elevatorLowerButton;
         }
 
-        boolean elevatorPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) < 0.5;
+        // true when the elevator should operate in manual mode (PID disabled)
+        boolean elevatorPIDManualModeTrigger = manipulator.getAxis(Axis.RIGHT_TRIGGER) > 0.5;
 
         if (!elevatorPIDManualModeTrigger && elevatorPIDManualModeTrigger != elevatorPIDManualModeEnabled) {
             elevator.setDestinationHeight(elevator.getCurrentHeight());
@@ -321,6 +343,13 @@ public class Robot extends TimedRobot {
                 elevator.setDestinationHeight(elevator.getCurrentHeight() + changeInHeight);
             }
         }
+    }
+
+    @Override
+    public void disabledInit() {
+        // Disable the harvester PID controller when the robot is disabled to prevent integral
+        // windup. This also resets the PID controller, clearing the integral term.
+        harvester.disablePID();
     }
 
     @Override
