@@ -118,12 +118,12 @@ public class MissionSelector {
                     commandFactory.setIntakeMotor(0.08),
                     commandFactory.rotateHarvester(HarvesterAngle.AIMED),
                     commandFactory.delay(0.5),
-                    commandFactory.delay(0.5),
                     commandFactory.moveStraightDistance(0.5, 145, true),
                     commandFactory.moveStraight(-0.1, 0.2, false),
                     commandFactory.turnInPlace(0.5, 80),
-                    commandFactory.moveStraight(0.5, 0.35, false),
                     commandFactory.setElevator(ElevatorLevel.SWITCH, true),
+                    commandFactory.moveStraight(0.6, 0.5, false),
+                    commandFactory.setDriveMotors(0.2),
                     commandFactory.deployCube()
                 );
 
