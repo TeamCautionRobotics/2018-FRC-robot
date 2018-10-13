@@ -273,7 +273,7 @@ public class Robot extends TimedRobot {
                 }
         }
 
-        harvester.move(grabberPower != 0 ? grabberPower : 0.08);
+        harvester.move(grabberPower != 0 ? grabberPower : 0.15);
 
         // When true, use the angulator motor to move the angultor up, then reset the encoder.
         boolean angulatorEncoderRealign = manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5;
