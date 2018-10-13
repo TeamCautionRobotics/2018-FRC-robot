@@ -101,6 +101,7 @@ public class MissionSelector {
                 commandFactory.turnInPlace(0.5, -80),
                 commandFactory.setElevator(ElevatorLevel.SWITCH, true),
                 commandFactory.moveStraight(0.6, 0.5, false),
+                commandFactory.setDriveMotors(0.2),
                 commandFactory.deployCube()
                 );
 
