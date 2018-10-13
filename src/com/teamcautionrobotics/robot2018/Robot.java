@@ -275,8 +275,10 @@ public class Robot extends TimedRobot {
 
         harvester.move(grabberPower != 0 ? grabberPower : 0.08);
 
-        if (driverRight.getRawButton(3) || driverRight.getRawButton(2)
-                || manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5) {
+        // When true, use the angulator motor to move the angultor up, then reset the encoder.
+        boolean angulatorEncoderRealign = manipulator.getAxis(Axis.LEFT_TRIGGER) > 0.5;
+
+        if (!angulatorEncoderRealign && (driverRight.getRawButton(3) || driverRight.getRawButton(2))) {
             if (elevator.getCurrentHeight() <= 2.0) {
                 harvester.disablePID();
             } else {
@@ -288,6 +290,11 @@ public class Robot extends TimedRobot {
             harvester.setDestinationAngle(HarvesterAngle.AIMED);
         }
 
+        if (angulatorEncoderRealign) {
+            harvester.disablePID();
+            harvester.angulator.set(0.3);
+            harvester.resetEncoder();
+        }
 
         boolean elevatorRaiseButton = manipulator.getButton(Button.Y);
         if (elevatorRaiseButton != elevatorRaiseButtonPressed) {
