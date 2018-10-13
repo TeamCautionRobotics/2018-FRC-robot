@@ -74,6 +74,7 @@ public class MissionSelector {
                 commandFactory.setElevator(ElevatorLevel.HIGH_SCALE),
                 commandFactory.turnInPlace(0.3, 90),
                 commandFactory.moveStraight(0.5, 0.3, false),
+                commandFactory.delay(1),
                 commandFactory.deployCube()
         );
 
@@ -102,6 +103,7 @@ public class MissionSelector {
                 commandFactory.setElevator(ElevatorLevel.SWITCH, true),
                 commandFactory.moveStraight(0.6, 0.5, false),
                 commandFactory.setDriveMotors(0.2),
+                commandFactory.delay(1),
                 commandFactory.deployCube()
                 );
 
@@ -125,6 +127,7 @@ public class MissionSelector {
                     commandFactory.setElevator(ElevatorLevel.SWITCH, true),
                     commandFactory.moveStraight(0.6, 0.5, false),
                     commandFactory.setDriveMotors(0.2),
+                    commandFactory.delay(1),
                     commandFactory.deployCube()
                 );
 
