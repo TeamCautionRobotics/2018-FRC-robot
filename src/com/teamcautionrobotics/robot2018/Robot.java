@@ -141,8 +141,7 @@ public class Robot extends TimedRobot {
         addObjectsToChooser(autoModeChooser, AutoMode.FMS_DATA, AutoMode.values());
         SmartDashboard.putData("Autonomous Mode Select", autoModeChooser);
 
-        // TODO(Schuyler): fix the missionSendable
-        missionSendable = new MissionSendable("Teleop Mission", () -> missionScriptMission);
+        missionSendable = new MissionSendable("Teleop Mission", this::selectMission);
         SmartDashboard.putData(missionSendable);
 
 
@@ -182,7 +181,7 @@ public class Robot extends TimedRobot {
         // TODO(Schuyler): fix this
         // SmartDashboard.putString("selected mission", autoModeChooser.getSelected().getName());
 
-        if ((missionSendable.run() /* && !autoModeChooser.getSelected().enableControls */)
+        if ((missionSendable.run() && !selectMission().enableControls)
                 || driveBase.pidController.isEnabled()) {
             return;
         }
