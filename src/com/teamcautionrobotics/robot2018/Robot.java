@@ -349,6 +349,10 @@ public class Robot extends TimedRobot {
         // Joystick down moves the elevator up
         double elevatorMoveCommand = manipulator.getAxis(Axis.RIGHT_Y);
 
+        // The driver has controls for the lift on the left joystick. These override the manipulator
+        elevatorMoveCommand = driverLeft.getRawButton(3) ?  1 : elevatorMoveCommand;
+        elevatorMoveCommand = driverLeft.getRawButton(2) ? -1 : elevatorMoveCommand;
+
         SmartDashboard.putBoolean("Elevator manual mode enabled", elevatorPIDManualModeEnabled);
         SmartDashboard.putNumber("Elevator Move Command (manip)", elevatorMoveCommand);
 
