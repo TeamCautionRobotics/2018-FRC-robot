@@ -154,6 +154,11 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Angulator PID", harvester.pidController);
 
         missionSelector = new MissionSelector(commandFactory);
+
+        // Remove the true to have this not default to safe mode; it will save the setting instead
+        if (!SmartDashboard.getKeys().contains("normal mode")) {
+            SmartDashboard.putBoolean("normal mode", true);
+        }
     }
 
     @Override
@@ -219,6 +224,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        // Safe mode will disable lift, run drive at half speed, and reduce the power of the
+        // harvester
+        boolean normalModeArmed = SmartDashboard.getBoolean("normal mode", false);
+        boolean safeModeEnabled = !(normalModeArmed && driverRight.getRawButton(2));
+
         // TODO(Schuyler): fix this
         // SmartDashboard.putString("selected mission", autoModeChooser.getSelected().getName());
 
@@ -233,6 +243,12 @@ public class Robot extends TimedRobot {
         double rightPower = forwardCommand - turnCommand;
 
         double speedLimit = speedLimitFromElevatorHeight(elevator.getCurrentHeight());
+
+        // Speed limiter
+        if (safeModeEnabled) {
+            speedLimit *= 0.4;
+        }
+
         leftPower *= speedLimit;
         rightPower *= speedLimit;
 
@@ -252,6 +268,9 @@ public class Robot extends TimedRobot {
             }
             if (driverRight.getTrigger()) {
                 grabberPower = 0.5;
+            }
+            if (safeModeEnabled) {
+                grabberPower *= 0.5;
             }
         } else {
                 int dPadAngle = manipulator.getPOV();
@@ -330,17 +349,25 @@ public class Robot extends TimedRobot {
         // Joystick down moves the elevator up
         double elevatorMoveCommand = manipulator.getAxis(Axis.RIGHT_Y);
 
+        // The driver has controls for the lift on the left joystick. These override the manipulator
+        elevatorMoveCommand = driverLeft.getRawButton(3) ?  1 : elevatorMoveCommand;
+        elevatorMoveCommand = driverLeft.getRawButton(2) ? -1 : elevatorMoveCommand;
+
         SmartDashboard.putBoolean("Elevator manual mode enabled", elevatorPIDManualModeEnabled);
         SmartDashboard.putNumber("Elevator Move Command (manip)", elevatorMoveCommand);
 
         if (elevatorPIDManualModeEnabled) {
-            elevator.move(elevatorMoveCommand);
+            if (!safeModeEnabled) {
+                elevator.move(elevatorMoveCommand);
+            }
         } else {
-            // Use the manipulator right joystick Y to adjust the PID controller's setpoint
-            double dt = this.getPeriod();
-            double changeInHeight = ELEVATOR_NUDGE_SPEED * elevatorMoveCommand * dt; // inches
-            if (elevatorMoveCommand != 0) {
-                elevator.setDestinationHeight(elevator.getCurrentHeight() + changeInHeight);
+            if (!safeModeEnabled) {
+                // Use the manipulator right joystick Y to adjust the PID controller's setpoint
+                double dt = this.getPeriod();
+                double changeInHeight = ELEVATOR_NUDGE_SPEED * elevatorMoveCommand * dt; // inches
+                if (elevatorMoveCommand != 0) {
+                    elevator.setDestinationHeight(elevator.getCurrentHeight() + changeInHeight);
+                }
             }
         }
     }
