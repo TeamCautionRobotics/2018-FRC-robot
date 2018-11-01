@@ -9,13 +9,13 @@ package com.teamcautionrobotics.robot2018;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 
 import com.teamcautionrobotics.autonomous.Mission;
 import com.teamcautionrobotics.autonomous.MissionScriptMission;
 import com.teamcautionrobotics.autonomous.MissionSendable;
 import com.teamcautionrobotics.autonomous2018.AutoEnums.AutoMode;
 import com.teamcautionrobotics.autonomous2018.AutoEnums.AutoObjective;
-import com.teamcautionrobotics.autonomous2018.AutoEnums.PlateSide;
 import com.teamcautionrobotics.autonomous2018.AutoEnums.StartingPosition;
 import com.teamcautionrobotics.autonomous2018.MissionSelector;
 import com.teamcautionrobotics.autonomous2018.commands.CommandFactory2018;
@@ -62,10 +62,6 @@ public class Robot extends TimedRobot {
     CommandFactory2018 commandFactory;
     MissionScriptMission missionScriptMission;
     MissionSendable missionSendable;
-
-    String fmsData;
-    PlateSide switchPosition;
-    PlateSide scalePosition;
 
     SendableChooser<AutoMode> autoModeChooser;
     SendableChooser<StartingPosition> startingPositionChooser;
@@ -158,43 +154,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        switch (autoModeChooser.getSelected()) {
-            case FMS_DATA:
-                fmsData = DriverStation.getInstance().getGameSpecificMessage();
-                System.out.format("FMS Data for Plate Positions: '%s'%n", fmsData);
-                if (fmsData.length() == 3) {
-                    if (fmsData.charAt(0) == 'L') {
-                        switchPosition = PlateSide.LEFT;
-                    } else if (fmsData.charAt(0) == 'R') {
-                        switchPosition = PlateSide.RIGHT;
-                    } else {
-                        System.err.println("FMS switch char is neither 'L' nor 'R'");
-                    }
-                    if (fmsData.charAt(1) == 'L') {
-                        scalePosition = PlateSide.LEFT;
-                    } else if (fmsData.charAt(1) == 'R') {
-                        scalePosition = PlateSide.RIGHT;
-                    } else {
-                        System.err.println("FMS scale char is neither 'L' nor 'R'");
-                    }
-                } else {
-                    System.err.println("FMS does not pass a three-char string for plate position.");
-                }
-
-                activeMission = missionSelector.selectMissionFromFieldData(switchPosition,
-                        scalePosition, startingPositionChooser.getSelected(),
-                        autoObjectiveChooser.getSelected());
-                System.out.format("FMS auto selected mission is %s%n", activeMission.getName());
-                break;
-
-            case DO_NOTHING:
-                activeMission = MissionSelector.DO_NOTHING_MISSION;
-                break;
-
-            case MISSION_SCRIPT:
-                activeMission = missionScriptMission;
-                break;
-        }
+        activeMission = selectMission();
 
         if (activeMission != null) {
             activeMission.reset();
@@ -358,6 +318,39 @@ public class Robot extends TimedRobot {
         harvesterEncoderResetSendable.update();
         putEncoders();
         putSensors();
+    }
+
+
+    private Mission selectMission() {
+        Mission selectedMission = MissionSelector.DO_NOTHING_MISSION;
+        switch (autoModeChooser.getSelected()) {
+            case FMS_DATA:
+                String fmsData = DriverStation.getInstance().getGameSpecificMessage();
+                System.out.format("FMS Data for Plate Positions: '%s'%n", fmsData);
+                try {
+                    selectedMission = missionSelector.selectMissionFromFmsString(
+                            startingPositionChooser.getSelected(),
+                            autoObjectiveChooser.getSelected(), fmsData);
+                } catch (ParseException e) {
+                    String errString = String.format(
+                            "Unable to select mission from FMS data, '%s'!%n%s", fmsData, e);
+                    DriverStation.reportWarning(errString, false);
+                    System.out.println(errString);
+                    e.printStackTrace();
+
+                    selectedMission = MissionSelector.DO_NOTHING_MISSION;
+                }
+                System.out.format("FMS auto selected mission is %s%n", selectedMission.getName());
+
+            case DO_NOTHING:
+                selectedMission = MissionSelector.DO_NOTHING_MISSION;
+                break;
+
+            case MISSION_SCRIPT:
+                selectedMission = missionScriptMission;
+                break;
+        }
+        return selectedMission;
     }
 
 

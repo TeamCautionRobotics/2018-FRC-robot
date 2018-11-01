@@ -1,5 +1,6 @@
 package com.teamcautionrobotics.autonomous2018;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -156,6 +157,38 @@ public class MissionSelector {
 
         autoCommands.addAll(Arrays.asList(commands));
         return new Mission(name, autoCommands);
+    }
+
+    public Mission selectMissionFromFmsString(StartingPosition startingPosition,
+            AutoObjective objective, String fmsData) throws ParseException {
+
+        PlateSide switchPosition;
+        PlateSide scalePosition;
+
+        if (fmsData.length() == 3) {
+            if (fmsData.charAt(0) == 'L') {
+                switchPosition = PlateSide.LEFT;
+            } else if (fmsData.charAt(0) == 'R') {
+                switchPosition = PlateSide.RIGHT;
+            } else {
+                throw new ParseException(String.format(
+                        "expected [LR] for FMS switch char, got %c instead", fmsData.charAt(0)), 0);
+            }
+
+            if (fmsData.charAt(1) == 'L') {
+                scalePosition = PlateSide.LEFT;
+            } else if (fmsData.charAt(1) == 'R') {
+                scalePosition = PlateSide.RIGHT;
+            } else {
+                throw new ParseException(String.format(
+                        "expected [LR] for FMS scale char, got %c instead", fmsData.charAt(0)), 3);
+            }
+        } else {
+            throw new ParseException(String.format(
+                    "expected 3 char string for FMS data, got '%s' instead", fmsData), 0);
+        }
+
+        return selectMissionFromFieldData(switchPosition, scalePosition, startingPosition, objective);
     }
 
     public Mission selectMissionFromFieldData(PlateSide switchSide, PlateSide scaleSide,
